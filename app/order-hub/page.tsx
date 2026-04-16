@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { useEffect, useEffectEvent, useMemo, useState } from 'react'
+import { Suspense, useEffect, useEffectEvent, useMemo, useState } from 'react'
 import {
   getRememberedOrderHubEmail,
   listOrderHubOrders,
@@ -68,7 +68,7 @@ function matchesTab(order: OrderHubOrder, tab: TabId) {
   return true
 }
 
-export default function OrderHubPage() {
+function OrderHubPageContent() {
   const searchParams = useSearchParams()
   const [email, setEmail] = useState('')
   const [orders, setOrders] = useState<OrderHubOrder[]>([])
@@ -374,5 +374,21 @@ export default function OrderHubPage() {
         )}
       </div>
     </main>
+  )
+}
+
+export default function OrderHubPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="max-w-7xl mx-auto px-6 py-10">
+          <div className="rounded-3xl border bg-white p-6 text-sm text-gray-600">
+            Loading Order Hub...
+          </div>
+        </main>
+      }
+    >
+      <OrderHubPageContent />
+    </Suspense>
   )
 }

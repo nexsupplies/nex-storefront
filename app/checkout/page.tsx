@@ -507,7 +507,7 @@ export default function CheckoutPage() {
     return null
   }
 
-  async function persistCheckoutDetails() {
+  async function persistCheckoutDetails(): Promise<MedusaCart> {
     const validationMessage = getValidationMessage()
 
     if (validationMessage) {
@@ -543,7 +543,7 @@ export default function CheckoutPage() {
           country_code: PICKUP_LOCATION.countryCode,
         }
 
-    const updatedCart = await updateCart(cart.id, {
+    const updatedCart = (await updateCart(cart.id, {
       email,
       shipping_address: address,
       billing_address: address,
@@ -566,9 +566,9 @@ export default function CheckoutPage() {
         shipping_quote_required: isOutOfCity,
         shipping_quote_status: isOutOfCity ? 'awaiting' : null,
       },
-    })
+    })) as MedusaCart
 
-    let finalCart = updatedCart
+    let finalCart: MedusaCart = updatedCart
 
     if (selectedShipping?.optionId) {
       const existingShippingMethods = updatedCart.shipping_methods as
@@ -580,7 +580,10 @@ export default function CheckoutPage() {
       )
 
       if (!hasSelectedShippingMethod) {
-        finalCart = await addShippingMethod(updatedCart.id, selectedShipping.optionId)
+        finalCart = (await addShippingMethod(
+          updatedCart.id,
+          selectedShipping.optionId
+        )) as MedusaCart
       }
     }
 
