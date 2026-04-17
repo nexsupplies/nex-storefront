@@ -158,7 +158,7 @@ export default function ProductActions({
   }
 
   return (
-    <section className="border-t border-black/50 pt-8">
+    <div>
       <div className="px-0 py-0">
         <h2 className="text-2xl font-semibold">Order Matrix</h2>
         <p className="mt-2 text-sm text-gray-600">
@@ -173,7 +173,7 @@ export default function ProductActions({
         </div>
       ) : (
         <>
-          <div className="mt-6 overflow-x-auto border-y border-black/10">
+          <div className="mt-6 overflow-x-auto">
             <table className="min-w-full">
               <thead className="bg-gray-50 text-left text-sm text-gray-500">
                 <tr>
@@ -270,6 +270,6 @@ export default function ProductActions({
           </div>
         </>
       )}
-    </section>
+    </div>
   )
 }

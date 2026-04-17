@@ -128,20 +128,34 @@ export default async function ProductDetailPage({
 
   return (
     <main className="mx-auto max-w-7xl px-6 py-10 lg:px-10">
-      <ProductDetailHero
-        title={product.title}
-        handle={product.handle}
-        description={
-          product.description ||
-          'Material specifications can vary by thickness and finish. Use the order matrix below to combine multiple variants into one cart or quote request.'
-        }
-        priceSummary={priceSummary}
-        variantCount={variantCount}
-        imageGallery={imageGallery}
-        orderMatrixId={orderMatrixId}
-      />
+      <section className="space-y-5">
+        <div>
+          <p className="text-xs uppercase tracking-[0.24em] text-gray-500">
+            Detail Section
+          </p>
+        </div>
 
-      <section id={orderMatrixId} className="mt-12 scroll-mt-24">
+        <ProductDetailHero
+          title={product.title}
+          handle={product.handle}
+          description={
+            product.description ||
+            'Material specifications can vary by thickness and finish. Use the order matrix below to combine multiple variants into one cart or quote request.'
+          }
+          priceSummary={priceSummary}
+          variantCount={variantCount}
+          imageGallery={imageGallery}
+          orderMatrixId={orderMatrixId}
+        />
+      </section>
+
+      <section id={orderMatrixId} className="mt-16 scroll-mt-24 space-y-5">
+        <div>
+          <p className="text-xs uppercase tracking-[0.24em] text-gray-500">
+            Order Section
+          </p>
+        </div>
+
         <ProductActions
           product={{
             id: product.id,
@@ -152,11 +166,11 @@ export default async function ProductDetailPage({
         />
       </section>
 
-      <section className="mt-12">
+      <section className="mt-16 space-y-5">
         <div className="mb-5 flex items-end justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.24em] text-gray-500">
-              Product Recommendations
+              Recommendation Section
             </p>
             <h2 className="mt-2 text-2xl font-semibold text-gray-900">
               Related materials

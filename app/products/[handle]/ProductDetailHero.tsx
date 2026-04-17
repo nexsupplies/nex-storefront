@@ -65,47 +65,16 @@ export default function ProductDetailHero({
   }
 
   return (
-    <section className="border-t border-black/50 pt-8">
-      <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(360px,0.92fr)] lg:items-start">
-      <div className="space-y-4">
-        <div className="grid gap-4 lg:grid-cols-[88px_minmax(0,1fr)] lg:items-start">
-          {imageGallery.length > 1 && (
-            <div className="order-2 flex gap-3 overflow-x-auto pb-1 lg:order-1 lg:flex-col lg:overflow-visible">
-              {imageGallery.map((imageUrl, index) => {
-                const isActive = index === activeImage
-
-                return (
-                  <button
-                    key={imageUrl}
-                    type="button"
-                    onClick={() => setActiveImage(index)}
-                    className={`overflow-hidden rounded-[12px] border bg-white transition ${
-                      isActive
-                        ? 'border-black shadow-[0_0_0_1px_rgba(0,0,0,0.08)]'
-                        : 'border-gray-200'
-                    }`}
-                    aria-label={`Show image ${index + 1} for ${title}`}
-                    aria-pressed={isActive}
-                  >
-                    <img
-                      src={imageUrl}
-                      alt={`${title} thumbnail ${index + 1}`}
-                      className="h-20 w-20 object-contain bg-white p-1 lg:h-[88px] lg:w-[88px]"
-                      loading="lazy"
-                    />
-                  </button>
-                )
-              })}
-            </div>
-          )}
-
-          <div className="order-1 overflow-hidden rounded-[12px] border bg-white lg:order-2">
+    <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.18fr)_minmax(360px,0.82fr)] lg:items-start">
+      <div className="space-y-5">
+        <div className="overflow-hidden rounded-[12px] border bg-white">
+          <div className="order-1 overflow-hidden rounded-[12px] bg-white">
             {currentImage ? (
               <div className="relative aspect-square w-full bg-white">
                 <img
                   src={currentImage}
                   alt={title}
-                  className="absolute inset-0 h-full w-full object-contain p-4 lg:p-6"
+                  className="absolute inset-0 h-full w-full object-contain p-5 lg:p-8"
                 />
               </div>
             ) : (
@@ -115,6 +84,36 @@ export default function ProductDetailHero({
             )}
           </div>
         </div>
+
+        {imageGallery.length > 1 && (
+          <div className="flex gap-3 overflow-x-auto pb-1">
+            {imageGallery.map((imageUrl, index) => {
+              const isActive = index === activeImage
+
+              return (
+                <button
+                  key={imageUrl}
+                  type="button"
+                  onClick={() => setActiveImage(index)}
+                  className={`overflow-hidden rounded-[12px] border bg-white transition ${
+                    isActive
+                      ? 'border-black shadow-[0_0_0_1px_rgba(0,0,0,0.08)]'
+                      : 'border-gray-200'
+                  }`}
+                  aria-label={`Show image ${index + 1} for ${title}`}
+                  aria-pressed={isActive}
+                >
+                  <img
+                    src={imageUrl}
+                    alt={`${title} thumbnail ${index + 1}`}
+                    className="h-20 w-20 object-contain bg-white p-1 lg:h-24 lg:w-24"
+                    loading="lazy"
+                  />
+                </button>
+              )
+            })}
+          </div>
+        )}
       </div>
 
       <div className="lg:sticky lg:top-8">
@@ -194,7 +193,6 @@ export default function ProductDetailHero({
           </div>
         </section>
       </div>
-      </div>
-    </section>
+    </div>
   )
 }
