@@ -143,7 +143,7 @@ export default async function ProductDetailPage({
         />
       </section>
 
-      <section id={orderMatrixId} className="mt-16 scroll-mt-24">
+      <section id={orderMatrixId} className="scroll-mt-24">
         <ProductActions
           product={{
             id: product.id,
