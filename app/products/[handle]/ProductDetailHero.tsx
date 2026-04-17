@@ -9,6 +9,7 @@ type ProductDetailHeroProps = {
   priceSummary: string
   variantCount: number
   imageGallery: string[]
+  orderMatrixId: string
 }
 
 type AccordionKey = 'overview' | 'delivery' | 'support'
@@ -45,6 +46,7 @@ export default function ProductDetailHero({
   priceSummary,
   variantCount,
   imageGallery,
+  orderMatrixId,
 }: ProductDetailHeroProps) {
   const [activeImage, setActiveImage] = useState(0)
   const [openItem, setOpenItem] = useState<AccordionKey>('overview')
@@ -55,8 +57,16 @@ export default function ProductDetailHero({
     setOpenItem((current) => (current === key ? key : key))
   }
 
+  function scrollToOrderMatrix() {
+    document.getElementById(orderMatrixId)?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    })
+  }
+
   return (
-    <section className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(360px,0.92fr)] lg:items-start">
+    <section className="border-t border-black/50 pt-8">
+      <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(360px,0.92fr)] lg:items-start">
       <div className="space-y-4">
         <div className="grid gap-4 lg:grid-cols-[88px_minmax(0,1fr)] lg:items-start">
           {imageGallery.length > 1 && (
@@ -80,7 +90,7 @@ export default function ProductDetailHero({
                     <img
                       src={imageUrl}
                       alt={`${title} thumbnail ${index + 1}`}
-                      className="h-20 w-20 object-cover lg:h-[88px] lg:w-[88px]"
+                      className="h-20 w-20 object-contain bg-white p-1 lg:h-[88px] lg:w-[88px]"
                       loading="lazy"
                     />
                   </button>
@@ -91,13 +101,15 @@ export default function ProductDetailHero({
 
           <div className="order-1 overflow-hidden rounded-[12px] border bg-white lg:order-2">
             {currentImage ? (
-              <img
-                src={currentImage}
-                alt={title}
-                className="h-[420px] w-full object-cover lg:h-[620px]"
-              />
+              <div className="relative aspect-square w-full bg-white">
+                <img
+                  src={currentImage}
+                  alt={title}
+                  className="absolute inset-0 h-full w-full object-contain p-4 lg:p-6"
+                />
+              </div>
             ) : (
-              <div className="flex h-[420px] items-center justify-center text-sm text-gray-500 lg:h-[620px]">
+              <div className="flex aspect-square items-center justify-center text-sm text-gray-500">
                 Product image coming soon
               </div>
             )}
@@ -115,7 +127,7 @@ export default function ProductDetailHero({
           </h1>
           <p className="mt-2 text-sm text-gray-500">{handle}</p>
 
-          <div className="mt-6 rounded-[12px] border bg-white px-5 py-6">
+          <div className="mt-6 px-0 py-0">
             <div className="flex items-end justify-between gap-6">
               <div>
                 <p className="text-xs uppercase tracking-[0.2em] text-gray-500">
@@ -126,11 +138,19 @@ export default function ProductDetailHero({
                 </p>
               </div>
 
-              <div className="rounded-full border bg-white px-4 py-2 text-sm text-gray-600">
-                {variantCount
-                  ? `${variantCount} orderable variant${variantCount === 1 ? '' : 's'}`
-                  : 'Custom ordering available'}
-              </div>
+              {variantCount ? (
+                <button
+                  type="button"
+                  onClick={scrollToOrderMatrix}
+                  className="rounded-full border px-4 py-2 text-sm text-gray-700 transition hover:bg-black hover:text-white"
+                >
+                  {`${variantCount} orderable variant${variantCount === 1 ? '' : 's'}`}
+                </button>
+              ) : (
+                <div className="rounded-full border px-4 py-2 text-sm text-gray-600">
+                  Custom ordering available
+                </div>
+              )}
             </div>
 
             <div className="mt-5 border-t pt-5">
@@ -143,7 +163,7 @@ export default function ProductDetailHero({
             </div>
           </div>
 
-          <div className="mt-6 divide-y rounded-[12px] border bg-white">
+          <div className="mt-6 divide-y">
             {accordionItems.map((item) => {
               const isOpen = openItem === item.key
               const bodyText =
@@ -154,7 +174,7 @@ export default function ProductDetailHero({
                   <button
                     type="button"
                     onClick={() => toggleItem(item.key)}
-                    className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
+                    className="flex w-full items-center justify-between gap-4 py-4 text-left"
                     aria-expanded={isOpen}
                   >
                     <span className="text-base font-medium text-gray-900">
@@ -164,7 +184,7 @@ export default function ProductDetailHero({
                   </button>
 
                   {isOpen && (
-                    <div className="px-5 pb-5 text-sm leading-7 text-gray-600">
+                    <div className="pb-5 text-sm leading-7 text-gray-600">
                       {bodyText}
                     </div>
                   )}
@@ -173,6 +193,7 @@ export default function ProductDetailHero({
             })}
           </div>
         </section>
+      </div>
       </div>
     </section>
   )

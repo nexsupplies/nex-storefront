@@ -124,6 +124,7 @@ export default async function ProductDetailPage({
   const priceSummary = getPriceSummary(product)
   const variantCount = product.variants?.length || 0
   const recommendedProducts = await getRecommendedProducts(product.handle)
+  const orderMatrixId = 'order-matrix'
 
   return (
     <main className="mx-auto max-w-7xl px-6 py-10 lg:px-10">
@@ -137,9 +138,10 @@ export default async function ProductDetailPage({
         priceSummary={priceSummary}
         variantCount={variantCount}
         imageGallery={imageGallery}
+        orderMatrixId={orderMatrixId}
       />
 
-      <section className="mt-12">
+      <section id={orderMatrixId} className="mt-12 scroll-mt-24">
         <ProductActions
           product={{
             id: product.id,
@@ -172,16 +174,18 @@ export default async function ProductDetailPage({
                 href={`/products/${item.handle}`}
                 className="rounded-[12px] border bg-white transition hover:shadow-md"
               >
-                <div className="overflow-hidden rounded-t-[12px] bg-gray-100">
+                <div className="overflow-hidden rounded-t-[12px] bg-white">
                   {imageUrl ? (
-                    <img
-                      src={imageUrl}
-                      alt={item.title}
-                      className="h-48 w-full object-cover"
-                      loading="lazy"
-                    />
+                    <div className="relative aspect-square w-full bg-white">
+                      <img
+                        src={imageUrl}
+                        alt={item.title}
+                        className="absolute inset-0 h-full w-full object-contain p-4"
+                        loading="lazy"
+                      />
+                    </div>
                   ) : (
-                    <div className="flex h-48 items-center justify-center text-sm text-gray-500">
+                    <div className="flex aspect-square items-center justify-center text-sm text-gray-500">
                       Image coming soon
                     </div>
                   )}

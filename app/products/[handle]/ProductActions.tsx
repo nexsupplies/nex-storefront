@@ -158,8 +158,8 @@ export default function ProductActions({
   }
 
   return (
-    <div className="mt-10 rounded-[12px] border bg-white">
-      <div className="border-b px-6 py-5">
+    <section className="border-t border-black/50 pt-8">
+      <div className="px-0 py-0">
         <h2 className="text-2xl font-semibold">Order Matrix</h2>
         <p className="mt-2 text-sm text-gray-600">
           Adjust quantity per variant, then add the selected mix to cart or quote
@@ -168,12 +168,12 @@ export default function ProductActions({
       </div>
 
       {variants.length === 0 ? (
-        <div className="px-6 py-8 text-sm text-gray-600">
+        <div className="py-8 text-sm text-gray-600">
           No orderable variants are available for this material yet.
         </div>
       ) : (
         <>
-          <div className="overflow-x-auto">
+          <div className="mt-6 overflow-x-auto border-y border-black/10">
             <table className="min-w-full">
               <thead className="bg-gray-50 text-left text-sm text-gray-500">
                 <tr>
@@ -230,7 +230,7 @@ export default function ProductActions({
             </table>
           </div>
 
-          <div className="border-t bg-gray-50 px-6 py-5">
+          <div className="py-5">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
               <div className="space-y-2 text-sm text-gray-700">
                 <div className="flex items-center gap-4">
@@ -270,6 +270,6 @@ export default function ProductActions({
           </div>
         </>
       )}
-    </div>
+    </section>
   )
 }
