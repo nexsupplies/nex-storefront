@@ -173,17 +173,17 @@ export default function ProductActions({
         </div>
       ) : (
         <>
-          <div className="mt-6 overflow-x-auto">
-            <table className="min-w-full">
-              <thead className="bg-gray-50 text-left text-sm text-gray-500">
+          <div className="mt-8 overflow-x-auto border-y border-black/20">
+            <table className="min-w-full border-collapse">
+              <thead className="text-left text-xs uppercase tracking-[0.18em] text-gray-500">
                 <tr>
                   <th className="px-6 py-4 font-medium">Variant</th>
                   <th className="px-6 py-4 font-medium">Quantity</th>
                   <th className="px-6 py-4 font-medium">Price</th>
-                  <th className="px-6 py-4 font-medium text-right">Variant Total</th>
+                  <th className="px-6 py-4 text-right font-medium">Variant Total</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-black/50">
+              <tbody className="divide-y divide-black/20">
                 {orderRows.map((row) => (
                   <tr key={row.variant.id}>
                     <td className="px-6 py-4">
@@ -192,7 +192,7 @@ export default function ProductActions({
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="inline-flex items-center gap-3 rounded-xl border border-black/50 px-3 py-2">
+                      <div className="inline-flex items-center gap-3 rounded-[12px] border border-black/20 bg-white px-3 py-2">
                         <button
                           type="button"
                           onClick={() =>
@@ -230,9 +230,9 @@ export default function ProductActions({
             </table>
           </div>
 
-          <div className="py-5">
-            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-              <div className="space-y-2 text-sm text-gray-700">
+          <div className="py-6">
+            <div className="flex flex-col gap-6 border-b border-black/20 pb-6 lg:flex-row lg:items-end lg:justify-between">
+              <div className="space-y-3 text-sm text-gray-700">
                 <div className="flex items-center gap-4">
                   <span className="text-gray-500">Total Items</span>
                   <span className="font-semibold text-gray-900">{totalItems}</span>
@@ -259,7 +259,7 @@ export default function ProductActions({
                   type="button"
                   onClick={addToQuoteList}
                   disabled={!selectedRows.length}
-                  className="w-full rounded-xl border border-black/50 py-3 disabled:opacity-50"
+                  className="w-full rounded-xl border border-black/20 py-3 disabled:opacity-50"
                 >
                   Add Selected Variants to Quote List
                 </button>

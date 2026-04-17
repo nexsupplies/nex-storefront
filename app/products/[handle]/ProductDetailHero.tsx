@@ -65,12 +65,13 @@ export default function ProductDetailHero({
   }
 
   return (
-    <div className="grid grid-cols-1 gap-10 rounded-[12px] bg-[#f2f2f2] p-6 lg:grid-cols-[minmax(0,1.18fr)_minmax(360px,0.82fr)] lg:items-start lg:p-8">
+    <div className="mx-[calc(50%-50vw)] w-screen bg-[#f2f2f2]">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-6 py-10 lg:grid-cols-[minmax(0,1.18fr)_minmax(360px,0.82fr)] lg:items-start lg:px-10 lg:py-12">
       <div className="space-y-5">
-        <div className="overflow-hidden rounded-[12px] bg-white">
-          <div className="order-1 overflow-hidden rounded-[12px] bg-white">
+        <div className="overflow-hidden rounded-[12px] bg-[#f2f2f2]">
+          <div className="order-1 overflow-hidden rounded-[12px] bg-[#f2f2f2]">
             {currentImage ? (
-              <div className="relative aspect-square w-full bg-white">
+              <div className="relative aspect-square w-full bg-[#f2f2f2]">
                 <img
                   src={currentImage}
                   alt={title}
@@ -98,7 +99,7 @@ export default function ProductDetailHero({
                   className={`overflow-hidden rounded-[12px] border bg-white transition ${
                     isActive
                       ? 'border-black/50 shadow-[0_0_0_1px_rgba(0,0,0,0.08)]'
-                      : 'border-black/50'
+                      : 'border-black/20'
                   }`}
                   aria-label={`Show image ${index + 1} for ${title}`}
                   aria-pressed={isActive}
@@ -192,6 +193,7 @@ export default function ProductDetailHero({
             })}
           </div>
         </section>
+      </div>
       </div>
     </div>
   )
