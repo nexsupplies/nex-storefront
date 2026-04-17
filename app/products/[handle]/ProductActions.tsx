@@ -159,7 +159,7 @@ export default function ProductActions({
 
   return (
     <>
-      <section className="min-w-0 border-l border-black/50 py-8 lg:min-h-screen lg:px-8 lg:py-10">
+      <section className="min-w-0 border-l border-black/50 py-8 lg:min-h-[calc(100vh-4rem)] lg:px-8 lg:py-10">
         <div>
           <h2 className="text-2xl font-semibold">Order Matrix</h2>
           <p className="mt-3 max-w-2xl text-sm leading-7 text-gray-600">
@@ -236,7 +236,7 @@ export default function ProductActions({
         </div>
       </section>
 
-      <section className="min-w-0 flex flex-col justify-start py-8 lg:min-h-screen lg:pl-8 lg:pr-16 lg:py-10">
+      <section className="min-w-0 flex flex-col justify-start py-8 lg:min-h-[calc(100vh-4rem)] lg:pl-8 lg:pr-16 lg:py-10">
           <div className="space-y-4">
             <div className="space-y-3 text-sm text-gray-700">
               <div className="flex items-center justify-between gap-4">

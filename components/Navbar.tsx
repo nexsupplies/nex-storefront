@@ -11,23 +11,29 @@ const navItems = [
 
 export default function Navbar() {
   return (
-    <header className="border-b bg-white">
-      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold tracking-tight">
-          NEX Supplies
-        </Link>
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-black/50 bg-white/95 backdrop-blur-sm">
+      <div className="flex flex-col gap-3 px-6 py-3 lg:grid lg:h-16 lg:grid-cols-[minmax(320px,30fr)_minmax(0,35fr)_minmax(0,35fr)] lg:gap-0 lg:p-0">
+        <div className="flex items-center lg:pl-16 lg:pr-10">
+          <Link href="/" className="text-xl font-bold tracking-tight">
+            NEX Supplies
+          </Link>
+        </div>
 
-        <nav className="flex items-center gap-6">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-sm font-medium text-gray-700 hover:text-black transition"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        <div className="hidden lg:block lg:border-l lg:border-black/50" />
+
+        <div className="flex items-center lg:border-l lg:border-black/50 lg:pl-8 lg:pr-16">
+          <nav className="flex w-full flex-wrap items-center gap-x-6 gap-y-2 text-sm font-medium text-gray-700 lg:justify-end">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="transition hover:text-black"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
       </div>
     </header>
   )

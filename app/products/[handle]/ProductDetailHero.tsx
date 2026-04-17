@@ -49,7 +49,7 @@ export default function ProductDetailHero({
 
   return (
     <>
-      <section className="min-w-0 space-y-5 bg-[#f2f2f2] py-10 lg:flex lg:h-screen lg:flex-col lg:justify-between lg:border-l lg:border-black/50 lg:px-8 lg:py-12">
+      <section className="min-w-0 space-y-6 bg-[#f2f2f2] py-10 lg:h-[calc(100vh-4rem)] lg:border-l lg:border-black/50 lg:px-8 lg:py-10">
         <div className="overflow-hidden rounded-[12px] bg-[#f2f2f2]">
           <div className="order-1 overflow-hidden rounded-[12px] bg-[#f2f2f2]">
             {currentImage ? (
@@ -69,7 +69,7 @@ export default function ProductDetailHero({
         </div>
 
         {imageGallery.length > 1 && (
-          <div className="flex gap-3 overflow-x-auto pb-1">
+          <div className="flex gap-6 overflow-x-auto pb-1">
               {imageGallery.map((imageUrl, index) => {
                 const isActive = index === activeImage
 
@@ -81,7 +81,7 @@ export default function ProductDetailHero({
                   className={`overflow-hidden rounded-[12px] border bg-white transition ${
                     isActive
                       ? 'border-black/50 shadow-[0_0_0_1px_rgba(0,0,0,0.08)]'
-                      : 'border-black/20'
+                      : 'border-black/50'
                   }`}
                     aria-label={`Show image ${index + 1}`}
                     aria-pressed={isActive}
@@ -99,7 +99,7 @@ export default function ProductDetailHero({
         )}
       </section>
 
-      <section className="min-w-0 bg-[#f2f2f2] py-10 lg:h-screen lg:border-l lg:border-black/50 lg:pl-8 lg:pr-16 lg:py-12">
+      <section className="min-w-0 bg-[#f2f2f2] py-10 lg:h-[calc(100vh-4rem)] lg:border-l lg:border-black/50 lg:pl-8 lg:pr-16 lg:py-10">
         <div className="border-t border-black/50">
           {accordionItems.map((item) => {
             const isOpen = openItem === item.key
