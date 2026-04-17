@@ -55,9 +55,10 @@ export function normalizeMedusaAssetUrl(
     const parsedUrl = new URL(url)
 
     if (MEDUSA_LOCAL_HOST_RE.test(`${parsedUrl.protocol}//${parsedUrl.host}`)) {
-      const backend = new URL(backendUrl)
-      parsedUrl.protocol = backend.protocol
-      parsedUrl.host = backend.host
+      return new URL(
+        `${parsedUrl.pathname}${parsedUrl.search}${parsedUrl.hash}`,
+        backendUrl
+      ).toString()
     }
 
     return parsedUrl.toString()
