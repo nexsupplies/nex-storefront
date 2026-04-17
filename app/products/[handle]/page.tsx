@@ -131,8 +131,8 @@ export default async function ProductDetailPage({
 
   return (
     <main className="w-full">
-      <section className="mx-[calc(50%-50vw)] w-screen grid grid-cols-1 lg:grid-cols-[minmax(320px,0.9fr)_minmax(0,1fr)_minmax(0,1fr)]">
-        <aside className="px-6 py-10 lg:sticky lg:top-0 lg:row-span-2 lg:min-h-screen lg:pl-16 lg:pr-10">
+      <section className="mx-[calc(50%-50vw)] w-screen grid grid-cols-1 lg:grid-cols-[minmax(320px,30fr)_minmax(0,35fr)_minmax(0,35fr)]">
+        <aside className="px-6 py-10 lg:sticky lg:top-0 lg:row-span-2 lg:self-start lg:min-h-screen lg:pl-16 lg:pr-10">
           <div className="space-y-6">
             <div>
               <p className="text-sm uppercase tracking-[0.24em] text-gray-500">
