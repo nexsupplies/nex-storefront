@@ -49,7 +49,7 @@ export default function ProductDetailHero({
 
   return (
     <>
-      <section className="min-w-0 space-y-5 bg-[#f2f2f2] py-10 lg:border-l lg:border-black/50 lg:px-8 lg:py-12">
+      <section className="min-w-0 space-y-5 bg-[#f2f2f2] py-10 lg:flex lg:h-screen lg:flex-col lg:justify-between lg:border-l lg:border-black/50 lg:px-8 lg:py-12">
         <div className="overflow-hidden rounded-[12px] bg-[#f2f2f2]">
           <div className="order-1 overflow-hidden rounded-[12px] bg-[#f2f2f2]">
             {currentImage ? (
@@ -99,7 +99,7 @@ export default function ProductDetailHero({
         )}
       </section>
 
-      <section className="min-w-0 bg-[#f2f2f2] py-10 lg:border-l lg:border-black/50 lg:pl-8 lg:pr-16 lg:py-12">
+      <section className="min-w-0 bg-[#f2f2f2] py-10 lg:h-screen lg:border-l lg:border-black/50 lg:pl-8 lg:pr-16 lg:py-12">
         <div className="border-t border-black/50">
           {accordionItems.map((item) => {
             const isOpen = openItem === item.key
