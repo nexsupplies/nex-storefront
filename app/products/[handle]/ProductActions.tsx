@@ -158,24 +158,17 @@ export default function ProductActions({
   }
 
   return (
-    <div className="lg:min-h-screen">
-      <div className="grid grid-cols-1 lg:min-h-screen lg:grid-cols-[minmax(220px,0.72fr)_minmax(0,1.5fr)_minmax(280px,0.86fr)]">
-        <section className="flex flex-col justify-between py-8 lg:py-10 lg:pr-8">
-          <div>
-            <h2 className="text-2xl font-semibold">Order Matrix</h2>
-            <p className="mt-3 max-w-sm text-sm leading-7 text-gray-600">
-              Build a mixed order by adjusting quantities directly in the matrix.
-              Each row stays visible as part of one unified materials schedule.
-            </p>
-          </div>
+    <>
+      <section className="border-l border-black/50 py-8 lg:min-h-screen lg:px-8 lg:py-10">
+        <div>
+          <h2 className="text-2xl font-semibold">Order Matrix</h2>
+          <p className="mt-3 max-w-2xl text-sm leading-7 text-gray-600">
+            Build a mixed order by adjusting quantities directly in the matrix.
+            Each row stays visible as part of one unified materials schedule.
+          </p>
+        </div>
 
-          <div className="mt-8 space-y-3 text-sm text-gray-600">
-            <p>Variant pricing is shown per row.</p>
-            <p>Use cart for direct orders and Quote List for reviewed jobs.</p>
-          </div>
-        </section>
-
-        <section className="border-l border-black/50 py-8 lg:py-10 lg:px-8">
+        <div className="mt-6">
           {variants.length === 0 ? (
             <div className="text-sm text-gray-600">
               No orderable variants are available for this material yet.
@@ -240,9 +233,10 @@ export default function ProductActions({
               </table>
             </div>
           )}
-        </section>
+        </div>
+      </section>
 
-        <section className="flex flex-col justify-between border-l border-black/50 py-8 lg:py-10 lg:pl-8">
+      <section className="flex flex-col justify-between border-l border-black/50 py-8 lg:min-h-screen lg:pl-8 lg:py-10">
           <div className="space-y-5">
             <div className="space-y-3 text-sm text-gray-700">
               <div className="flex items-center justify-between gap-4">
@@ -279,8 +273,7 @@ export default function ProductActions({
 
             {message && <p className="pt-2 text-sm text-green-700">{message}</p>}
           </div>
-        </section>
-      </div>
-    </div>
+      </section>
+    </>
   )
 }

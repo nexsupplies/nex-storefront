@@ -125,33 +125,71 @@ export default async function ProductDetailPage({
   const variantCount = product.variants?.length || 0
   const recommendedProducts = await getRecommendedProducts(product.handle)
   const orderMatrixId = 'order-matrix'
+  const description =
+    product.description ||
+    'Material specifications can vary by thickness and finish. Use the order matrix below to combine multiple variants into one cart or quote request.'
 
   return (
     <main className="mx-auto max-w-7xl px-6 py-10 lg:px-10">
-      <section>
-        <ProductDetailHero
-          title={product.title}
-          handle={product.handle}
-          description={
-            product.description ||
-            'Material specifications can vary by thickness and finish. Use the order matrix below to combine multiple variants into one cart or quote request.'
-          }
-          priceSummary={priceSummary}
-          variantCount={variantCount}
-          imageGallery={imageGallery}
-          orderMatrixId={orderMatrixId}
-        />
-      </section>
+      <section className="grid grid-cols-1 lg:grid-cols-[minmax(220px,0.72fr)_minmax(0,1.5fr)_minmax(280px,0.86fr)]">
+        <aside className="py-10 lg:sticky lg:top-0 lg:row-span-2 lg:min-h-screen lg:pr-8">
+          <div className="space-y-6">
+            <div>
+              <p className="text-sm uppercase tracking-[0.24em] text-gray-500">
+                NEXPRO Material
+              </p>
+              <h1 className="mt-3 text-4xl font-bold tracking-tight lg:text-5xl">
+                {product.title}
+              </h1>
+              <p className="mt-2 text-sm text-gray-500">{product.handle}</p>
+            </div>
 
-      <section id={orderMatrixId} className="scroll-mt-24">
-        <ProductActions
-          product={{
-            id: product.id,
-            title: product.title,
-            handle: product.handle,
-          }}
-          variants={product.variants || []}
+            <div className="space-y-3">
+              <p className="text-xs uppercase tracking-[0.2em] text-gray-500">
+                Starting Price
+              </p>
+              <p className="text-3xl font-semibold text-gray-950">{priceSummary}</p>
+            </div>
+
+            {variantCount ? (
+              <a
+                href={`#${orderMatrixId}`}
+                className="inline-flex rounded-full border border-black/50 px-4 py-2 text-sm text-gray-700 transition hover:bg-black hover:text-white"
+              >
+                {`${variantCount} orderable variant${variantCount === 1 ? '' : 's'}`}
+              </a>
+            ) : (
+              <div className="inline-flex rounded-full border border-black/50 px-4 py-2 text-sm text-gray-600">
+                Custom ordering available
+              </div>
+            )}
+
+            <div className="border-t border-black/50 pt-6">
+              <div className="flex items-start justify-between gap-4 py-2 text-sm">
+                <span className="text-gray-500">Best for</span>
+                <span className="text-right font-medium text-gray-900">
+                  Sign shops, fabricators, and board buyers
+                </span>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <ProductDetailHero
+          description={description}
+          imageGallery={imageGallery}
         />
+
+        <div id={orderMatrixId} className="scroll-mt-24 contents">
+          <ProductActions
+            product={{
+              id: product.id,
+              title: product.title,
+              handle: product.handle,
+            }}
+            variants={product.variants || []}
+          />
+        </div>
       </section>
 
       <section className="mt-16">

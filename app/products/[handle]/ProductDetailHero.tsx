@@ -3,13 +3,8 @@
 import { useState } from 'react'
 
 type ProductDetailHeroProps = {
-  title: string
-  handle: string
   description: string
-  priceSummary: string
-  variantCount: number
   imageGallery: string[]
-  orderMatrixId: string
 }
 
 type AccordionKey = 'overview' | 'delivery' | 'support'
@@ -40,13 +35,8 @@ const accordionItems: Array<{
 ]
 
 export default function ProductDetailHero({
-  title,
-  handle,
   description,
-  priceSummary,
-  variantCount,
   imageGallery,
-  orderMatrixId,
 }: ProductDetailHeroProps) {
   const [activeImage, setActiveImage] = useState(0)
   const [openItem, setOpenItem] = useState<AccordionKey>('overview')
@@ -57,24 +47,16 @@ export default function ProductDetailHero({
     setOpenItem((current) => (current === key ? key : key))
   }
 
-  function scrollToOrderMatrix() {
-    document.getElementById(orderMatrixId)?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-    })
-  }
-
   return (
-    <div className="mx-[calc(50%-50vw)] w-screen bg-[#f2f2f2]">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-6 py-10 lg:grid-cols-[minmax(0,1.18fr)_minmax(360px,0.82fr)] lg:items-start lg:px-10 lg:py-12">
-      <div className="space-y-5">
+    <>
+      <section className="space-y-5 bg-[#f2f2f2] py-10 lg:border-l lg:border-black/50 lg:px-8 lg:py-12">
         <div className="overflow-hidden rounded-[12px] bg-[#f2f2f2]">
           <div className="order-1 overflow-hidden rounded-[12px] bg-[#f2f2f2]">
             {currentImage ? (
               <div className="relative aspect-square w-full bg-[#f2f2f2]">
                 <img
                   src={currentImage}
-                  alt={title}
+                  alt="Product image"
                   className="absolute inset-0 h-full w-full object-contain p-5 lg:p-8"
                 />
               </div>
@@ -88,11 +70,11 @@ export default function ProductDetailHero({
 
         {imageGallery.length > 1 && (
           <div className="flex gap-3 overflow-x-auto pb-1">
-            {imageGallery.map((imageUrl, index) => {
-              const isActive = index === activeImage
+              {imageGallery.map((imageUrl, index) => {
+                const isActive = index === activeImage
 
-              return (
-                <button
+                return (
+                  <button
                   key={imageUrl}
                   type="button"
                   onClick={() => setActiveImage(index)}
@@ -101,100 +83,53 @@ export default function ProductDetailHero({
                       ? 'border-black/50 shadow-[0_0_0_1px_rgba(0,0,0,0.08)]'
                       : 'border-black/20'
                   }`}
-                  aria-label={`Show image ${index + 1} for ${title}`}
-                  aria-pressed={isActive}
-                >
-                  <img
-                    src={imageUrl}
-                    alt={`${title} thumbnail ${index + 1}`}
-                    className="h-20 w-20 object-contain bg-white p-1 lg:h-24 lg:w-24"
-                    loading="lazy"
-                  />
-                </button>
-              )
-            })}
+                    aria-label={`Show image ${index + 1}`}
+                    aria-pressed={isActive}
+                  >
+                    <img
+                      src={imageUrl}
+                      alt={`Product thumbnail ${index + 1}`}
+                      className="h-20 w-20 object-contain bg-white p-1 lg:h-24 lg:w-24"
+                      loading="lazy"
+                    />
+                  </button>
+                )
+              })}
           </div>
         )}
-      </div>
+      </section>
 
-      <div className="lg:sticky lg:top-8">
-        <section className="rounded-[12px] border border-black/50 bg-white p-7 lg:p-8">
-          <p className="text-sm uppercase tracking-[0.24em] text-gray-500">
-            NEXPRO Material
-          </p>
-          <h1 className="mt-3 text-4xl font-bold tracking-tight lg:text-5xl">
-            {title}
-          </h1>
-          <p className="mt-2 text-sm text-gray-500">{handle}</p>
+      <section className="bg-[#f2f2f2] py-10 lg:border-l lg:border-black/50 lg:pl-8 lg:py-12">
+        <div className="border-t border-black/50">
+          {accordionItems.map((item) => {
+            const isOpen = openItem === item.key
+            const bodyText =
+              item.key === 'overview' && description ? description : item.content
 
-          <div className="mt-6 px-0 py-0">
-            <div className="flex items-end justify-between gap-6">
-              <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-gray-500">
-                  Starting Price
-                </p>
-                <p className="mt-2 text-3xl font-semibold text-gray-950">
-                  {priceSummary}
-                </p>
-              </div>
-
-              {variantCount ? (
+            return (
+              <div key={item.key} className="border-b border-black/50">
                 <button
                   type="button"
-                  onClick={scrollToOrderMatrix}
-                  className="rounded-full border border-black/50 px-4 py-2 text-sm text-gray-700 transition hover:bg-black hover:text-white"
+                  onClick={() => toggleItem(item.key)}
+                  className="flex w-full items-center justify-between gap-4 py-5 text-left"
+                  aria-expanded={isOpen}
                 >
-                  {`${variantCount} orderable variant${variantCount === 1 ? '' : 's'}`}
+                  <span className="text-base font-medium text-gray-900">
+                    {item.title}
+                  </span>
+                  <span className="text-xl text-gray-500">{isOpen ? '-' : '+'}</span>
                 </button>
-              ) : (
-                <div className="rounded-full border border-black/50 px-4 py-2 text-sm text-gray-600">
-                  Custom ordering available
-                </div>
-              )}
-            </div>
 
-            <div className="mt-5 border-t border-black/50 pt-5">
-              <div className="flex items-start justify-between gap-4 py-2 text-sm">
-                <span className="text-gray-500">Best for</span>
-                <span className="text-right font-medium text-gray-900">
-                  Sign shops, fabricators, and board buyers
-                </span>
+                {isOpen && (
+                  <div className="pb-5 text-sm leading-7 text-gray-600">
+                    {bodyText}
+                  </div>
+                )}
               </div>
-            </div>
-          </div>
-
-          <div className="mt-6 divide-y divide-black/50">
-            {accordionItems.map((item) => {
-              const isOpen = openItem === item.key
-              const bodyText =
-                item.key === 'overview' && description ? description : item.content
-
-              return (
-                <div key={item.key}>
-                  <button
-                    type="button"
-                    onClick={() => toggleItem(item.key)}
-                    className="flex w-full items-center justify-between gap-4 py-4 text-left"
-                    aria-expanded={isOpen}
-                  >
-                    <span className="text-base font-medium text-gray-900">
-                      {item.title}
-                    </span>
-                    <span className="text-xl text-gray-500">{isOpen ? '-' : '+'}</span>
-                  </button>
-
-                  {isOpen && (
-                    <div className="pb-5 text-sm leading-7 text-gray-600">
-                      {bodyText}
-                    </div>
-                  )}
-                </div>
-              )
-            })}
-          </div>
-        </section>
-      </div>
-      </div>
-    </div>
+            )
+          })}
+        </div>
+      </section>
+    </>
   )
 }
