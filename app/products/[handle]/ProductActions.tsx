@@ -236,8 +236,8 @@ export default function ProductActions({
         </div>
       </section>
 
-      <section className="flex flex-col justify-between border-l border-black/50 py-8 lg:min-h-screen lg:pl-8 lg:py-10">
-          <div className="space-y-5">
+      <section className="flex flex-col justify-start py-8 lg:min-h-screen lg:pl-8 lg:pr-16 lg:py-10">
+          <div className="space-y-4">
             <div className="space-y-3 text-sm text-gray-700">
               <div className="flex items-center justify-between gap-4">
                 <span className="text-gray-500">Total Items</span>
@@ -252,7 +252,7 @@ export default function ProductActions({
             </div>
           </div>
 
-          <div className="mt-8 space-y-3">
+          <div className="mt-6 space-y-3">
             <button
               type="button"
               onClick={addToCart}

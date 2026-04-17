@@ -131,8 +131,8 @@ export default async function ProductDetailPage({
 
   return (
     <main className="w-full">
-      <section className="mx-[calc(50%-50vw)] w-screen grid grid-cols-1 lg:grid-cols-[minmax(320px,0.9fr)_minmax(0,1.9fr)_minmax(360px,1fr)] xl:grid-cols-[minmax(360px,0.95fr)_minmax(0,2.1fr)_minmax(400px,1.05fr)]">
-        <aside className="px-6 py-10 lg:sticky lg:top-0 lg:row-span-2 lg:min-h-screen lg:px-10 lg:pr-10">
+      <section className="mx-[calc(50%-50vw)] w-screen grid grid-cols-1 lg:grid-cols-[minmax(320px,0.9fr)_minmax(0,1fr)_minmax(0,1fr)]">
+        <aside className="px-6 py-10 lg:sticky lg:top-0 lg:row-span-2 lg:min-h-screen lg:pl-16 lg:pr-10">
           <div className="space-y-6">
             <div>
               <p className="text-sm uppercase tracking-[0.24em] text-gray-500">
@@ -192,7 +192,7 @@ export default async function ProductDetailPage({
         </div>
       </section>
 
-      <section className="mx-[calc(50%-50vw)] mt-16 w-screen px-6 lg:px-10">
+      <section className="mx-[calc(50%-50vw)] mt-16 w-screen px-6 lg:px-16">
         <div className="mb-5 flex items-end justify-between gap-4">
           <div>
             <h2 className="mt-2 text-2xl font-semibold text-gray-900">
