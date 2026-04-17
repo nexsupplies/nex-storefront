@@ -186,7 +186,7 @@ export default async function ProductDetailPage({
               <Link
                 key={item.id}
                 href={`/products/${item.handle}`}
-                className="rounded-[12px] border bg-white transition hover:shadow-md"
+                className="rounded-[12px] border border-black/50 bg-white transition hover:shadow-md"
               >
                 <div className="overflow-hidden rounded-t-[12px] bg-white">
                   {imageUrl ? (

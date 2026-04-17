@@ -65,9 +65,9 @@ export default function ProductDetailHero({
   }
 
   return (
-    <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.18fr)_minmax(360px,0.82fr)] lg:items-start">
+    <div className="grid grid-cols-1 gap-10 rounded-[12px] bg-[#f2f2f2] p-6 lg:grid-cols-[minmax(0,1.18fr)_minmax(360px,0.82fr)] lg:items-start lg:p-8">
       <div className="space-y-5">
-        <div className="overflow-hidden rounded-[12px] border bg-white">
+        <div className="overflow-hidden rounded-[12px] bg-white">
           <div className="order-1 overflow-hidden rounded-[12px] bg-white">
             {currentImage ? (
               <div className="relative aspect-square w-full bg-white">
@@ -97,8 +97,8 @@ export default function ProductDetailHero({
                   onClick={() => setActiveImage(index)}
                   className={`overflow-hidden rounded-[12px] border bg-white transition ${
                     isActive
-                      ? 'border-black shadow-[0_0_0_1px_rgba(0,0,0,0.08)]'
-                      : 'border-gray-200'
+                      ? 'border-black/50 shadow-[0_0_0_1px_rgba(0,0,0,0.08)]'
+                      : 'border-black/50'
                   }`}
                   aria-label={`Show image ${index + 1} for ${title}`}
                   aria-pressed={isActive}
@@ -117,7 +117,7 @@ export default function ProductDetailHero({
       </div>
 
       <div className="lg:sticky lg:top-8">
-        <section className="rounded-[12px] border bg-white p-7 lg:p-8">
+        <section className="rounded-[12px] border border-black/50 bg-white p-7 lg:p-8">
           <p className="text-sm uppercase tracking-[0.24em] text-gray-500">
             NEXPRO Material
           </p>
@@ -141,18 +141,18 @@ export default function ProductDetailHero({
                 <button
                   type="button"
                   onClick={scrollToOrderMatrix}
-                  className="rounded-full border px-4 py-2 text-sm text-gray-700 transition hover:bg-black hover:text-white"
+                  className="rounded-full border border-black/50 px-4 py-2 text-sm text-gray-700 transition hover:bg-black hover:text-white"
                 >
                   {`${variantCount} orderable variant${variantCount === 1 ? '' : 's'}`}
                 </button>
               ) : (
-                <div className="rounded-full border px-4 py-2 text-sm text-gray-600">
+                <div className="rounded-full border border-black/50 px-4 py-2 text-sm text-gray-600">
                   Custom ordering available
                 </div>
               )}
             </div>
 
-            <div className="mt-5 border-t pt-5">
+            <div className="mt-5 border-t border-black/50 pt-5">
               <div className="flex items-start justify-between gap-4 py-2 text-sm">
                 <span className="text-gray-500">Best for</span>
                 <span className="text-right font-medium text-gray-900">
@@ -162,7 +162,7 @@ export default function ProductDetailHero({
             </div>
           </div>
 
-          <div className="mt-6 divide-y">
+          <div className="mt-6 divide-y divide-black/50">
             {accordionItems.map((item) => {
               const isOpen = openItem === item.key
               const bodyText =

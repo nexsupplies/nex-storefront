@@ -183,7 +183,7 @@ export default function ProductActions({
                   <th className="px-6 py-4 font-medium text-right">Variant Total</th>
                 </tr>
               </thead>
-              <tbody className="divide-y">
+              <tbody className="divide-y divide-black/50">
                 {orderRows.map((row) => (
                   <tr key={row.variant.id}>
                     <td className="px-6 py-4">
@@ -192,7 +192,7 @@ export default function ProductActions({
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="inline-flex items-center gap-3 rounded-xl border px-3 py-2">
+                      <div className="inline-flex items-center gap-3 rounded-xl border border-black/50 px-3 py-2">
                         <button
                           type="button"
                           onClick={() =>
@@ -259,7 +259,7 @@ export default function ProductActions({
                   type="button"
                   onClick={addToQuoteList}
                   disabled={!selectedRows.length}
-                  className="w-full rounded-xl border py-3 disabled:opacity-50"
+                  className="w-full rounded-xl border border-black/50 py-3 disabled:opacity-50"
                 >
                   Add Selected Variants to Quote List
                 </button>
