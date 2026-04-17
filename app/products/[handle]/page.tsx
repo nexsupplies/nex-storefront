@@ -1,4 +1,5 @@
 import ProductActions from './ProductActions'
+import ProductDetailHero from './ProductDetailHero'
 import {
   formatPrice,
   getProductImageUrl,
@@ -97,124 +98,17 @@ export default async function ProductDetailPage({
 
   return (
     <main className="mx-auto max-w-7xl px-6 py-10 lg:px-10">
-      <section className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)] lg:items-start">
-        <div className="space-y-4">
-          <div className="overflow-hidden rounded-[2rem] border bg-gray-100">
-            {primaryImage ? (
-              <img
-                src={primaryImage}
-                alt={product.title}
-                className="h-[420px] w-full object-cover lg:h-[560px]"
-              />
-            ) : (
-              <div className="flex h-[420px] items-center justify-center text-sm text-gray-500 lg:h-[560px]">
-                Product image coming soon
-              </div>
-            )}
-          </div>
-
-          {imageGallery.length > 1 && (
-            <div className="grid grid-cols-3 gap-3 md:grid-cols-4">
-              {imageGallery.map((imageUrl) => (
-                <div
-                  key={imageUrl}
-                  className="overflow-hidden rounded-2xl border bg-gray-100"
-                >
-                  <img
-                    src={imageUrl}
-                    alt={`${product.title} preview`}
-                    className="h-24 w-full object-cover md:h-28"
-                    loading="lazy"
-                  />
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="space-y-4 lg:sticky lg:top-8">
-          <section className="rounded-[2rem] border bg-white p-7 lg:p-8">
-            <p className="text-sm uppercase tracking-[0.24em] text-gray-500">
-              NEXPRO Material
-            </p>
-            <h1 className="mt-3 text-4xl font-bold tracking-tight lg:text-5xl">
-              {product.title}
-            </h1>
-            <p className="mt-2 text-sm text-gray-500">{product.handle}</p>
-
-            <div className="mt-6 flex flex-wrap items-center gap-4">
-              <div className="text-3xl font-semibold">{priceSummary}</div>
-              <div className="rounded-full border px-4 py-2 text-sm text-gray-600">
-                {variantCount
-                  ? `${variantCount} orderable variant${variantCount === 1 ? '' : 's'}`
-                  : 'Custom ordering available'}
-              </div>
-            </div>
-
-            <div className="mt-6 rounded-2xl bg-gray-50 p-5">
-              <p className="text-xs uppercase tracking-[0.2em] text-gray-500">
-                Material Overview
-              </p>
-              <p className="mt-3 text-base leading-7 text-gray-700">
-                {product.description ||
-                  'Material specifications can vary by thickness and finish. Use the order matrix below to combine multiple variants into one cart or quote request.'}
-              </p>
-            </div>
-
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              <div className="rounded-2xl border p-4">
-                <p className="text-xs uppercase tracking-[0.2em] text-gray-500">
-                  Pricing View
-                </p>
-                <p className="mt-2 text-lg font-semibold text-gray-900">
-                  Variant-based pricing
-                </p>
-                <p className="mt-2 text-sm leading-6 text-gray-600">
-                  Each row in the matrix below has its own quantity, price, and line
-                  total.
-                </p>
-              </div>
-
-              <div className="rounded-2xl border p-4">
-                <p className="text-xs uppercase tracking-[0.2em] text-gray-500">
-                  Order Method
-                </p>
-                <p className="mt-2 text-lg font-semibold text-gray-900">
-                  Multi-variant ordering
-                </p>
-                <p className="mt-2 text-sm leading-6 text-gray-600">
-                  Build one mixed-material order, then send it to cart or quote list
-                  in a single action.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          <section className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-[1.75rem] border bg-white p-5">
-              <p className="text-xs uppercase tracking-[0.2em] text-gray-500">
-                Pickup & Delivery
-              </p>
-              <p className="mt-3 text-sm leading-6 text-gray-700">
-                Local pickup and delivery can be arranged after quote review or cart
-                confirmation. Final logistics depend on sheet size, order volume, and
-                destination.
-              </p>
-            </div>
-
-            <div className="rounded-[1.75rem] border bg-white p-5">
-              <p className="text-xs uppercase tracking-[0.2em] text-gray-500">
-                Order Support
-              </p>
-              <p className="mt-3 text-sm leading-6 text-gray-700">
-                Use the matrix below for direct ordering. If your job needs mixed
-                materials, special cutting, or freight handling, add it to Quote List
-                instead.
-              </p>
-            </div>
-          </section>
-        </div>
-      </section>
+      <ProductDetailHero
+        title={product.title}
+        handle={product.handle}
+        description={
+          product.description ||
+          'Material specifications can vary by thickness and finish. Use the order matrix below to combine multiple variants into one cart or quote request.'
+        }
+        priceSummary={priceSummary}
+        variantCount={variantCount}
+        imageGallery={imageGallery}
+      />
 
       <section className="mt-12">
         <ProductActions
