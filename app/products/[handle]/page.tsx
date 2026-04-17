@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import ProductActions from './ProductActions'
 import ProductDetailHero from './ProductDetailHero'
 import {
@@ -38,6 +39,33 @@ async function getProduct(handle: string): Promise<StorefrontProduct | null> {
 
   const data = JSON.parse(text)
   return data.products?.[0] || null
+}
+
+async function getRecommendedProducts(
+  currentHandle: string
+): Promise<StorefrontProduct[]> {
+  const baseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL
+  const publishableKey = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY
+
+  if (!baseUrl) throw new Error('NEXT_PUBLIC_MEDUSA_BACKEND_URL is missing')
+  if (!publishableKey) throw new Error('NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY is missing')
+
+  const res = await fetch(`${baseUrl}/store/products?limit=12`, {
+    cache: 'no-store',
+    headers: {
+      'x-publishable-api-key': publishableKey,
+    },
+  })
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch recommended products')
+  }
+
+  const data = await res.json()
+
+  return (data.products || [])
+    .filter((item: StorefrontProduct) => item.handle !== currentHandle)
+    .slice(0, 4)
 }
 
 function getPriceSummary(product: StorefrontProduct) {
@@ -95,6 +123,7 @@ export default async function ProductDetailPage({
   )
   const priceSummary = getPriceSummary(product)
   const variantCount = product.variants?.length || 0
+  const recommendedProducts = await getRecommendedProducts(product.handle)
 
   return (
     <main className="mx-auto max-w-7xl px-6 py-10 lg:px-10">
@@ -121,31 +150,55 @@ export default async function ProductDetailPage({
         />
       </section>
 
-      <section className="mt-12 rounded-[2rem] border bg-white p-7 lg:p-8">
-        <p className="text-xs uppercase tracking-[0.24em] text-gray-500">
-          Product Details
-        </p>
-        <div className="mt-4 grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(260px,0.8fr)]">
+      <section className="mt-12">
+        <div className="mb-5 flex items-end justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-semibold text-gray-900">
-              Built for sign production and material buying
+            <p className="text-xs uppercase tracking-[0.24em] text-gray-500">
+              Product Recommendations
+            </p>
+            <h2 className="mt-2 text-2xl font-semibold text-gray-900">
+              Related materials
             </h2>
-            <p className="mt-4 text-base leading-7 text-gray-700">
-              {product.description ||
-                'This material is presented for practical B2B ordering. Review available variants, compare pricing row by row, and place a mixed order through the matrix above.'}
-            </p>
           </div>
+        </div>
 
-          <div className="rounded-2xl bg-gray-50 p-5">
-            <p className="text-xs uppercase tracking-[0.2em] text-gray-500">
-              Buying Format
-            </p>
-            <ul className="mt-3 space-y-3 text-sm leading-6 text-gray-700">
-              <li>Order multiple thickness or finish variants in one pass.</li>
-              <li>Use cart for direct checkout-ready items.</li>
-              <li>Use Quote List when the order needs freight or project review.</li>
-            </ul>
-          </div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {recommendedProducts.map((item) => {
+            const imageUrl = getProductImageUrl(item)
+
+            return (
+              <Link
+                key={item.id}
+                href={`/products/${item.handle}`}
+                className="rounded-[12px] border bg-white transition hover:shadow-md"
+              >
+                <div className="overflow-hidden rounded-t-[12px] bg-gray-100">
+                  {imageUrl ? (
+                    <img
+                      src={imageUrl}
+                      alt={item.title}
+                      className="h-48 w-full object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="flex h-48 items-center justify-center text-sm text-gray-500">
+                      Image coming soon
+                    </div>
+                  )}
+                </div>
+
+                <div className="p-5">
+                  <p className="text-xs uppercase tracking-[0.2em] text-gray-500">
+                    Material
+                  </p>
+                  <h3 className="mt-2 text-lg font-semibold text-gray-900">
+                    {item.title}
+                  </h3>
+                  <p className="mt-2 text-sm text-gray-500">{item.handle}</p>
+                </div>
+              </Link>
+            )
+          })}
         </div>
       </section>
     </main>

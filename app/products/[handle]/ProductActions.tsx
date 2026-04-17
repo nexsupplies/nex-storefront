@@ -158,7 +158,7 @@ export default function ProductActions({
   }
 
   return (
-    <div className="mt-10 rounded-3xl border bg-white">
+    <div className="mt-10 rounded-[12px] border bg-white">
       <div className="border-b px-6 py-5">
         <h2 className="text-2xl font-semibold">Order Matrix</h2>
         <p className="mt-2 text-sm text-gray-600">

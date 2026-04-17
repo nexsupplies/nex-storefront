@@ -69,7 +69,7 @@ export default function ProductDetailHero({
                     key={imageUrl}
                     type="button"
                     onClick={() => setActiveImage(index)}
-                    className={`overflow-hidden rounded-2xl border bg-gray-100 transition ${
+                    className={`overflow-hidden rounded-[12px] border bg-white transition ${
                       isActive
                         ? 'border-black shadow-[0_0_0_1px_rgba(0,0,0,0.08)]'
                         : 'border-gray-200'
@@ -89,7 +89,7 @@ export default function ProductDetailHero({
             </div>
           )}
 
-          <div className="order-1 overflow-hidden rounded-[2rem] border bg-gray-100 lg:order-2">
+          <div className="order-1 overflow-hidden rounded-[12px] border bg-white lg:order-2">
             {currentImage ? (
               <img
                 src={currentImage}
@@ -106,7 +106,7 @@ export default function ProductDetailHero({
       </div>
 
       <div className="lg:sticky lg:top-8">
-        <section className="rounded-[2rem] border bg-white p-7 lg:p-8">
+        <section className="rounded-[12px] border bg-white p-7 lg:p-8">
           <p className="text-sm uppercase tracking-[0.24em] text-gray-500">
             NEXPRO Material
           </p>
@@ -115,7 +115,7 @@ export default function ProductDetailHero({
           </h1>
           <p className="mt-2 text-sm text-gray-500">{handle}</p>
 
-          <div className="mt-6 rounded-[1.75rem] border bg-gray-50 px-5 py-6">
+          <div className="mt-6 rounded-[12px] border bg-white px-5 py-6">
             <div className="flex items-end justify-between gap-6">
               <div>
                 <p className="text-xs uppercase tracking-[0.2em] text-gray-500">
@@ -135,18 +135,6 @@ export default function ProductDetailHero({
 
             <div className="mt-5 border-t pt-5">
               <div className="flex items-start justify-between gap-4 py-2 text-sm">
-                <span className="text-gray-500">Ordering format</span>
-                <span className="text-right font-medium text-gray-900">
-                  Multi-variant matrix ordering
-                </span>
-              </div>
-              <div className="flex items-start justify-between gap-4 py-2 text-sm">
-                <span className="text-gray-500">Checkout path</span>
-                <span className="text-right font-medium text-gray-900">
-                  Add selected rows to cart or Quote List
-                </span>
-              </div>
-              <div className="flex items-start justify-between gap-4 py-2 text-sm">
                 <span className="text-gray-500">Best for</span>
                 <span className="text-right font-medium text-gray-900">
                   Sign shops, fabricators, and board buyers
@@ -155,7 +143,7 @@ export default function ProductDetailHero({
             </div>
           </div>
 
-          <div className="mt-6 divide-y rounded-[1.75rem] border">
+          <div className="mt-6 divide-y rounded-[12px] border bg-white">
             {accordionItems.map((item) => {
               const isOpen = openItem === item.key
               const bodyText =
