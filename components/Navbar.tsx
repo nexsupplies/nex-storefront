@@ -4,7 +4,7 @@ const navItems = [
   { label: 'Home', href: '/' },
   { label: 'Catalog', href: '/products' },
   { label: 'Order Hub', href: '/order-hub' },
-  { label: 'Quote Hub', href: '/quote-list' },
+  { label: 'Quote List', href: '/quote-list' },
   { label: 'Cart', href: '/cart' },
   { label: 'Account', href: '/account' },
 ]
