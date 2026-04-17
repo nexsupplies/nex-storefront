@@ -690,7 +690,7 @@ export default function CheckoutPage() {
       setMessage('')
 
       const preparedCart = await persistCheckoutDetails()
-      const quoteItems = preparedCart.items.map((item) => {
+      const quoteItems = preparedCart.items.map((item: CartLineItem) => {
         if (!item.variant_id) {
           throw new Error('One of the cart items is missing a variant reference.')
         }
