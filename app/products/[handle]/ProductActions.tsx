@@ -158,118 +158,129 @@ export default function ProductActions({
   }
 
   return (
-    <div>
-      <div className="px-0 py-0">
-        <h2 className="text-2xl font-semibold">Order Matrix</h2>
-        <p className="mt-2 text-sm text-gray-600">
-          Adjust quantity per variant, then add the selected mix to cart or quote
-          list in one action.
-        </p>
-      </div>
-
-      {variants.length === 0 ? (
-        <div className="py-8 text-sm text-gray-600">
-          No orderable variants are available for this material yet.
-        </div>
-      ) : (
-        <>
-          <div className="mt-8 overflow-x-auto border-y border-black/20">
-            <table className="min-w-full border-collapse">
-              <thead className="text-left text-xs uppercase tracking-[0.18em] text-gray-500">
-                <tr>
-                  <th className="px-6 py-4 font-medium">Variant</th>
-                  <th className="px-6 py-4 font-medium">Quantity</th>
-                  <th className="px-6 py-4 font-medium">Price</th>
-                  <th className="px-6 py-4 text-right font-medium">Variant Total</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-black/20">
-                {orderRows.map((row) => (
-                  <tr key={row.variant.id}>
-                    <td className="px-6 py-4">
-                      <div className="font-medium text-gray-900">
-                        {row.variant.title}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="inline-flex items-center gap-3 rounded-[12px] border border-black/20 bg-white px-3 py-2">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            updateQuantity(row.variant.id, row.quantity - 1)
-                          }
-                          className="rounded-md px-2 py-1 text-lg leading-none"
-                        >
-                          -
-                        </button>
-                        <span className="min-w-8 text-center text-sm font-medium">
-                          {row.quantity}
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            updateQuantity(row.variant.id, row.quantity + 1)
-                          }
-                          className="rounded-md px-2 py-1 text-lg leading-none"
-                        >
-                          +
-                        </button>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-700">
-                      {formatPrice(row.unitAmount, row.currencyCode)}
-                    </td>
-                    <td className="px-6 py-4 text-right text-sm font-medium text-gray-900">
-                      {row.unitAmount == null
-                        ? 'Price unavailable'
-                        : formatPrice(row.lineTotal, row.currencyCode)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+    <div className="lg:min-h-screen">
+      <div className="grid grid-cols-1 lg:min-h-screen lg:grid-cols-[minmax(220px,0.72fr)_minmax(0,1.5fr)_minmax(280px,0.86fr)]">
+        <section className="flex flex-col justify-between py-8 lg:py-10 lg:pr-8">
+          <div>
+            <h2 className="text-2xl font-semibold">Order Matrix</h2>
+            <p className="mt-3 max-w-sm text-sm leading-7 text-gray-600">
+              Build a mixed order by adjusting quantities directly in the matrix.
+              Each row stays visible as part of one unified materials schedule.
+            </p>
           </div>
 
-          <div className="py-6">
-            <div className="flex flex-col gap-6 border-b border-black/20 pb-6 lg:flex-row lg:items-end lg:justify-between">
-              <div className="space-y-3 text-sm text-gray-700">
-                <div className="flex items-center gap-4">
-                  <span className="text-gray-500">Total Items</span>
-                  <span className="font-semibold text-gray-900">{totalItems}</span>
-                </div>
-                <div className="flex items-center gap-4">
-                  <span className="text-gray-500">Product Subtotal</span>
-                  <span className="font-semibold text-gray-900">
-                    {formatPrice(subtotal, summaryCurrency)}
-                  </span>
-                </div>
+          <div className="mt-8 space-y-3 text-sm text-gray-600">
+            <p>Variant pricing is shown per row.</p>
+            <p>Use cart for direct orders and Quote List for reviewed jobs.</p>
+          </div>
+        </section>
+
+        <section className="border-l border-black/50 py-8 lg:py-10 lg:px-8">
+          {variants.length === 0 ? (
+            <div className="text-sm text-gray-600">
+              No orderable variants are available for this material yet.
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="min-w-full border-collapse">
+                <thead className="border-b border-black/50 text-left text-xs uppercase tracking-[0.18em] text-gray-500">
+                  <tr>
+                    <th className="px-4 py-4 font-medium lg:px-5">Variant</th>
+                    <th className="px-4 py-4 font-medium lg:px-5">Quantity</th>
+                    <th className="px-4 py-4 font-medium lg:px-5">Price</th>
+                    <th className="px-4 py-4 text-right font-medium lg:px-5">
+                      Variant Total
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-black/50">
+                  {orderRows.map((row) => (
+                    <tr key={row.variant.id}>
+                      <td className="px-4 py-5 lg:px-5">
+                        <div className="font-medium text-gray-900">
+                          {row.variant.title}
+                        </div>
+                      </td>
+                      <td className="px-4 py-5 lg:px-5">
+                        <div className="inline-flex items-center gap-3 rounded-[12px] border border-black/50 bg-white px-3 py-2">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              updateQuantity(row.variant.id, row.quantity - 1)
+                            }
+                            className="rounded-md px-2 py-1 text-lg leading-none"
+                          >
+                            -
+                          </button>
+                          <span className="min-w-8 text-center text-sm font-medium">
+                            {row.quantity}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              updateQuantity(row.variant.id, row.quantity + 1)
+                            }
+                            className="rounded-md px-2 py-1 text-lg leading-none"
+                          >
+                            +
+                          </button>
+                        </div>
+                      </td>
+                      <td className="px-4 py-5 text-sm text-gray-700 lg:px-5">
+                        {formatPrice(row.unitAmount, row.currencyCode)}
+                      </td>
+                      <td className="px-4 py-5 text-right text-sm font-medium text-gray-900 lg:px-5">
+                        {row.unitAmount == null
+                          ? 'Price unavailable'
+                          : formatPrice(row.lineTotal, row.currencyCode)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+
+        <section className="flex flex-col justify-between border-l border-black/50 py-8 lg:py-10 lg:pl-8">
+          <div className="space-y-5">
+            <div className="space-y-3 text-sm text-gray-700">
+              <div className="flex items-center justify-between gap-4">
+                <span className="text-gray-500">Total Items</span>
+                <span className="font-semibold text-gray-900">{totalItems}</span>
               </div>
-
-              <div className="flex w-full flex-col gap-3 lg:w-auto lg:min-w-[320px]">
-                <button
-                  type="button"
-                  onClick={addToCart}
-                  disabled={!selectedRows.length}
-                  className="w-full rounded-xl bg-black py-3 text-white disabled:opacity-50"
-                >
-                  Add Selected Variants to Cart
-                </button>
-
-                <button
-                  type="button"
-                  onClick={addToQuoteList}
-                  disabled={!selectedRows.length}
-                  className="w-full rounded-xl border border-black/20 py-3 disabled:opacity-50"
-                >
-                  Add Selected Variants to Quote List
-                </button>
+              <div className="flex items-center justify-between gap-4">
+                <span className="text-gray-500">Product Subtotal</span>
+                <span className="font-semibold text-gray-900">
+                  {formatPrice(subtotal, summaryCurrency)}
+                </span>
               </div>
             </div>
-
-            {message && <p className="mt-4 text-sm text-green-700">{message}</p>}
           </div>
-        </>
-      )}
+
+          <div className="mt-8 space-y-3">
+            <button
+              type="button"
+              onClick={addToCart}
+              disabled={!selectedRows.length}
+              className="w-full rounded-xl bg-black py-3 text-white disabled:opacity-50"
+            >
+              Add Selected Variants to Cart
+            </button>
+
+            <button
+              type="button"
+              onClick={addToQuoteList}
+              disabled={!selectedRows.length}
+              className="w-full rounded-xl border border-black/50 py-3 disabled:opacity-50"
+            >
+              Add Selected Variants to Quote List
+            </button>
+
+            {message && <p className="pt-2 text-sm text-green-700">{message}</p>}
+          </div>
+        </section>
+      </div>
     </div>
   )
 }
