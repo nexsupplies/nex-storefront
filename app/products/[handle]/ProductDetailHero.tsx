@@ -16,7 +16,7 @@ const accordionItems: Array<{
 }> = [
   {
     key: 'overview',
-    title: 'Material Overview',
+    title: 'Product Details',
     content:
       'Material specifications can vary by thickness and finish. Review the variant rows below to compare pricing and build a mixed order in one pass.',
   },

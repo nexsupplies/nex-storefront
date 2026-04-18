@@ -134,21 +134,28 @@ export default async function ProductDetailPage({
     <main className="w-full">
       <ProductPageSnap />
 
-      <section className="mx-[calc(50%-50vw)] w-screen grid grid-cols-1 lg:snap-start lg:grid-cols-[minmax(320px,30fr)_minmax(0,35fr)_minmax(0,35fr)]">
+      <section className="mx-[calc(50%-50vw)] w-screen grid grid-cols-1 lg:grid-cols-[minmax(320px,30fr)_minmax(0,35fr)_minmax(0,35fr)]">
         <aside className="px-6 py-10 lg:sticky lg:top-16 lg:row-span-2 lg:self-start lg:min-h-[calc(100vh-4rem)] lg:pl-16 lg:pr-10">
           <div className="flex h-full flex-col">
-            <div className="space-y-6">
+            <div className="space-y-8">
               <div>
-              <p className="text-sm uppercase tracking-[0.24em] text-gray-500">
-                NEXPRO Material
-              </p>
-              <h1 className="mt-3 text-4xl font-bold tracking-tight lg:text-5xl">
-                {product.title}
-              </h1>
-              <p className="mt-2 text-sm text-gray-500">{product.handle}</p>
+                <Link
+                  href="/products"
+                  className="inline-flex items-center gap-2 text-sm text-gray-500 transition hover:text-black"
+                >
+                  <span aria-hidden="true">←</span>
+                  <span>Back to materials</span>
+                </Link>
+
+                <p className="mt-8 text-sm uppercase tracking-[0.24em] text-gray-500">
+                  NEXPRO Material
+                </p>
+                <h1 className="mt-3 text-4xl font-bold tracking-tight text-gray-950 lg:text-5xl">
+                  {product.title}
+                </h1>
               </div>
 
-              <div className="border-t border-black/50 pt-6">
+              <div>
                 <p className="text-[11px] uppercase tracking-[0.2em] text-gray-500">
                   Procurement Pricing
                 </p>
@@ -158,24 +165,6 @@ export default async function ProductDetailPage({
                 <p className="mt-2 max-w-sm text-sm leading-6 text-gray-500">
                   Live pricing across currently orderable variants.
                 </p>
-              </div>
-
-              <div className="border-t border-black/50 pt-6">
-                <p className="text-[11px] uppercase tracking-[0.2em] text-gray-500">
-                  Material Notes
-                </p>
-                <div className="mt-3 max-w-sm text-sm leading-7 text-gray-600">
-                  {description}
-                </div>
-              </div>
-
-              <div className="border-t border-black/50 pt-6">
-                <div className="flex items-start justify-between gap-4 py-2 text-sm">
-                  <span className="text-gray-500">Best for</span>
-                  <span className="text-right font-medium text-gray-900">
-                    Sign shops, fabricators, and board buyers
-                  </span>
-                </div>
               </div>
             </div>
 
@@ -222,7 +211,7 @@ export default async function ProductDetailPage({
         />
       </section>
 
-      <section className="mx-[calc(50%-50vw)] mt-16 w-screen px-6 lg:snap-start lg:px-16">
+      <section className="mx-[calc(50%-50vw)] mt-16 w-screen px-6 lg:px-16">
         <div className="mb-5 flex items-end justify-between gap-4">
           <div>
             <h2 className="mt-2 text-2xl font-semibold text-gray-900">

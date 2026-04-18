@@ -246,7 +246,7 @@ export default function ProductActions({
         </div>
       </section>
 
-      <section className="min-w-0 flex flex-col justify-start py-8 lg:min-h-[calc(100vh-4rem)] lg:snap-start lg:pl-8 lg:pr-16 lg:py-10">
+      <section className="min-w-0 flex flex-col justify-start py-8 lg:min-h-[calc(100vh-4rem)] lg:pl-8 lg:pr-16 lg:py-10">
           <div className="space-y-4">
             <div className="space-y-3 text-sm text-gray-700">
               <div className="flex items-center justify-between gap-4">

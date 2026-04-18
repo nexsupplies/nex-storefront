@@ -11,6 +11,7 @@ html {
 
 html.product-page-snap {
   scroll-snap-type: y proximity;
+  scroll-padding-top: 4rem;
 }
 
 @theme inline {
