@@ -334,6 +334,8 @@ export default function CheckoutPage() {
   const [city, setCity] = useState('')
   const [province, setProvince] = useState('AB')
   const [postalCode, setPostalCode] = useState('')
+  const [step1Complete, setStep1Complete] = useState(false)
+  const [step2Complete, setStep2Complete] = useState(false)
 
   const earliestPickupDate = useMemo(() => getEarliestPickupDate(), [])
 
@@ -452,6 +454,8 @@ export default function CheckoutPage() {
   const isPickup = shippingMethod === 'pickup'
   const isOutOfCity = shippingMethod === 'outcity'
   const isDelivery = !isPickup
+  const step2Unlocked = step1Complete
+  const step3Unlocked = step1Complete && step2Complete
 
   const expectedCity = selectedShipping?.expectedCity ?? null
   const cityMatches =
@@ -459,19 +463,15 @@ export default function CheckoutPage() {
     normalizeCity(city) === expectedCity ||
     (expectedCity === 'st. albert' && normalizeCity(city) === 'st albert')
 
-  function getValidationMessage() {
-    if (!cart) {
-      return 'Cart not found.'
-    }
-
-    if (cart.items.length === 0) {
-      return 'Your cart is empty.'
-    }
-
-    if (!fullName || !email || !phone) {
+  function getStep1ValidationMessage() {
+    if (!fullName.trim() || !email.trim() || !phone.trim()) {
       return 'Please fill in full name, email, and phone.'
     }
 
+    return null
+  }
+
+  function getStep2ValidationMessage() {
     if (isPickup) {
       if (!pickupDate) {
         return 'Please select a pickup date.'
@@ -492,7 +492,7 @@ export default function CheckoutPage() {
     }
 
     if (isDelivery) {
-      if (!street || !city || !province || !postalCode) {
+      if (!street.trim() || !city.trim() || !province.trim() || !postalCode.trim()) {
         return 'Please complete the delivery address.'
       }
 
@@ -503,6 +503,28 @@ export default function CheckoutPage() {
 
     if (!isOutOfCity && !selectedShipping?.optionId) {
       return 'The selected shipping method is not available for this cart.'
+    }
+
+    return null
+  }
+
+  function getValidationMessage() {
+    if (!cart) {
+      return 'Cart not found.'
+    }
+
+    if (cart.items.length === 0) {
+      return 'Your cart is empty.'
+    }
+
+    const step1ValidationMessage = getStep1ValidationMessage()
+    if (step1ValidationMessage) {
+      return step1ValidationMessage
+    }
+
+    const step2ValidationMessage = getStep2ValidationMessage()
+    if (step2ValidationMessage) {
+      return step2ValidationMessage
     }
 
     return null
@@ -782,281 +804,414 @@ export default function CheckoutPage() {
   const items = cart?.items || []
   const isBusy = saving || placingOrder
   const canCreateManualOrder = !isOutOfCity && items.length > 0
+  const step1ValidationMessage = getStep1ValidationMessage()
+  const step2ValidationMessage = getStep2ValidationMessage()
 
   return (
     <PageFrame
+      sidebarClassName="bg-[#f2f2f2] lg:sticky lg:top-16 lg:self-start lg:min-h-[calc(100vh-4rem)]"
+      contentClassName="px-0 py-0"
       sidebar={
-        <div className="space-y-4">
-          <p className="text-sm uppercase tracking-[0.24em] text-gray-500">Checkout</p>
-          <h1 className="text-4xl font-bold tracking-tight text-gray-950">
-            Finalize customer details, fulfillment, and payment.
-          </h1>
+        <div className="flex h-full flex-col">
+          <div className="space-y-8">
+            <div>
+              <p className="text-sm uppercase tracking-[0.24em] text-gray-500">Checkout</p>
+              <h1 className="mt-3 text-4xl font-bold tracking-tight text-gray-950">
+                Finalize customer details, fulfillment, and payment.
+              </h1>
+            </div>
+
+            <div className="space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gray-500">
+                Step 1
+              </p>
+              <h2 className="text-2xl font-semibold text-gray-950">User Information</h2>
+            </div>
+
+            <div className="space-y-4">
+              <input
+                placeholder="Full Name"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                disabled={step1Complete}
+                className="w-full rounded-xl border border-gray-300 bg-white p-3 disabled:cursor-not-allowed disabled:bg-white"
+              />
+
+              <input
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={step1Complete}
+                className="w-full rounded-xl border border-gray-300 bg-white p-3 disabled:cursor-not-allowed disabled:bg-white"
+              />
+
+              <input
+                placeholder="Phone"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                disabled={step1Complete}
+                className="w-full rounded-xl border border-gray-300 bg-white p-3 disabled:cursor-not-allowed disabled:bg-white"
+              />
+            </div>
+          </div>
+
+          <div className="mt-auto space-y-3 pt-8">
+            {step1Complete && (
+              <button
+                type="button"
+                onClick={() => {
+                  setStep1Complete(false)
+                  setStep2Complete(false)
+                }}
+                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700"
+              >
+                Modify Step 1
+              </button>
+            )}
+
+            {!step1Complete && step1ValidationMessage && (
+              <p className="text-sm text-gray-600">{step1ValidationMessage}</p>
+            )}
+
+            {step1Complete && (
+              <p className="text-sm text-gray-600">
+                User information completed. Step 2 is now available.
+              </p>
+            )}
+
+            {!step1Complete && (
+              <button
+                type="button"
+                onClick={() => {
+                  setMessage('')
+                  setStep1Complete(true)
+                }}
+                disabled={Boolean(step1ValidationMessage)}
+                className="w-full rounded-xl bg-black py-3 text-base font-medium text-white disabled:opacity-50"
+              >
+                Complete Step 1
+              </button>
+            )}
+          </div>
         </div>
       }
     >
 
       {message && (
-        <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-700">
+        <div className="mx-6 mt-6 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-700 lg:mx-8">
           {message}
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_360px] gap-10">
-        <div>
-          <div className="space-y-8">
-            <section>
-              <h2 className="text-xl font-semibold mb-4">Customer Information</h2>
-
-              <div className="space-y-4">
-                <input
-                  placeholder="Full Name"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  className="w-full border p-3 rounded"
-                />
-
-                <input
-                  placeholder="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full border p-3 rounded"
-                />
-
-                <input
-                  placeholder="Phone"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="w-full border p-3 rounded"
-                />
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+        <section
+          className={`min-w-0 px-6 py-10 transition-colors duration-200 lg:px-8 ${
+            step2Unlocked ? 'bg-[#f2f2f2]' : 'bg-white opacity-55'
+          }`}
+        >
+          <div className={step2Unlocked ? '' : 'pointer-events-none'}>
+            <div className="mb-6 flex items-start justify-between gap-4">
+              <div className="space-y-2">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gray-500">
+                  Step 2
+                </p>
+                <h2 className="text-2xl font-semibold text-gray-950">Shipping</h2>
               </div>
-            </section>
 
-            <section>
-              <h2 className="text-xl font-semibold mb-4">Shipping Method</h2>
+              {step2Complete && (
+                <button
+                  type="button"
+                  onClick={() => setStep2Complete(false)}
+                  className="rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700"
+                >
+                  Modify
+                </button>
+              )}
+            </div>
+
+            {!step2Unlocked && (
+              <p className="mb-6 text-sm text-gray-600">
+                Complete Step 1 before choosing shipping information.
+              </p>
+            )}
+
+            <div className="space-y-8">
+              <section>
+                <h3 className="mb-4 text-lg font-semibold">Shipping Method</h3>
 
               <div className="space-y-3">
                 {shippingMethods.map((method) => (
                   <label
                     key={method.id}
-                    className="flex justify-between border p-4 rounded cursor-pointer"
+                    className="flex cursor-pointer justify-between rounded-2xl border border-gray-300 bg-white p-4"
                   >
                     <div>
                       <input
                         type="radio"
                         checked={shippingMethod === method.id}
-                        onChange={() => setShippingMethod(method.id)}
-                      />
-                      <span className="ml-3">{method.label}</span>
-                    </div>
+                          onChange={() => setShippingMethod(method.id)}
+                          disabled={!step2Unlocked || step2Complete}
+                        />
+                        <span className="ml-3">{method.label}</span>
+                      </div>
 
-                    <span>
-                      {method.fee == null ? 'TBD' : formatPrice(method.fee, cartCurrency)}
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </section>
-
-            {isPickup && (
-              <section>
-                <h2 className="text-xl font-semibold mb-4">Pickup Details</h2>
-
-                <div className="border rounded-xl p-4 bg-gray-50 mb-4">
-                  <p className="font-medium">Pickup Address</p>
-                  <p className="text-sm text-gray-600 mt-1">{PICKUP_LOCATION.company}</p>
-                  <p className="text-sm text-gray-600">
-                    {PICKUP_LOCATION.address1}, {PICKUP_LOCATION.city}, {PICKUP_LOCATION.province}{' '}
-                    {PICKUP_LOCATION.postalCode}
-                  </p>
-                  <p className="text-sm text-gray-600 mt-2">{PICKUP_LOCATION.hours}</p>
+                      <span>
+                        {method.fee == null ? 'TBD' : formatPrice(method.fee, cartCurrency)}
+                      </span>
+                    </label>
+                  ))}
                 </div>
-
-                <div className="space-y-4">
-                  <input
-                    type="date"
-                    value={pickupDate}
-                    min={getEdmontonTodayString()}
-                    onChange={(e) => setPickupDate(e.target.value)}
-                    className="w-full border p-3 rounded"
-                  />
-
-                  <select
-                    value={pickupTime}
-                    onChange={(e) => setPickupTime(e.target.value as PickupSlotId | '')}
-                    className="w-full border p-3 rounded"
-                    disabled={availablePickupSlots.length === 0}
-                  >
-                    <option value="">Select Pickup Window</option>
-                    {availablePickupSlots.map((slot) => (
-                      <option key={slot.id} value={slot.id}>
-                        {slot.label} ({slot.window})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {!isBusinessDay(pickupDate) && pickupDate && (
-                  <p className="text-sm text-red-600 mt-3">
-                    Pickup is only available Monday through Friday.
-                  </p>
-                )}
-
-                {isBusinessDay(pickupDate) && availablePickupSlots.length === 0 && (
-                  <p className="text-sm text-amber-700 mt-3">
-                    No pickup windows remain for {formatDateLabel(pickupDate)}. Please
-                    choose {formatDateLabel(getNextBusinessDate(pickupDate))} or later.
-                  </p>
-                )}
-
-                {availablePickupSlots.length === 1 && pickupDate === getEdmontonTodayString() && (
-                  <p className="text-sm text-gray-600 mt-3">
-                    Morning pickup has closed for today. Afternoon remains available.
-                  </p>
-                )}
               </section>
-            )}
 
-            {isDelivery && (
-              <section>
-                <h2 className="text-xl font-semibold mb-4">Delivery Address</h2>
+              {isPickup && (
+                <section>
+                  <h3 className="mb-4 text-lg font-semibold">Pickup Details</h3>
 
-                <div className="space-y-4">
-                  <input
-                    placeholder="Street Address"
-                    value={street}
-                    onChange={(e) => setStreet(e.target.value)}
-                    className="w-full border p-3 rounded"
-                  />
-
-                  <input
-                    placeholder="City"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    className="w-full border p-3 rounded"
-                  />
-
-                  <input
-                    placeholder="Province"
-                    value={province}
-                    onChange={(e) => setProvince(e.target.value)}
-                    className="w-full border p-3 rounded"
-                  />
-
-                  <input
-                    placeholder="Postal Code"
-                    value={postalCode}
-                    onChange={(e) => setPostalCode(e.target.value)}
-                    className="w-full border p-3 rounded"
-                  />
-                </div>
-
-                {expectedCity && city && !cityMatches && (
-                  <p className="text-sm text-red-600 mt-3">
-                    This shipping method is intended for {expectedCity}. Please update the
-                    city or select Out-of-City Delivery.
-                  </p>
-                )}
-
-                {isOutOfCity && (
-                  <div className="mt-4 rounded-xl bg-amber-50 border border-amber-200 p-4">
-                    <p className="text-sm text-amber-900">
-                      We’ll review your delivery address and provide a shipping quote as
-                      soon as possible. The shipping fee will be updated by email, and
-                      you’ll also be able to review the quote and complete payment later
-                      in your Order Hub.
+                  <div className="mb-4 rounded-2xl border border-gray-300 bg-white p-4">
+                    <p className="font-medium">Pickup Address</p>
+                    <p className="mt-1 text-sm text-gray-600">{PICKUP_LOCATION.company}</p>
+                    <p className="text-sm text-gray-600">
+                      {PICKUP_LOCATION.address1}, {PICKUP_LOCATION.city}, {PICKUP_LOCATION.province}{' '}
+                      {PICKUP_LOCATION.postalCode}
                     </p>
+                    <p className="mt-2 text-sm text-gray-600">{PICKUP_LOCATION.hours}</p>
                   </div>
-                )}
-              </section>
+
+                  <div className="space-y-4">
+                    <input
+                      type="date"
+                      value={pickupDate}
+                      min={getEdmontonTodayString()}
+                      onChange={(e) => setPickupDate(e.target.value)}
+                      disabled={!step2Unlocked || step2Complete}
+                      className="w-full rounded-xl border border-gray-300 bg-white p-3"
+                    />
+
+                    <select
+                      value={pickupTime}
+                      onChange={(e) => setPickupTime(e.target.value as PickupSlotId | '')}
+                      className="w-full rounded-xl border border-gray-300 bg-white p-3"
+                      disabled={
+                        !step2Unlocked || step2Complete || availablePickupSlots.length === 0
+                      }
+                    >
+                      <option value="">Select Pickup Window</option>
+                      {availablePickupSlots.map((slot) => (
+                        <option key={slot.id} value={slot.id}>
+                          {slot.label} ({slot.window})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {!isBusinessDay(pickupDate) && pickupDate && (
+                    <p className="mt-3 text-sm text-red-600">
+                      Pickup is only available Monday through Friday.
+                    </p>
+                  )}
+
+                  {isBusinessDay(pickupDate) && availablePickupSlots.length === 0 && (
+                    <p className="mt-3 text-sm text-amber-700">
+                      No pickup windows remain for {formatDateLabel(pickupDate)}. Please
+                      choose {formatDateLabel(getNextBusinessDate(pickupDate))} or later.
+                    </p>
+                  )}
+
+                  {availablePickupSlots.length === 1 && pickupDate === getEdmontonTodayString() && (
+                    <p className="mt-3 text-sm text-gray-600">
+                      Morning pickup has closed for today. Afternoon remains available.
+                    </p>
+                  )}
+                </section>
+              )}
+
+              {isDelivery && (
+                <section>
+                  <h3 className="mb-4 text-lg font-semibold">Delivery Address</h3>
+
+                  <div className="space-y-4">
+                    <input
+                      placeholder="Street Address"
+                      value={street}
+                      onChange={(e) => setStreet(e.target.value)}
+                      disabled={!step2Unlocked || step2Complete}
+                      className="w-full rounded-xl border border-gray-300 bg-white p-3"
+                    />
+
+                    <input
+                      placeholder="City"
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                      disabled={!step2Unlocked || step2Complete}
+                      className="w-full rounded-xl border border-gray-300 bg-white p-3"
+                    />
+
+                    <input
+                      placeholder="Province"
+                      value={province}
+                      onChange={(e) => setProvince(e.target.value)}
+                      disabled={!step2Unlocked || step2Complete}
+                      className="w-full rounded-xl border border-gray-300 bg-white p-3"
+                    />
+
+                    <input
+                      placeholder="Postal Code"
+                      value={postalCode}
+                      onChange={(e) => setPostalCode(e.target.value)}
+                      disabled={!step2Unlocked || step2Complete}
+                      className="w-full rounded-xl border border-gray-300 bg-white p-3"
+                    />
+                  </div>
+
+                  {expectedCity && city && !cityMatches && (
+                    <p className="mt-3 text-sm text-red-600">
+                      This shipping method is intended for {expectedCity}. Please update the
+                      city or select Out-of-City Delivery.
+                    </p>
+                  )}
+
+                  {isOutOfCity && (
+                    <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4">
+                      <p className="text-sm text-amber-900">
+                        We’ll review your delivery address and provide a shipping quote as
+                        soon as possible. The shipping fee will be updated by email, and
+                        you’ll also be able to review the quote and complete payment later
+                        in your Order Hub.
+                      </p>
+                    </div>
+                  )}
+                </section>
+              )}
+            </div>
+
+            <div className="mt-6 space-y-3">
+              {step2Unlocked && !step2Complete && step2ValidationMessage && (
+                <p className="text-sm text-gray-600">{step2ValidationMessage}</p>
+              )}
+
+              {step2Complete && (
+                <p className="text-sm text-gray-600">
+                  Shipping information completed. Step 3 is now available.
+                </p>
+              )}
+
+              {step2Unlocked && !step2Complete && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMessage('')
+                    setStep2Complete(true)
+                  }}
+                  disabled={Boolean(step2ValidationMessage)}
+                  className="w-full rounded-xl bg-black py-3 text-base font-medium text-white disabled:opacity-50"
+                >
+                  Complete Step 2
+                </button>
+              )}
+            </div>
+          </div>
+        </section>
+
+        <section
+          className={`min-w-0 border-t border-black/50 px-6 py-10 transition-colors duration-200 lg:border-l lg:border-t-0 lg:pl-8 lg:pr-16 ${
+            step3Unlocked ? 'bg-[#f2f2f2]' : 'bg-white opacity-55'
+          }`}
+        >
+          <div className={step3Unlocked ? '' : 'pointer-events-none'}>
+            <div className="mb-6 space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gray-500">
+                Step 3
+              </p>
+              <h2 className="text-2xl font-semibold text-gray-950">Summary</h2>
+            </div>
+
+            {!step3Unlocked && (
+              <p className="mb-6 text-sm text-gray-600">
+                Complete Step 2 before reviewing the summary and placing the order.
+              </p>
             )}
 
-          </div>
-        </div>
-
-        <aside className="lg:sticky lg:top-8 self-start">
-          <div className="border rounded-2xl p-6 space-y-6">
-            <div>
-              <h2 className="text-2xl font-bold mb-6">Order Summary</h2>
-
+            <div className="space-y-6">
               <div className="space-y-4">
                 {items.length === 0 ? (
-                  <div className="border p-4 rounded">
-                    <p>Your cart is empty.</p>
-                  </div>
+                  <p className="text-sm text-gray-700">Your cart is empty.</p>
                 ) : (
                   items.map((item) => (
-                    <div key={item.id} className="border p-4 rounded">
-                      <p className="font-medium">{item.product_title || item.title}</p>
+                    <div key={item.id} className="border-b border-gray-300 pb-4 last:border-b-0">
+                      <p className="font-medium text-gray-950">
+                        {item.product_title || item.title}
+                      </p>
                       <p className="text-sm text-gray-500">
                         {item.variant_title || 'Default variant'}
                       </p>
-                      <p className="text-sm mt-2">Qty: {item.quantity}</p>
-                      <p className="text-sm mt-1">
-                        Line Total: {formatPrice(item.subtotal, cartCurrency)}
-                      </p>
+                      <div className="mt-2 flex justify-between text-sm text-gray-700">
+                        <span>Qty {item.quantity}</span>
+                        <span>{formatPrice(item.subtotal, cartCurrency)}</span>
+                      </div>
                     </div>
                   ))
                 )}
               </div>
-            </div>
 
-            <div className="border-t pt-6 space-y-3">
-              <div className="flex justify-between">
-                <span>Subtotal</span>
-                <span>{formatPrice(subtotal, cartCurrency)}</span>
+              <div className="space-y-3 border-t border-gray-300 pt-6">
+                <div className="flex justify-between">
+                  <span>Subtotal</span>
+                  <span>{formatPrice(subtotal, cartCurrency)}</span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span>Shipping</span>
+                  <span>
+                    {shippingFee == null ? 'TBD' : formatPrice(shippingFee, cartCurrency)}
+                  </span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span>Estimated Tax</span>
+                  <span>
+                    {shippingFee == null
+                      ? `${formatPrice(estimatedTax, cartCurrency)} (estimated)`
+                      : formatPrice(estimatedTax, cartCurrency)}
+                  </span>
+                </div>
+
+                <div className="flex justify-between text-lg font-bold">
+                  <span>Total</span>
+                  <span>
+                    {shippingFee == null
+                      ? `${formatPrice(total, cartCurrency)} (shipping TBD)`
+                      : formatPrice(total, cartCurrency)}
+                  </span>
+                </div>
               </div>
 
-              <div className="flex justify-between">
-                <span>Shipping</span>
-                <span>
-                  {shippingFee == null ? 'TBD' : formatPrice(shippingFee, cartCurrency)}
-                </span>
-              </div>
-
-              <div className="flex justify-between">
-                <span>Estimated Tax</span>
-                <span>
-                  {shippingFee == null
-                    ? `${formatPrice(estimatedTax, cartCurrency)} (estimated)`
-                    : formatPrice(estimatedTax, cartCurrency)}
-                </span>
-              </div>
-
-              <div className="flex justify-between font-bold text-lg">
-                <span>Total</span>
-                <span>
-                  {shippingFee == null
-                    ? `${formatPrice(total, cartCurrency)} (shipping TBD)`
-                    : formatPrice(total, cartCurrency)}
-                </span>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <div className="rounded-2xl border p-4">
+              <div className="space-y-3 border-t border-gray-300 pt-6">
                 <h3 className="text-base font-semibold">Payment Method</h3>
+
                 {isOutOfCity ? (
-                  <p className="mt-2 text-sm text-gray-600">
+                  <p className="text-sm text-gray-600">
                     Out-of-city delivery is quoted first. Payment will happen after the
                     shipping quote is approved.
                   </p>
                 ) : (
-                  <div className="mt-4 space-y-3">
-                    <label className="block rounded-xl border p-4">
+                  <div className="space-y-3">
+                    <label className="block rounded-2xl border border-gray-300 bg-white p-4">
                       <input
                         type="radio"
                         checked={paymentMethod === 'online'}
                         onChange={() => setPaymentMethod('online')}
+                        disabled={!step3Unlocked}
                       />
                       <span className="ml-3">Online Payment</span>
                     </label>
 
                     {isPickup && (
-                      <label className="block rounded-xl border p-4">
+                      <label className="block rounded-2xl border border-gray-300 bg-white p-4">
                         <input
                           type="radio"
                           checked={paymentMethod === 'pickup-pay'}
                           onChange={() => setPaymentMethod('pickup-pay')}
+                          disabled={!step3Unlocked}
                         />
                         <span className="ml-3">Pay at Pickup</span>
                       </label>
@@ -1065,43 +1220,45 @@ export default function CheckoutPage() {
                 )}
               </div>
 
-              <button
-                type="button"
-                onClick={isOutOfCity ? handleRequestShippingQuote : handleCompleteManualOrder}
-                disabled={isBusy}
-                className="w-full bg-black text-white py-4 rounded text-lg disabled:opacity-60"
-              >
-                {placingOrder
-                  ? isOutOfCity
-                    ? 'Sending Quote Request...'
-                    : 'Creating Order...'
-                  : isOutOfCity
-                  ? 'Request Shipping Quote'
-                  : paymentMethod === 'online'
-                  ? 'Place Order and Continue to Payment'
-                  : 'Place Order and Pay at Pickup'}
-              </button>
-
-              {!isOutOfCity && (
+              <div className="space-y-3 border-t border-gray-300 pt-6">
                 <button
                   type="button"
-                  onClick={handleSaveCheckout}
-                  disabled={isBusy || !canCreateManualOrder}
-                  className="w-full border border-black py-4 rounded text-lg disabled:opacity-60"
+                  onClick={isOutOfCity ? handleRequestShippingQuote : handleCompleteManualOrder}
+                  disabled={isBusy || !step3Unlocked}
+                  className="w-full rounded-xl bg-black py-4 text-lg text-white disabled:opacity-60"
                 >
-                  {saving ? 'Saving...' : 'Save Checkout Details'}
+                  {placingOrder
+                    ? isOutOfCity
+                      ? 'Sending Quote Request...'
+                      : 'Creating Order...'
+                    : isOutOfCity
+                    ? 'Request Shipping Quote'
+                    : paymentMethod === 'online'
+                    ? 'Place Order and Continue to Payment'
+                    : 'Place Order and Pay at Pickup'}
                 </button>
-              )}
 
-              {paymentMethod === 'online' && !isOutOfCity && (
-                <p className="text-sm text-gray-600">
-                  Online payment is still a placeholder. This will still create the
-                  order and surface the payment follow-up in Order Hub.
-                </p>
-              )}
+                {!isOutOfCity && (
+                  <button
+                    type="button"
+                    onClick={handleSaveCheckout}
+                    disabled={isBusy || !canCreateManualOrder || !step3Unlocked}
+                    className="w-full rounded-xl border border-black py-4 text-lg disabled:opacity-60"
+                  >
+                    {saving ? 'Saving...' : 'Save Checkout Details'}
+                  </button>
+                )}
+
+                {paymentMethod === 'online' && !isOutOfCity && (
+                  <p className="text-sm text-gray-600">
+                    Online payment is still a placeholder. This will still create the
+                    order and surface the payment follow-up in Order Hub.
+                  </p>
+                )}
+              </div>
             </div>
           </div>
-        </aside>
+        </section>
       </div>
     </PageFrame>
   )
