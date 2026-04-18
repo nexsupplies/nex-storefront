@@ -162,7 +162,7 @@ export default function ProductActions({
   return (
     <section
       id={sectionId}
-      className="min-w-0 scroll-mt-20 border-l border-black/50 py-8 lg:col-span-2 lg:min-h-[calc(100vh-4rem)] lg:snap-start lg:px-8 lg:py-10 lg:pr-16"
+      className="min-w-0 border-l border-black/50 py-8 lg:col-span-2 lg:min-h-[calc(100vh-4rem)] lg:snap-start lg:px-8 lg:py-10 lg:pr-16"
     >
       <div>
         <h2 className="text-xl font-semibold text-gray-950">Order Matrix</h2>
