@@ -15,7 +15,7 @@ export default function Navbar() {
         <div className="flex items-center lg:pl-16 lg:pr-10">
           <Link href="/" className="block">
             <img
-              src="/nex-supplies-logo.svg"
+              src="/nex-supplies-logo.png"
               alt="NEX Supplies"
               className="h-9 w-auto lg:h-10"
             />
