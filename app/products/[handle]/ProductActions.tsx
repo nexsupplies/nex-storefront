@@ -237,12 +237,12 @@ export default function ProductActions({
 
       <div className="mt-8 border-t border-black/30 pt-5">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
-          <div className="space-y-3 text-sm text-gray-700">
-            <div className="flex items-center justify-between gap-4">
+          <div className="space-y-2 text-sm text-gray-700">
+            <div className="grid grid-cols-[auto_auto] justify-start gap-x-3">
               <span className="text-gray-500">Total Items</span>
               <span className="font-semibold text-gray-900">{totalItems}</span>
             </div>
-            <div className="flex items-center justify-between gap-4">
+            <div className="grid grid-cols-[auto_auto] justify-start gap-x-3">
               <span className="text-gray-500">Product Subtotal</span>
               <span className="font-semibold text-gray-900">
                 {formatPrice(subtotal, summaryCurrency)}
