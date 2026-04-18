@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import PageFrame from '@/components/PageFrame'
 import { getProductImageUrl, type StorefrontProduct } from '@/lib/catalog'
 
 async function getProducts(): Promise<StorefrontProduct[]> {
@@ -24,24 +25,33 @@ export default async function ProductsPage() {
   const products = await getProducts()
 
   return (
-    <main className="p-10">
-      <h1 className="text-3xl font-bold mb-8">Materials</h1>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <PageFrame
+      sidebar={
+        <div className="space-y-4">
+          <p className="text-sm uppercase tracking-[0.24em] text-gray-500">
+            Materials
+          </p>
+          <h1 className="text-4xl font-bold tracking-tight text-gray-950">
+            Browse the core sheet and sign materials available for quoting and checkout.
+          </h1>
+        </div>
+      }
+    >
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
         {products.map((product) => {
           const imageUrl = getProductImageUrl(product)
 
           return (
             <div
               key={product.id}
-              className="border rounded-2xl p-6 hover:shadow-lg transition"
+              className="rounded-[12px] border border-black/30 bg-white p-6 transition hover:shadow-[0_12px_30px_rgba(0,0,0,0.06)]"
             >
-              <div className="h-40 overflow-hidden bg-gray-100 rounded-lg mb-4">
+              <div className="mb-4 aspect-square overflow-hidden rounded-[12px] bg-[#f2f2f2]">
                 {imageUrl ? (
                   <img
                     src={imageUrl}
                     alt={product.title}
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-contain p-4"
                     loading="lazy"
                   />
                 ) : (
@@ -51,10 +61,8 @@ export default async function ProductsPage() {
                 )}
               </div>
 
-              <h2 className="font-semibold text-lg">{product.title}</h2>
-
-              <p className="text-sm text-gray-500 mt-1">{product.handle}</p>
-
+              <h2 className="text-lg font-semibold text-gray-900">{product.title}</h2>
+              <p className="mt-1 text-sm text-gray-500">{product.handle}</p>
               <p className="mt-3 text-sm text-gray-600">
                 {product.variants?.length
                   ? `${product.variants.length} ordering option${product.variants.length === 1 ? '' : 's'}`
@@ -63,7 +71,7 @@ export default async function ProductsPage() {
 
               <Link
                 href={`/products/${product.handle}`}
-                className="mt-4 inline-block w-full bg-black text-white py-2 rounded-lg text-center"
+                className="mt-4 inline-block w-full rounded-[12px] bg-black py-3 text-center text-sm font-medium text-white"
               >
                 View Material
               </Link>
@@ -71,6 +79,6 @@ export default async function ProductsPage() {
           )
         })}
       </div>
-    </main>
+    </PageFrame>
   )
 }

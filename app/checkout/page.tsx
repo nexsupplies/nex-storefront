@@ -2,6 +2,7 @@
 
 import { startTransition, useEffect, useEffectEvent, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import PageFrame from '@/components/PageFrame'
 import {
   addShippingMethod,
   clearStoredCartId,
@@ -763,10 +764,18 @@ export default function CheckoutPage() {
 
   if (loading) {
     return (
-      <main className="max-w-7xl mx-auto px-8 py-10">
-        <h1 className="text-3xl font-bold mb-8">Checkout</h1>
+      <PageFrame
+        sidebar={
+          <div className="space-y-4">
+            <p className="text-sm uppercase tracking-[0.24em] text-gray-500">Checkout</p>
+            <h1 className="text-4xl font-bold tracking-tight text-gray-950">
+              Finalize customer details, fulfillment, and payment.
+            </h1>
+          </div>
+        }
+      >
         <p>Loading checkout...</p>
-      </main>
+      </PageFrame>
     )
   }
 
@@ -775,8 +784,16 @@ export default function CheckoutPage() {
   const canCreateManualOrder = !isOutOfCity && items.length > 0
 
   return (
-    <main className="max-w-7xl mx-auto px-8 py-10">
-      <h1 className="text-3xl font-bold mb-8">Checkout</h1>
+    <PageFrame
+      sidebar={
+        <div className="space-y-4">
+          <p className="text-sm uppercase tracking-[0.24em] text-gray-500">Checkout</p>
+          <h1 className="text-4xl font-bold tracking-tight text-gray-950">
+            Finalize customer details, fulfillment, and payment.
+          </h1>
+        </div>
+      }
+    >
 
       {message && (
         <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-700">
@@ -1086,6 +1103,6 @@ export default function CheckoutPage() {
           </div>
         </aside>
       </div>
-    </main>
+    </PageFrame>
   )
 }

@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { Suspense, useEffect, useEffectEvent, useMemo, useState } from 'react'
+import PageFrame from '@/components/PageFrame'
 import {
   getRememberedOrderHubEmail,
   listOrderHubOrders,
@@ -139,19 +140,21 @@ function OrderHubPageContent() {
   )
 
   return (
-    <main className="max-w-7xl mx-auto px-6 py-10">
-      <div className="max-w-3xl">
-        <p className="text-sm uppercase tracking-[0.24em] text-gray-500">Order Hub</p>
-        <h1 className="mt-3 text-4xl font-bold tracking-tight">
-          Orders, payment follow-up, and delivery quotes in one place.
-        </h1>
-        <p className="mt-4 text-base text-gray-600">
-          Enter the checkout email to view paid orders, pending payment orders, and
-          out-of-city delivery quote requests.
-        </p>
-      </div>
-
-      <div className="mt-8 rounded-3xl border bg-white p-6">
+    <PageFrame
+      sidebar={
+        <div className="space-y-4">
+          <p className="text-sm uppercase tracking-[0.24em] text-gray-500">Order Hub</p>
+          <h1 className="text-4xl font-bold tracking-tight text-gray-950">
+            Orders, payment follow-up, and delivery quotes in one place.
+          </h1>
+          <p className="text-base text-gray-600">
+            Enter the checkout email to view paid orders, pending payment orders,
+            and out-of-city delivery quote requests.
+          </p>
+        </div>
+      }
+    >
+      <div className="rounded-[12px] border border-black/30 bg-white p-6">
         <div className="flex flex-col gap-3 md:flex-row">
           <input
             type="email"
@@ -196,12 +199,15 @@ function OrderHubPageContent() {
 
       <div className="mt-8 space-y-4">
         {filteredOrders.length === 0 ? (
-          <div className="rounded-3xl border border-dashed p-8 text-gray-600">
+          <div className="rounded-[12px] border border-dashed border-black/30 p-8 text-gray-600">
             No entries match this filter.
           </div>
         ) : (
           filteredOrders.map((order) => (
-            <section key={`${order.source}-${order.id}`} className="rounded-3xl border p-6">
+            <section
+              key={`${order.source}-${order.id}`}
+              className="rounded-[12px] border border-black/30 bg-white p-6"
+            >
               <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
                 <div className="space-y-4">
                   <div className="flex flex-wrap items-center gap-3">
@@ -327,7 +333,7 @@ function OrderHubPageContent() {
                   </div>
                 </div>
 
-                <div className="w-full max-w-sm rounded-2xl border p-4">
+                <div className="w-full max-w-sm rounded-[12px] border border-black/30 p-4">
                   <div className="text-sm font-medium text-gray-500">Follow-up</div>
                   <div className="mt-4 space-y-3">
                     {order.can_prepare_payment ? (
@@ -373,7 +379,7 @@ function OrderHubPageContent() {
           ))
         )}
       </div>
-    </main>
+    </PageFrame>
   )
 }
 
@@ -381,11 +387,22 @@ export default function OrderHubPage() {
   return (
     <Suspense
       fallback={
-        <main className="max-w-7xl mx-auto px-6 py-10">
-          <div className="rounded-3xl border bg-white p-6 text-sm text-gray-600">
+        <PageFrame
+          sidebar={
+            <div className="space-y-4">
+              <p className="text-sm uppercase tracking-[0.24em] text-gray-500">
+                Order Hub
+              </p>
+              <h1 className="text-4xl font-bold tracking-tight text-gray-950">
+                Orders, payment follow-up, and delivery quotes in one place.
+              </h1>
+            </div>
+          }
+        >
+          <div className="rounded-[12px] border border-black/30 bg-white p-6 text-sm text-gray-600">
             Loading Order Hub...
           </div>
-        </main>
+        </PageFrame>
       }
     >
       <OrderHubPageContent />

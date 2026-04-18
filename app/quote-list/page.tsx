@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
+import PageFrame from '@/components/PageFrame'
 
 type QuoteItem = {
   productId: string
@@ -40,26 +41,35 @@ export default function QuoteListPage() {
   }
 
   return (
-    <main className="p-10 max-w-5xl mx-auto">
-      <h1 className="text-3xl font-bold mb-8">Quote List</h1>
-
+    <PageFrame
+      sidebar={
+        <div className="space-y-4">
+          <p className="text-sm uppercase tracking-[0.24em] text-gray-500">
+            Quote List
+          </p>
+          <h1 className="text-4xl font-bold tracking-tight text-gray-950">
+            Collect multiple products here, then submit one consolidated quote request.
+          </h1>
+        </div>
+      }
+    >
       {quoteList.length === 0 ? (
         <div className="space-y-4">
           <p>Your quote list is empty.</p>
           <Link
             href="/products"
-            className="inline-block bg-black text-white px-5 py-3 rounded-lg"
+            className="inline-block rounded-[12px] bg-black px-5 py-3 text-white"
           >
             Browse Products
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
           <div className="space-y-4">
             {quoteList.map((item) => (
               <div
                 key={item.variantId}
-                className="border rounded-2xl p-5 flex flex-col gap-4"
+                className="flex flex-col gap-4 rounded-[12px] border border-black/30 bg-white p-5"
               >
                 <div>
                   <Link
@@ -68,7 +78,7 @@ export default function QuoteListPage() {
                   >
                     {item.productTitle}
                   </Link>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="mt-1 text-sm text-gray-500">
                     {item.variantTitle}
                   </p>
                 </div>
@@ -80,7 +90,7 @@ export default function QuoteListPage() {
                       onClick={() =>
                         updateQuantity(item.variantId, item.quantity - 1)
                       }
-                      className="border rounded-lg px-3 py-2"
+                      className="rounded-[10px] border border-black/30 px-3 py-2"
                     >
                       -
                     </button>
@@ -92,7 +102,7 @@ export default function QuoteListPage() {
                       onClick={() =>
                         updateQuantity(item.variantId, item.quantity + 1)
                       }
-                      className="border rounded-lg px-3 py-2"
+                      className="rounded-[10px] border border-black/30 px-3 py-2"
                     >
                       +
                     </button>
@@ -110,22 +120,22 @@ export default function QuoteListPage() {
             ))}
           </div>
 
-          <aside className="border rounded-2xl p-6 h-fit">
-            <h2 className="text-xl font-semibold mb-4">Quote Summary</h2>
+          <aside className="h-fit rounded-[12px] border border-black/30 bg-white p-6">
+            <h2 className="mb-4 text-xl font-semibold">Quote Summary</h2>
 
-            <p className="text-sm text-gray-600 mb-6">
+            <p className="mb-6 text-sm text-gray-600">
               You can collect multiple products here, then submit one quote request.
             </p>
 
             <Link
               href="/quote"
-              className="block w-full text-center bg-black text-white py-3 rounded-lg"
+              className="block w-full rounded-[12px] bg-black py-3 text-center text-white"
             >
               Continue to Quote
             </Link>
           </aside>
         </div>
       )}
-    </main>
+    </PageFrame>
   )
 }

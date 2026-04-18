@@ -1,8 +1,23 @@
+import PageFrame from '@/components/PageFrame'
+
 export default function AccountPage() {
-    return (
-      <main className="p-10">
-        <h1 className="text-3xl font-bold mb-4">Account</h1>
-        <p className="text-gray-600">Account page coming soon.</p>
-      </main>
-    )
-  }
+  return (
+    <PageFrame
+      sidebar={
+        <div className="space-y-4">
+          <p className="text-sm uppercase tracking-[0.24em] text-gray-500">
+            Account
+          </p>
+          <h1 className="text-4xl font-bold tracking-tight text-gray-950">
+            Customer account tools are coming soon.
+          </h1>
+        </div>
+      }
+    >
+      <div className="max-w-2xl text-base leading-8 text-gray-700">
+        Saved profiles, order history, and reusable business details will be added
+        here as the storefront account workflow expands.
+      </div>
+    </PageFrame>
+  )
+}
