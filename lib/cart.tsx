@@ -3,6 +3,12 @@ const PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY
 const REGION_ID = process.env.NEXT_PUBLIC_MEDUSA_REGION_ID
 
 const CART_KEY = 'medusa_cart_id'
+export const CART_UPDATED_EVENT = 'medusa-cart-updated'
+
+function dispatchCartUpdated() {
+  if (typeof window === 'undefined') return
+  window.dispatchEvent(new Event(CART_UPDATED_EVENT))
+}
 
 function ensureBackendUrl() {
   if (!BACKEND_URL) {
@@ -91,11 +97,13 @@ export function getStoredCartId() {
 export function setStoredCartId(cartId: string) {
   if (typeof window === 'undefined') return
   localStorage.setItem(CART_KEY, cartId)
+  dispatchCartUpdated()
 }
 
 export function clearStoredCartId() {
   if (typeof window === 'undefined') return
   localStorage.removeItem(CART_KEY)
+  dispatchCartUpdated()
 }
 
 function withQuery(url: string, params: Record<string, string | undefined>) {
@@ -253,7 +261,9 @@ export async function addLineItem(cartId: string, variantId: string, quantity: n
     throw new Error(`Failed to add line item: ${res.status} ${text}`)
   }
 
-  return JSON.parse(text).cart
+  const cart = JSON.parse(text).cart
+  dispatchCartUpdated()
+  return cart
 }
 
 export async function updateLineItem(
@@ -279,7 +289,9 @@ export async function updateLineItem(
     throw new Error(`Failed to update line item: ${res.status} ${text}`)
   }
 
-  return JSON.parse(text).cart
+  const cart = JSON.parse(text).cart
+  dispatchCartUpdated()
+  return cart
 }
 
 export async function deleteLineItem(cartId: string, lineItemId: string) {
@@ -298,7 +310,9 @@ export async function deleteLineItem(cartId: string, lineItemId: string) {
     throw new Error(`Failed to delete line item: ${res.status} ${text}`)
   }
 
-  return JSON.parse(text).cart
+  const cart = JSON.parse(text).cart
+  dispatchCartUpdated()
+  return cart
 }
 
 type AddressPayload = {
@@ -332,7 +346,9 @@ export async function updateCart(cartId: string, payload: UpdateCartPayload) {
     throw new Error(`Failed to update cart: ${res.status} ${text}`)
   }
 
-  return JSON.parse(text).cart
+  const cart = JSON.parse(text).cart
+  dispatchCartUpdated()
+  return cart
 }
 
 export async function addShippingMethod(

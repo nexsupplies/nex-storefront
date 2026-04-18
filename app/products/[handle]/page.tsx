@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import OrderJumpCTA from './OrderJumpCTA'
 import ProductActions from './ProductActions'
 import ProductDetailHero from './ProductDetailHero'
 import ProductPageSnap from './ProductPageSnap'
@@ -66,7 +67,7 @@ async function getRecommendedProducts(
 
   return (data.products || [])
     .filter((item: StorefrontProduct) => item.handle !== currentHandle)
-    .slice(0, 4)
+    .slice(0, 3)
 }
 
 function getPriceSummary(product: StorefrontProduct) {
@@ -170,24 +171,12 @@ export default async function ProductDetailPage({
 
             <div className="mt-auto pt-8">
               {variantCount ? (
-                <a
-                  href={`#${orderMatrixId}`}
-                  className="group flex w-full items-center justify-between rounded-[12px] bg-black px-5 py-4 text-left text-white transition hover:bg-gray-900"
-                >
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.2em] text-white/70">
-                      Ready to Order
-                    </p>
-                    <p className="mt-2 text-base font-semibold">
-                      {`${variantCount} orderable variant${variantCount === 1 ? '' : 's'}`}
-                    </p>
-                  </div>
-                  <span className="text-xl transition group-hover:translate-x-1">
-                    →
-                  </span>
-                </a>
+                <OrderJumpCTA
+                  sectionId={orderMatrixId}
+                  variantCount={variantCount}
+                />
               ) : (
-                <div className="rounded-[12px] border border-black/50 px-5 py-4 text-sm text-gray-600">
+                <div className="rounded-[12px] border border-black/30 px-5 py-4 text-sm text-gray-600">
                   Custom ordering available
                 </div>
               )}
@@ -211,54 +200,56 @@ export default async function ProductDetailPage({
         />
       </section>
 
-      <section className="mx-[calc(50%-50vw)] mt-16 w-screen px-6 lg:px-16">
-        <div className="mb-5 flex items-end justify-between gap-4">
-          <div>
-            <h2 className="mt-2 text-2xl font-semibold text-gray-900">
-              Related materials
-            </h2>
-          </div>
+      <section className="mx-[calc(50%-50vw)] mt-16 grid w-screen grid-cols-1 lg:grid-cols-[minmax(320px,30fr)_minmax(0,35fr)_minmax(0,35fr)]">
+        <div className="px-6 py-10 lg:pl-16 lg:pr-10">
+          <p className="text-[11px] uppercase tracking-[0.2em] text-gray-500">
+            More Materials
+          </p>
+          <h2 className="mt-3 text-2xl font-semibold text-gray-950">
+            Related materials
+          </h2>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-          {recommendedProducts.map((item) => {
-            const imageUrl = getProductImageUrl(item)
+        <div className="min-w-0 border-l border-black/50 px-6 py-10 lg:col-span-2 lg:px-8 lg:pr-16">
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+            {recommendedProducts.map((item) => {
+              const imageUrl = getProductImageUrl(item)
+              const recommendationPrice = getPriceSummary(item)
 
-            return (
-              <Link
-                key={item.id}
-                href={`/products/${item.handle}`}
-                className="rounded-[12px] border border-black/50 bg-white transition hover:shadow-md"
-              >
-                <div className="overflow-hidden rounded-t-[12px] bg-white">
-                  {imageUrl ? (
-                    <div className="relative aspect-square w-full bg-white">
+              return (
+                <Link
+                  key={item.id}
+                  href={`/products/${item.handle}`}
+                  className="group rounded-[12px] border border-black/30 bg-white transition hover:shadow-[0_12px_30px_rgba(0,0,0,0.06)]"
+                >
+                  <div className="relative aspect-square w-full overflow-hidden rounded-t-[12px] bg-[#f2f2f2]">
+                    {imageUrl ? (
                       <img
                         src={imageUrl}
                         alt={item.title}
                         className="absolute inset-0 h-full w-full object-contain p-4"
                         loading="lazy"
                       />
-                    </div>
-                  ) : (
-                    <div className="flex aspect-square items-center justify-center text-sm text-gray-500">
-                      Image coming soon
-                    </div>
-                  )}
-                </div>
+                    ) : (
+                      <div className="flex h-full items-center justify-center text-sm text-gray-500">
+                        Image coming soon
+                      </div>
+                    )}
+                  </div>
 
-                <div className="p-5">
-                  <p className="text-xs uppercase tracking-[0.2em] text-gray-500">
-                    Material
-                  </p>
-                  <h3 className="mt-2 text-lg font-semibold text-gray-900">
-                    {item.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-gray-500">{item.handle}</p>
-                </div>
-              </Link>
-            )
-          })}
+                  <div className="space-y-3 p-5">
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-gray-500">
+                      Material
+                    </p>
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      {item.title}
+                    </h3>
+                    <p className="text-sm text-gray-600">{recommendationPrice}</p>
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
         </div>
       </section>
     </main>

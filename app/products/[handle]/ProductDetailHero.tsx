@@ -38,10 +38,7 @@ export default function ProductDetailHero({
   description,
   imageGallery,
 }: ProductDetailHeroProps) {
-  const [activeImage, setActiveImage] = useState(0)
   const [openItem, setOpenItem] = useState<AccordionKey>('overview')
-
-  const currentImage = imageGallery[activeImage] || null
 
   function toggleItem(key: AccordionKey) {
     setOpenItem((current) => (current === key ? key : key))
@@ -49,65 +46,36 @@ export default function ProductDetailHero({
 
   return (
     <>
-      <section className="min-w-0 space-y-6 bg-[#f2f2f2] py-10 lg:h-[calc(100vh-4rem)] lg:border-l lg:border-black/50 lg:px-8 lg:py-10">
-        <div className="overflow-hidden rounded-[12px] bg-[#f2f2f2]">
-          <div className="order-1 overflow-hidden rounded-[12px] bg-[#f2f2f2]">
-            {currentImage ? (
+      <section className="min-w-0 space-y-6 bg-[#f2f2f2] py-10 lg:border-l lg:border-black/50 lg:px-8 lg:py-10">
+        {imageGallery.length ? (
+          imageGallery.map((imageUrl, index) => (
+            <div key={`${imageUrl}-${index}`} className="overflow-hidden bg-[#f2f2f2]">
               <div className="relative aspect-square w-full bg-[#f2f2f2]">
                 <img
-                  src={currentImage}
-                  alt="Product image"
+                  src={imageUrl}
+                  alt={`Product image ${index + 1}`}
                   className="absolute inset-0 h-full w-full object-contain p-5 lg:p-8"
+                  loading={index === 0 ? 'eager' : 'lazy'}
                 />
               </div>
-            ) : (
-              <div className="flex aspect-square items-center justify-center text-sm text-gray-500">
-                Product image coming soon
-              </div>
-            )}
-          </div>
-        </div>
-
-        {imageGallery.length > 1 && (
-          <div className="flex gap-6 overflow-x-auto pb-1">
-              {imageGallery.map((imageUrl, index) => {
-                const isActive = index === activeImage
-
-                return (
-                  <button
-                  key={imageUrl}
-                  type="button"
-                  onClick={() => setActiveImage(index)}
-                  className={`overflow-hidden rounded-[12px] border bg-white transition ${
-                    isActive
-                      ? 'border-black/50 shadow-[0_0_0_1px_rgba(0,0,0,0.08)]'
-                      : 'border-black/50'
-                  }`}
-                    aria-label={`Show image ${index + 1}`}
-                    aria-pressed={isActive}
-                  >
-                    <img
-                      src={imageUrl}
-                      alt={`Product thumbnail ${index + 1}`}
-                      className="h-20 w-20 object-contain bg-white p-1 lg:h-24 lg:w-24"
-                      loading="lazy"
-                    />
-                  </button>
-                )
-              })}
+            </div>
+          ))
+        ) : (
+          <div className="flex aspect-square items-center justify-center text-sm text-gray-500">
+            Product image coming soon
           </div>
         )}
       </section>
 
-      <section className="min-w-0 bg-[#f2f2f2] py-10 lg:h-[calc(100vh-4rem)] lg:border-l lg:border-black/50 lg:pl-8 lg:pr-16 lg:py-10">
-        <div className="border-t border-black/50">
+      <section className="min-w-0 bg-[#f2f2f2] py-10 lg:min-h-[calc(100vh-4rem)] lg:border-l lg:border-black/50 lg:pl-8 lg:pr-16 lg:py-10">
+        <div>
           {accordionItems.map((item) => {
             const isOpen = openItem === item.key
             const bodyText =
               item.key === 'overview' && description ? description : item.content
 
             return (
-              <div key={item.key} className="border-b border-black/50">
+              <div key={item.key} className="border-b border-black/30">
                 <button
                   type="button"
                   onClick={() => toggleItem(item.key)}

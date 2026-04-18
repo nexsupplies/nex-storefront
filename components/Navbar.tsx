@@ -1,17 +1,16 @@
 import Link from 'next/link'
+import CartNavLink from './CartNavLink'
 
 const navItems = [
-  { label: 'Home', href: '/' },
   { label: 'Catalog', href: '/products' },
   { label: 'Order Hub', href: '/order-hub' },
   { label: 'Quote List', href: '/quote-list' },
-  { label: 'Cart', href: '/cart' },
   { label: 'Account', href: '/account' },
 ]
 
 export default function Navbar() {
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-black/50 bg-white/95 backdrop-blur-sm">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-black/30 bg-white/95 backdrop-blur-sm">
       <div className="flex flex-col gap-3 px-6 py-3 lg:grid lg:h-16 lg:grid-cols-[minmax(320px,30fr)_minmax(0,35fr)_minmax(0,35fr)] lg:gap-0 lg:p-0">
         <div className="flex items-center lg:pl-16 lg:pr-10">
           <Link href="/" className="text-xl font-bold tracking-tight">
@@ -32,6 +31,7 @@ export default function Navbar() {
                 {item.label}
               </Link>
             ))}
+            <CartNavLink />
           </nav>
         </div>
       </div>

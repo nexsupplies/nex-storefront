@@ -164,20 +164,11 @@ export default function ProductActions({
       id={sectionId}
       className="min-w-0 scroll-mt-20 border-l border-black/50 py-8 lg:col-span-2 lg:min-h-[calc(100vh-4rem)] lg:snap-start lg:px-8 lg:py-10 lg:pr-16"
     >
-      <div className="border-b border-black/50 pb-4">
-        <p className="text-[11px] uppercase tracking-[0.2em] text-gray-500">
-          Material Ordering
-        </p>
-        <h2 className="mt-2 text-xl font-semibold text-gray-950">
-          Order Matrix
-        </h2>
-        <p className="mt-2 max-w-2xl text-sm leading-7 text-gray-600">
-          Build a mixed order by adjusting quantities directly in the matrix.
-          Each row stays visible as part of one unified materials schedule.
-        </p>
+      <div>
+        <h2 className="text-xl font-semibold text-gray-950">Order Matrix</h2>
       </div>
 
-      <div className="mt-4">
+      <div className="mt-5">
         {variants.length === 0 ? (
           <div className="text-sm text-gray-600">
             No orderable variants are available for this material yet.
@@ -185,7 +176,7 @@ export default function ProductActions({
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full border-collapse">
-              <thead className="border-b border-black/50 text-left text-[10px] uppercase tracking-[0.18em] text-gray-500">
+              <thead className="text-left text-[10px] uppercase tracking-[0.18em] text-gray-500">
                 <tr>
                   <th className="px-4 py-3 font-medium lg:px-4">Variant</th>
                   <th className="px-4 py-3 font-medium lg:px-4">Quantity</th>
@@ -204,7 +195,7 @@ export default function ProductActions({
                       </div>
                     </td>
                     <td className="px-4 py-4 lg:px-4">
-                      <div className="inline-flex items-center gap-2 rounded-[10px] border border-black/50 bg-white px-2 py-1.5">
+                      <div className="inline-flex items-center gap-2 rounded-[10px] border border-black/30 bg-white px-2 py-1.5">
                         <button
                           type="button"
                           onClick={() =>
@@ -244,7 +235,7 @@ export default function ProductActions({
         )}
       </div>
 
-      <div className="mt-8 border-t border-black/50 pt-5">
+      <div className="mt-8 border-t border-black/30 pt-5">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
           <div className="space-y-3 text-sm text-gray-700">
             <div className="flex items-center justify-between gap-4">
@@ -273,7 +264,7 @@ export default function ProductActions({
               type="button"
               onClick={addToQuoteList}
               disabled={!selectedRows.length}
-              className="w-full rounded-xl border border-black/50 py-3 disabled:opacity-50"
+              className="w-full rounded-xl border border-black/30 py-3 disabled:opacity-50"
             >
               Add Selected Variants to Quote List
             </button>
