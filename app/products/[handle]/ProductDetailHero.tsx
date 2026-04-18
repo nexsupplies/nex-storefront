@@ -45,7 +45,7 @@ export default function ProductDetailHero({
   }
 
   return (
-    <>
+    <div className="min-w-0 lg:col-span-2 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
       <section className="min-w-0 space-y-6 bg-[#f2f2f2] py-10 lg:border-l lg:border-black/50 lg:px-8 lg:py-10">
         {imageGallery.length ? (
           imageGallery.map((imageUrl, index) => (
@@ -98,6 +98,6 @@ export default function ProductDetailHero({
           })}
         </div>
       </section>
-    </>
+    </div>
   )
 }
