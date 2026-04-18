@@ -1,0 +1,9 @@
+<svg width="620" height="140" viewBox="0 0 620 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="620" height="140" fill="white"/>
+  <path d="M18 18H52L108 84V126H18V18Z" fill="black"/>
+  <path d="M52 18H84L154 96H234L263 57L219 18H84L52 18Z" fill="black"/>
+  <path d="M108 126L77 126L44 84V18H52L131 108H223L263 57L297 18H335L284 70L337 126H299L263 82L228 126H108Z" fill="black"/>
+  <path d="M108 70H193L210 88L193 106H122L108 70Z" fill="#3159A6"/>
+  <text x="365" y="62" fill="black" font-family="Arial, Helvetica, sans-serif" font-size="52" font-weight="700" letter-spacing="1">NEX</text>
+  <text x="362" y="120" fill="black" font-family="Arial, Helvetica, sans-serif" font-size="44" font-weight="300">Supplies</text>
+</svg>

@@ -13,8 +13,12 @@ export default function Navbar() {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-black/30 bg-white/95 backdrop-blur-sm">
       <div className="flex flex-col gap-3 px-6 py-3 lg:grid lg:h-16 lg:grid-cols-[minmax(320px,30fr)_minmax(0,35fr)_minmax(0,35fr)] lg:gap-0 lg:p-0">
         <div className="flex items-center lg:pl-16 lg:pr-10">
-          <Link href="/" className="text-xl font-bold tracking-tight">
-            NEX Supplies
+          <Link href="/" className="block">
+            <img
+              src="/nex-supplies-logo.svg"
+              alt="NEX Supplies"
+              className="h-9 w-auto lg:h-10"
+            />
           </Link>
         </div>
 
