@@ -9,6 +9,10 @@ html {
   scroll-behavior: smooth;
 }
 
+html.product-page-snap {
+  scroll-snap-type: y proximity;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

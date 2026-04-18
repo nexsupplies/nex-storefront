@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import ProductActions from './ProductActions'
 import ProductDetailHero from './ProductDetailHero'
+import ProductPageSnap from './ProductPageSnap'
 import {
   formatPrice,
   getProductImageUrl,
@@ -131,10 +132,13 @@ export default async function ProductDetailPage({
 
   return (
     <main className="w-full">
-      <section className="mx-[calc(50%-50vw)] w-screen grid grid-cols-1 lg:grid-cols-[minmax(320px,30fr)_minmax(0,35fr)_minmax(0,35fr)]">
+      <ProductPageSnap />
+
+      <section className="mx-[calc(50%-50vw)] w-screen grid grid-cols-1 lg:snap-start lg:grid-cols-[minmax(320px,30fr)_minmax(0,35fr)_minmax(0,35fr)]">
         <aside className="px-6 py-10 lg:sticky lg:top-16 lg:row-span-2 lg:self-start lg:min-h-[calc(100vh-4rem)] lg:pl-16 lg:pr-10">
-          <div className="space-y-6">
-            <div>
+          <div className="flex h-full flex-col">
+            <div className="space-y-6">
+              <div>
               <p className="text-sm uppercase tracking-[0.24em] text-gray-500">
                 NEXPRO Material
               </p>
@@ -142,39 +146,62 @@ export default async function ProductDetailPage({
                 {product.title}
               </h1>
               <p className="mt-2 text-sm text-gray-500">{product.handle}</p>
-            </div>
-
-            <div className="space-y-3">
-              <p className="text-xs uppercase tracking-[0.2em] text-gray-500">
-                Starting Price
-              </p>
-              <p className="text-3xl font-semibold text-gray-950">{priceSummary}</p>
-            </div>
-
-            {variantCount ? (
-              <a
-                href={`#${orderMatrixId}`}
-                className="inline-flex rounded-full border border-black/50 px-4 py-2 text-sm text-gray-700 transition hover:bg-black hover:text-white"
-              >
-                {`${variantCount} orderable variant${variantCount === 1 ? '' : 's'}`}
-              </a>
-            ) : (
-              <div className="inline-flex rounded-full border border-black/50 px-4 py-2 text-sm text-gray-600">
-                Custom ordering available
               </div>
-            )}
 
-            <div className="max-w-sm text-sm leading-7 text-gray-600">
-              {description}
+              <div className="border-t border-black/50 pt-6">
+                <p className="text-[11px] uppercase tracking-[0.2em] text-gray-500">
+                  Procurement Pricing
+                </p>
+                <p className="mt-3 text-4xl font-semibold tracking-tight text-gray-950">
+                  {priceSummary}
+                </p>
+                <p className="mt-2 max-w-sm text-sm leading-6 text-gray-500">
+                  Live pricing across currently orderable variants.
+                </p>
+              </div>
+
+              <div className="border-t border-black/50 pt-6">
+                <p className="text-[11px] uppercase tracking-[0.2em] text-gray-500">
+                  Material Notes
+                </p>
+                <div className="mt-3 max-w-sm text-sm leading-7 text-gray-600">
+                  {description}
+                </div>
+              </div>
+
+              <div className="border-t border-black/50 pt-6">
+                <div className="flex items-start justify-between gap-4 py-2 text-sm">
+                  <span className="text-gray-500">Best for</span>
+                  <span className="text-right font-medium text-gray-900">
+                    Sign shops, fabricators, and board buyers
+                  </span>
+                </div>
+              </div>
             </div>
 
-            <div className="border-t border-black/50 pt-6">
-              <div className="flex items-start justify-between gap-4 py-2 text-sm">
-                <span className="text-gray-500">Best for</span>
-                <span className="text-right font-medium text-gray-900">
-                  Sign shops, fabricators, and board buyers
-                </span>
-              </div>
+            <div className="mt-auto pt-8">
+              {variantCount ? (
+                <a
+                  href={`#${orderMatrixId}`}
+                  className="group flex w-full items-center justify-between rounded-[12px] bg-black px-5 py-4 text-left text-white transition hover:bg-gray-900"
+                >
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.2em] text-white/70">
+                      Ready to Order
+                    </p>
+                    <p className="mt-2 text-base font-semibold">
+                      {`${variantCount} orderable variant${variantCount === 1 ? '' : 's'}`}
+                    </p>
+                  </div>
+                  <span className="text-xl transition group-hover:translate-x-1">
+                    →
+                  </span>
+                </a>
+              ) : (
+                <div className="rounded-[12px] border border-black/50 px-5 py-4 text-sm text-gray-600">
+                  Custom ordering available
+                </div>
+              )}
             </div>
           </div>
         </aside>
@@ -184,19 +211,18 @@ export default async function ProductDetailPage({
           imageGallery={imageGallery}
         />
 
-        <div id={orderMatrixId} className="scroll-mt-24 contents">
-          <ProductActions
-            product={{
-              id: product.id,
-              title: product.title,
-              handle: product.handle,
-            }}
-            variants={product.variants || []}
-          />
-        </div>
+        <ProductActions
+          sectionId={orderMatrixId}
+          product={{
+            id: product.id,
+            title: product.title,
+            handle: product.handle,
+          }}
+          variants={product.variants || []}
+        />
       </section>
 
-      <section className="mx-[calc(50%-50vw)] mt-16 w-screen px-6 lg:px-16">
+      <section className="mx-[calc(50%-50vw)] mt-16 w-screen px-6 lg:snap-start lg:px-16">
         <div className="mb-5 flex items-end justify-between gap-4">
           <div>
             <h2 className="mt-2 text-2xl font-semibold text-gray-900">
