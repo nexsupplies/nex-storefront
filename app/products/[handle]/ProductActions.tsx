@@ -195,7 +195,7 @@ export default function ProductActions({
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-black/50">
+              <tbody>
                 {orderRows.map((row) => (
                   <tr key={row.variant.id}>
                     <td className="px-4 py-4 lg:px-4">
