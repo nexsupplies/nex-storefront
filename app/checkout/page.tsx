@@ -1,6 +1,13 @@
 'use client'
 
-import { startTransition, useEffect, useEffectEvent, useMemo, useState } from 'react'
+import {
+  startTransition,
+  useEffect,
+  useEffectEvent,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { useRouter } from 'next/navigation'
 import PageFrame from '@/components/PageFrame'
 import {
@@ -334,8 +341,14 @@ export default function CheckoutPage() {
   const [city, setCity] = useState('')
   const [province, setProvince] = useState('AB')
   const [postalCode, setPostalCode] = useState('')
-  const [step1Complete, setStep1Complete] = useState(false)
   const [step2Complete, setStep2Complete] = useState(false)
+  const [highlightedDetail, setHighlightedDetail] = useState<'pickup' | 'delivery' | null>(
+    null
+  )
+
+  const pickupDetailsRef = useRef<HTMLElement | null>(null)
+  const deliveryAddressRef = useRef<HTMLElement | null>(null)
+  const previousShippingMethodRef = useRef(shippingMethod)
 
   const earliestPickupDate = useMemo(() => getEarliestPickupDate(), [])
 
@@ -454,8 +467,6 @@ export default function CheckoutPage() {
   const isPickup = shippingMethod === 'pickup'
   const isOutOfCity = shippingMethod === 'outcity'
   const isDelivery = !isPickup
-  const step2Unlocked = step1Complete
-  const step3Unlocked = step1Complete && step2Complete
 
   const expectedCity = selectedShipping?.expectedCity ?? null
   const cityMatches =
@@ -508,6 +519,10 @@ export default function CheckoutPage() {
     return null
   }
 
+  const step1Ready = getStep1ValidationMessage() == null
+  const step2Unlocked = step1Ready
+  const step3Unlocked = step1Ready && step2Complete
+
   function getValidationMessage() {
     if (!cart) {
       return 'Cart not found.'
@@ -529,6 +544,33 @@ export default function CheckoutPage() {
 
     return null
   }
+
+  useEffect(() => {
+    const previousShippingMethod = previousShippingMethodRef.current
+    previousShippingMethodRef.current = shippingMethod
+
+    if (!step2Unlocked || step2Complete || previousShippingMethod === shippingMethod) {
+      return
+    }
+
+    const detailSection = isPickup ? pickupDetailsRef.current : deliveryAddressRef.current
+
+    if (!detailSection) {
+      return
+    }
+
+    const highlightKey = isPickup ? 'pickup' : 'delivery'
+    setHighlightedDetail(highlightKey)
+    detailSection.scrollIntoView({ behavior: 'smooth', block: 'center' })
+
+    const timeoutId = window.setTimeout(() => {
+      setHighlightedDetail((current) => (current === highlightKey ? null : current))
+    }, 1800)
+
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
+  }, [isPickup, shippingMethod, step2Complete, step2Unlocked])
 
   async function persistCheckoutDetails(): Promise<MedusaCart> {
     const validationMessage = getValidationMessage()
@@ -806,13 +848,15 @@ export default function CheckoutPage() {
   const canCreateManualOrder = !isOutOfCity && items.length > 0
   const step1ValidationMessage = getStep1ValidationMessage()
   const step2ValidationMessage = getStep2ValidationMessage()
+  const detailHighlightClass =
+    'transition-all duration-300 ring-2 ring-black/80 ring-offset-4 ring-offset-[#f2f2f2]'
 
   return (
     <PageFrame
-      sidebarClassName="bg-[#f2f2f2] lg:sticky lg:top-16 lg:self-start lg:min-h-[calc(100vh-4rem)]"
+      sidebarClassName="bg-[#f2f2f2] px-0 py-0 lg:sticky lg:top-16 lg:self-start lg:min-h-[calc(100vh-4rem)] lg:pl-0 lg:pr-0"
       contentClassName="px-0 py-0"
       sidebar={
-        <div className="flex h-full flex-col">
+        <div className="flex h-full flex-col px-6 py-10 lg:pl-16 lg:pr-10">
           <div className="space-y-8">
             <div>
               <p className="text-sm uppercase tracking-[0.24em] text-gray-500">Checkout</p>
@@ -833,64 +877,34 @@ export default function CheckoutPage() {
                 placeholder="Full Name"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                disabled={step1Complete}
-                className="w-full rounded-xl border border-gray-300 bg-white p-3 disabled:cursor-not-allowed disabled:bg-white"
+                className="w-full rounded-xl border border-gray-300 bg-white p-3"
               />
 
               <input
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                disabled={step1Complete}
-                className="w-full rounded-xl border border-gray-300 bg-white p-3 disabled:cursor-not-allowed disabled:bg-white"
+                className="w-full rounded-xl border border-gray-300 bg-white p-3"
               />
 
               <input
                 placeholder="Phone"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                disabled={step1Complete}
-                className="w-full rounded-xl border border-gray-300 bg-white p-3 disabled:cursor-not-allowed disabled:bg-white"
+                className="w-full rounded-xl border border-gray-300 bg-white p-3"
               />
             </div>
           </div>
 
           <div className="mt-auto space-y-3 pt-8">
-            {step1Complete && (
-              <button
-                type="button"
-                onClick={() => {
-                  setStep1Complete(false)
-                  setStep2Complete(false)
-                }}
-                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700"
-              >
-                Modify Step 1
-              </button>
-            )}
-
-            {!step1Complete && step1ValidationMessage && (
+            {step1ValidationMessage && (
               <p className="text-sm text-gray-600">{step1ValidationMessage}</p>
             )}
 
-            {step1Complete && (
+            {step1Ready && (
               <p className="text-sm text-gray-600">
-                User information completed. Step 2 is now available.
+                User information completed. Step 2 is now available automatically.
               </p>
-            )}
-
-            {!step1Complete && (
-              <button
-                type="button"
-                onClick={() => {
-                  setMessage('')
-                  setStep1Complete(true)
-                }}
-                disabled={Boolean(step1ValidationMessage)}
-                className="w-full rounded-xl bg-black py-3 text-base font-medium text-white disabled:opacity-50"
-              >
-                Complete Step 1
-              </button>
             )}
           </div>
         </div>
@@ -939,16 +953,16 @@ export default function CheckoutPage() {
               <section>
                 <h3 className="mb-4 text-lg font-semibold">Shipping Method</h3>
 
-              <div className="space-y-3">
-                {shippingMethods.map((method) => (
-                  <label
-                    key={method.id}
-                    className="flex cursor-pointer justify-between rounded-2xl border border-gray-300 bg-white p-4"
-                  >
-                    <div>
-                      <input
-                        type="radio"
-                        checked={shippingMethod === method.id}
+                <div className="space-y-3">
+                  {shippingMethods.map((method) => (
+                    <label
+                      key={method.id}
+                      className="flex cursor-pointer justify-between rounded-2xl border border-gray-300 bg-white p-4"
+                    >
+                      <div>
+                        <input
+                          type="radio"
+                          checked={shippingMethod === method.id}
                           onChange={() => setShippingMethod(method.id)}
                           disabled={!step2Unlocked || step2Complete}
                         />
@@ -964,7 +978,10 @@ export default function CheckoutPage() {
               </section>
 
               {isPickup && (
-                <section>
+                <section
+                  ref={pickupDetailsRef}
+                  className={highlightedDetail === 'pickup' ? detailHighlightClass : ''}
+                >
                   <h3 className="mb-4 text-lg font-semibold">Pickup Details</h3>
 
                   <div className="mb-4 rounded-2xl border border-gray-300 bg-white p-4">
@@ -1026,7 +1043,10 @@ export default function CheckoutPage() {
               )}
 
               {isDelivery && (
-                <section>
+                <section
+                  ref={deliveryAddressRef}
+                  className={highlightedDetail === 'delivery' ? detailHighlightClass : ''}
+                >
                   <h3 className="mb-4 text-lg font-semibold">Delivery Address</h3>
 
                   <div className="space-y-4">
