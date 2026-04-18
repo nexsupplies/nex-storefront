@@ -67,7 +67,7 @@ export default function ProductDetailHero({
         )}
       </section>
 
-      <section className="min-w-0 bg-[#f2f2f2] py-10 lg:min-h-[calc(100vh-4rem)] lg:border-l lg:border-black/50 lg:pl-8 lg:pr-16 lg:py-10">
+      <section className="min-w-0 bg-[#f2f2f2] py-10 lg:sticky lg:top-16 lg:self-start lg:h-[calc(100vh-4rem)] lg:overflow-y-auto lg:border-l lg:border-black/50 lg:pl-8 lg:pr-16 lg:py-10">
         <div>
           {accordionItems.map((item) => {
             const isOpen = openItem === item.key
