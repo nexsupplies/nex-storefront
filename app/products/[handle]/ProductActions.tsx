@@ -160,109 +160,106 @@ export default function ProductActions({
   }
 
   return (
-    <>
-      <section
-        id={sectionId}
-        className="min-w-0 scroll-mt-20 border-l border-black/50 py-8 lg:min-h-[calc(100vh-4rem)] lg:snap-start lg:px-8 lg:py-10"
-      >
-        <div className="border-b border-black/50 pb-4">
-          <p className="text-[11px] uppercase tracking-[0.2em] text-gray-500">
-            Material Ordering
-          </p>
-          <h2 className="mt-2 text-xl font-semibold text-gray-950">
-            Order Matrix
-          </h2>
-          <p className="mt-2 max-w-2xl text-sm leading-7 text-gray-600">
-            Build a mixed order by adjusting quantities directly in the matrix.
-            Each row stays visible as part of one unified materials schedule.
-          </p>
-        </div>
+    <section
+      id={sectionId}
+      className="min-w-0 scroll-mt-20 border-l border-black/50 py-8 lg:col-span-2 lg:min-h-[calc(100vh-4rem)] lg:snap-start lg:px-8 lg:py-10 lg:pr-16"
+    >
+      <div className="border-b border-black/50 pb-4">
+        <p className="text-[11px] uppercase tracking-[0.2em] text-gray-500">
+          Material Ordering
+        </p>
+        <h2 className="mt-2 text-xl font-semibold text-gray-950">
+          Order Matrix
+        </h2>
+        <p className="mt-2 max-w-2xl text-sm leading-7 text-gray-600">
+          Build a mixed order by adjusting quantities directly in the matrix.
+          Each row stays visible as part of one unified materials schedule.
+        </p>
+      </div>
 
-        <div className="mt-4">
-          {variants.length === 0 ? (
-            <div className="text-sm text-gray-600">
-              No orderable variants are available for this material yet.
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full border-collapse">
-                <thead className="border-b border-black/50 text-left text-[10px] uppercase tracking-[0.18em] text-gray-500">
-                  <tr>
-                    <th className="px-4 py-3 font-medium lg:px-4">Variant</th>
-                    <th className="px-4 py-3 font-medium lg:px-4">Quantity</th>
-                    <th className="px-4 py-3 font-medium lg:px-4">Price</th>
-                    <th className="px-4 py-3 text-right font-medium lg:px-4">
-                      Variant Total
-                    </th>
+      <div className="mt-4">
+        {variants.length === 0 ? (
+          <div className="text-sm text-gray-600">
+            No orderable variants are available for this material yet.
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full border-collapse">
+              <thead className="border-b border-black/50 text-left text-[10px] uppercase tracking-[0.18em] text-gray-500">
+                <tr>
+                  <th className="px-4 py-3 font-medium lg:px-4">Variant</th>
+                  <th className="px-4 py-3 font-medium lg:px-4">Quantity</th>
+                  <th className="px-4 py-3 font-medium lg:px-4">Price</th>
+                  <th className="px-4 py-3 text-right font-medium lg:px-4">
+                    Variant Total
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-black/50">
+                {orderRows.map((row) => (
+                  <tr key={row.variant.id}>
+                    <td className="px-4 py-4 lg:px-4">
+                      <div className="text-sm font-medium text-gray-900">
+                        {row.variant.title}
+                      </div>
+                    </td>
+                    <td className="px-4 py-4 lg:px-4">
+                      <div className="inline-flex items-center gap-2 rounded-[10px] border border-black/50 bg-white px-2 py-1.5">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            updateQuantity(row.variant.id, row.quantity - 1)
+                          }
+                          className="rounded-md px-2 py-1 text-base leading-none"
+                        >
+                          -
+                        </button>
+                        <span className="min-w-8 text-center text-sm font-medium">
+                          {row.quantity}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            updateQuantity(row.variant.id, row.quantity + 1)
+                          }
+                          className="rounded-md px-2 py-1 text-base leading-none"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </td>
+                    <td className="px-4 py-4 text-sm text-gray-700 lg:px-4">
+                      {formatPrice(row.unitAmount, row.currencyCode)}
+                    </td>
+                    <td className="px-4 py-4 text-right text-sm font-medium text-gray-900 lg:px-4">
+                      {row.unitAmount == null
+                        ? 'Price unavailable'
+                        : formatPrice(row.lineTotal, row.currencyCode)}
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="divide-y divide-black/50">
-                  {orderRows.map((row) => (
-                    <tr key={row.variant.id}>
-                      <td className="px-4 py-4 lg:px-4">
-                        <div className="text-sm font-medium text-gray-900">
-                          {row.variant.title}
-                        </div>
-                      </td>
-                      <td className="px-4 py-4 lg:px-4">
-                        <div className="inline-flex items-center gap-2 rounded-[10px] border border-black/50 bg-white px-2 py-1.5">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              updateQuantity(row.variant.id, row.quantity - 1)
-                            }
-                            className="rounded-md px-2 py-1 text-base leading-none"
-                          >
-                            -
-                          </button>
-                          <span className="min-w-8 text-center text-sm font-medium">
-                            {row.quantity}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              updateQuantity(row.variant.id, row.quantity + 1)
-                            }
-                            className="rounded-md px-2 py-1 text-base leading-none"
-                          >
-                            +
-                          </button>
-                        </div>
-                      </td>
-                      <td className="px-4 py-4 text-sm text-gray-700 lg:px-4">
-                        {formatPrice(row.unitAmount, row.currencyCode)}
-                      </td>
-                      <td className="px-4 py-4 text-right text-sm font-medium text-gray-900 lg:px-4">
-                        {row.unitAmount == null
-                          ? 'Price unavailable'
-                          : formatPrice(row.lineTotal, row.currencyCode)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      </section>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
 
-      <section className="min-w-0 flex flex-col justify-start py-8 lg:min-h-[calc(100vh-4rem)] lg:pl-8 lg:pr-16 lg:py-10">
-          <div className="space-y-4">
-            <div className="space-y-3 text-sm text-gray-700">
-              <div className="flex items-center justify-between gap-4">
-                <span className="text-gray-500">Total Items</span>
-                <span className="font-semibold text-gray-900">{totalItems}</span>
-              </div>
-              <div className="flex items-center justify-between gap-4">
-                <span className="text-gray-500">Product Subtotal</span>
-                <span className="font-semibold text-gray-900">
-                  {formatPrice(subtotal, summaryCurrency)}
-                </span>
-              </div>
+      <div className="mt-8 border-t border-black/50 pt-5">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
+          <div className="space-y-3 text-sm text-gray-700">
+            <div className="flex items-center justify-between gap-4">
+              <span className="text-gray-500">Total Items</span>
+              <span className="font-semibold text-gray-900">{totalItems}</span>
+            </div>
+            <div className="flex items-center justify-between gap-4">
+              <span className="text-gray-500">Product Subtotal</span>
+              <span className="font-semibold text-gray-900">
+                {formatPrice(subtotal, summaryCurrency)}
+              </span>
             </div>
           </div>
 
-          <div className="mt-6 space-y-3">
+          <div className="space-y-3">
             <button
               type="button"
               onClick={addToCart}
@@ -283,7 +280,8 @@ export default function ProductActions({
 
             {message && <p className="pt-2 text-sm text-green-700">{message}</p>}
           </div>
-      </section>
-    </>
+        </div>
+      </div>
+    </section>
   )
 }
