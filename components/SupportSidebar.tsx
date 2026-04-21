@@ -42,13 +42,15 @@ export default function SupportSidebar({
   const [openItem, setOpenItem] = useState(defaultOpenKey ?? items[0]?.key ?? '')
 
   return (
-    <div className="flex h-full flex-col lg:sticky lg:top-16 lg:min-h-[calc(100vh-4rem)]">
-      <div className="space-y-10">
-        <Text as="h1" variant="h1Hero">
-          {title}
-        </Text>
+    <div className="flex h-full flex-col lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] lg:min-h-[calc(100vh-4rem)]">
+      <div className="flex flex-1 min-h-0 flex-col">
+        <div className="shrink-0 space-y-10">
+          <Text as="h1" variant="h1Hero">
+            {title}
+          </Text>
+        </div>
 
-        <div>
+        <div className="mt-10 min-h-0 flex-1 overflow-y-auto pr-2">
           {items.map((item) => {
             const isOpen = openItem === item.key
 
@@ -79,7 +81,7 @@ export default function SupportSidebar({
         </div>
       </div>
 
-      <div className="mt-10 pt-6 lg:mt-auto">
+      <div className="mt-6 shrink-0 border-t border-black/30 pt-6">
         <Button
           type="button"
           variant="secondary"

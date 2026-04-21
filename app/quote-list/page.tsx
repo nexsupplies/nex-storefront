@@ -98,7 +98,9 @@ export default function QuoteListPage() {
           <div className="hidden pb-2 lg:grid lg:grid-cols-[minmax(0,2.4fr)_minmax(0,1.15fr)_128px_40px] lg:gap-6">
             <Text variant="caption">Material</Text>
             <Text variant="caption">Variant</Text>
-            <Text variant="caption">Quantity</Text>
+            <div className="w-[112px]">
+              <Text variant="caption">Quantity</Text>
+            </div>
           </div>
 
           <div>
@@ -128,7 +130,7 @@ export default function QuoteListPage() {
                   </Text>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex w-[112px] items-center justify-between">
                   <Button
                     type="button"
                     onClick={() => updateQuantity(item.variantId, item.quantity - 1)}
@@ -136,12 +138,13 @@ export default function QuoteListPage() {
                     kind="icon"
                     icon={<span aria-hidden="true">−</span>}
                     aria-label={`Decrease quantity for ${item.productTitle}`}
+                    className="h-8 w-8 rounded-[4px]"
                   />
 
                   <Text
                     as="div"
                     variant="bodyMd"
-                    className="min-w-8 text-center font-semibold text-black"
+                    className="w-8 text-center font-semibold text-black"
                   >
                     {item.quantity}
                   </Text>
@@ -153,6 +156,7 @@ export default function QuoteListPage() {
                     kind="icon"
                     icon={<span aria-hidden="true">+</span>}
                     aria-label={`Increase quantity for ${item.productTitle}`}
+                    className="h-8 w-8 rounded-[4px]"
                   />
                 </div>
 

@@ -212,7 +212,9 @@ export default function CartPage() {
 
           <div className="hidden pb-2 lg:grid lg:grid-cols-[minmax(0,2.2fr)_128px_140px_140px_40px] lg:gap-6">
             <Text variant="caption">Material</Text>
-            <Text variant="caption">Quantity</Text>
+            <div className="w-[112px]">
+              <Text variant="caption">Quantity</Text>
+            </div>
             <Text variant="caption">Unit Price</Text>
             <Text variant="caption">Line Total</Text>
           </div>
@@ -272,7 +274,7 @@ export default function CartPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex w-[112px] items-center justify-between">
                   <Button
                     type="button"
                     onClick={() => handleDecrease(item)}
@@ -280,12 +282,13 @@ export default function CartPage() {
                     kind="icon"
                     icon={<span aria-hidden="true">−</span>}
                     aria-label={`Decrease quantity for ${item.product_title || item.title}`}
+                    className="h-8 w-8 rounded-[4px]"
                   />
 
                   <Text
                     as="div"
                     variant="bodyMd"
-                    className="min-w-8 text-center font-semibold text-black"
+                    className="w-8 text-center font-semibold text-black"
                   >
                     {item.quantity}
                   </Text>
@@ -297,6 +300,7 @@ export default function CartPage() {
                     kind="icon"
                     icon={<span aria-hidden="true">+</span>}
                     aria-label={`Increase quantity for ${item.product_title || item.title}`}
+                    className="h-8 w-8 rounded-[4px]"
                   />
                 </div>
 

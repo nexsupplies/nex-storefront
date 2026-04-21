@@ -6,8 +6,26 @@ const navItems = [
   { label: 'Catalog', href: '/products' },
   { label: 'Order Hub', href: '/order-hub' },
   { label: 'Quote List', href: '/quote-list' },
-  { label: 'Account', href: '/account' },
 ]
+
+function AccountIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 20 20"
+      fill="none"
+      className="h-[18px] w-[18px]"
+    >
+      <path
+        d="M10 10a3.333 3.333 0 1 0 0-6.667A3.333 3.333 0 0 0 10 10ZM4.167 16.667c0-2.762 2.611-5 5.833-5s5.833 2.238 5.833 5"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
 
 export default function Navbar() {
   return (
@@ -37,6 +55,13 @@ export default function Navbar() {
               </Link>
             ))}
             <CartNavLink />
+            <Link
+              href="/account"
+              aria-label="Account"
+              className={`${textStyles.navLink} inline-flex h-10 w-10 items-center justify-center rounded-[12px] border border-transparent transition hover:border-black/20`}
+            >
+              <AccountIcon />
+            </Link>
           </nav>
         </div>
       </div>
