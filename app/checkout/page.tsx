@@ -917,9 +917,9 @@ export default function CheckoutPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start">
         <section
-          className={`min-w-0 px-6 pb-10 pt-0 transition-colors duration-200 lg:px-8 lg:pb-10 lg:pt-0 ${
+          className={`min-w-0 px-6 py-0 transition-colors duration-200 lg:px-8 lg:py-0 ${
             step2Unlocked ? 'bg-[#f2f2f2]' : 'bg-white opacity-55'
           }`}
         >
@@ -1133,7 +1133,7 @@ export default function CheckoutPage() {
         </section>
 
         <section
-          className={`min-w-0 border-t border-black/50 px-6 pb-10 pt-0 transition-colors duration-200 lg:border-l lg:border-t-0 lg:pb-10 lg:pl-8 lg:pr-16 lg:pt-0 ${
+          className={`min-w-0 border-t border-black/50 px-6 py-0 transition-colors duration-200 lg:border-l lg:border-t-0 lg:pl-8 lg:pr-16 lg:py-0 ${
             step3Unlocked ? 'bg-[#f2f2f2]' : 'bg-white opacity-55'
           }`}
         >
