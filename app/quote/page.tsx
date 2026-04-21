@@ -6,6 +6,7 @@ import PageFrame from '@/components/PageFrame'
 import Button from '@/components/ui/Button'
 import PageIntro from '@/components/ui/PageIntro'
 import Text from '@/components/ui/Typography'
+import { createQuoteRequest } from '@/lib/order-hub'
 
 type QuoteItem = {
   productId: string
@@ -34,6 +35,7 @@ export default function QuotePage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [submittedQuoteId, setSubmittedQuoteId] = useState('')
+  const [submittedQuoteNumber, setSubmittedQuoteNumber] = useState('')
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -41,14 +43,6 @@ export default function QuotePage() {
 
     if (quoteList.length === 0) {
       setError('Your quote list is empty.')
-      return
-    }
-
-    const backendUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL
-    const publishableKey = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY
-
-    if (!backendUrl || !publishableKey) {
-      setError('Storefront Medusa environment variables are missing.')
       return
     }
 
@@ -69,27 +63,13 @@ export default function QuotePage() {
     setIsSubmitting(true)
 
     try {
-      const res = await fetch(`${backendUrl}/store/quote-requests`, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          'x-publishable-api-key': publishableKey,
-        },
-        body: JSON.stringify(payload),
-      })
-
-      const text = await res.text()
-
-      if (!res.ok) {
-        throw new Error(text || 'Failed to submit quote request.')
-      }
-
-      const data = text ? JSON.parse(text) : {}
+      const data = await createQuoteRequest(payload)
 
       localStorage.setItem('last-quote-request', JSON.stringify(data))
       localStorage.removeItem('quote-list')
       setQuoteList([])
       setSubmittedQuoteId(data.quote_request?.id || '')
+      setSubmittedQuoteNumber(data.quote_request?.quote_number || '')
       setSubmitted(true)
     } catch (err) {
       setError(
@@ -115,6 +95,14 @@ export default function QuotePage() {
           <Text variant="bodyMd">
             Your quote request has been sent to Medusa successfully.
           </Text>
+          {submittedQuoteNumber ? (
+            <div className="rounded-[12px] border border-[#1D4DC5]/20 bg-[#1D4DC5]/6 px-5 py-5">
+              <Text variant="caption">Quote Number</Text>
+              <Text as="div" variant="price" className="mt-3 text-[#1D4DC5]">
+                {submittedQuoteNumber}
+              </Text>
+            </div>
+          ) : null}
           {submittedQuoteId && (
             <Text variant="bodySm">Quote ID: {submittedQuoteId}</Text>
           )}
@@ -123,8 +111,15 @@ export default function QuotePage() {
             <Button href="/products" variant="tertiary">
               Continue Browsing
             </Button>
-            <Button href="/quote-list" variant="tertiary">
-              Back to Quote List
+            <Button
+              href={
+                submittedQuoteNumber
+                  ? `/order-hub?quote_number=${encodeURIComponent(submittedQuoteNumber)}`
+                  : '/order-hub'
+              }
+              variant="tertiary"
+            >
+              Open Quote Hub
             </Button>
           </div>
         </div>

@@ -23,7 +23,7 @@ import {
   retrieveCart,
   updateCart,
 } from '@/lib/cart'
-import { createQuoteRequest, rememberOrderHubEmail } from '@/lib/order-hub'
+import { createQuoteRequest } from '@/lib/order-hub'
 
 type CartLineItem = {
   id: string
@@ -724,7 +724,6 @@ export default function CheckoutPage() {
       }
 
       clearStoredCartId()
-      rememberOrderHubEmail(email.trim().toLowerCase())
 
       const params = new URLSearchParams({
         order_id: completion.order.id,
@@ -803,15 +802,18 @@ export default function CheckoutPage() {
       })
 
       clearStoredCartId()
-      rememberOrderHubEmail(email.trim().toLowerCase())
 
       const quoteId = response?.quote_request?.id
+      const quoteNumber = response?.quote_request?.quote_number
       const params = new URLSearchParams({
         email: email.trim().toLowerCase(),
       })
 
       if (quoteId) {
         params.set('quote_id', quoteId)
+      }
+      if (quoteNumber) {
+        params.set('quote_number', quoteNumber)
       }
 
       startTransition(() => {

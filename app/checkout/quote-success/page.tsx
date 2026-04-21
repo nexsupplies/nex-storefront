@@ -22,6 +22,7 @@ export default async function QuoteSuccessPage({
   const params = await searchParams
   const email = readParam(params.email)
   const quoteId = readParam(params.quote_id)
+  const quoteNumber = readParam(params.quote_number)
 
   return (
     <PageFrame
@@ -34,7 +35,7 @@ export default async function QuoteSuccessPage({
     >
       <Text variant="bodyMd" className="max-w-2xl">
         We received your delivery details and will prepare the freight quote next.
-        You can return to Order Hub later to review the quote and continue payment.
+        You can return to Quote Hub later to review the quote and continue payment.
       </Text>
 
       <div className="mt-8 grid gap-6 md:grid-cols-2">
@@ -43,6 +44,13 @@ export default async function QuoteSuccessPage({
             Request Details
           </Text>
           <div className="mt-4 space-y-3">
+            {quoteNumber && (
+              <p>
+                <Text as="span" variant="muted">Quote Number</Text>
+                <br />
+                <Text as="span" variant="bodyMd" className="font-semibold text-[#1D4DC5]">{quoteNumber}</Text>
+              </p>
+            )}
             {quoteId && (
               <p>
                 <Text as="span" variant="muted">Quote Request</Text>
@@ -66,17 +74,21 @@ export default async function QuoteSuccessPage({
           </Text>
           <div className="mt-4 space-y-3">
             <Text variant="bodySm">Our team will review the route and finalize the shipping quote.</Text>
-            <Text variant="bodySm">The quote will appear in Order Hub and can also be sent to the customer email.</Text>
+            <Text variant="bodySm">The quote will appear in Quote Hub and can also be sent to the customer email.</Text>
           </div>
         </section>
       </div>
 
       <div className="mt-8 flex flex-wrap gap-3">
         <Button
-          href={email ? `/order-hub?email=${encodeURIComponent(email)}` : '/order-hub'}
+          href={
+            quoteNumber
+              ? `/order-hub?quote_number=${encodeURIComponent(quoteNumber)}`
+              : '/order-hub'
+          }
           variant="primary"
         >
-          Go to Order Hub
+          Go to Quote Hub
         </Button>
         <Button href="/products" variant="secondary">
           Browse Materials

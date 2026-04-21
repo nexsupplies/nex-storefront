@@ -1,7 +1,7 @@
 const BACKEND_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL
 const PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY
 
-const ORDER_HUB_EMAIL_KEY = "nex_order_hub_email"
+const QUOTE_HUB_ACCESS_KEY = "nex_quote_hub_access"
 
 function getHeaders() {
   if (!PUBLISHABLE_KEY) {
@@ -30,8 +30,9 @@ export type OrderHubItem = {
   product_handle?: string | null
 }
 
-export type OrderHubOrder = {
+export type QuoteHubQuote = {
   id: string
+  quote_number?: string | null
   source: "order" | "quote_request"
   reference: string
   display_id?: string | null
@@ -61,6 +62,22 @@ export type OrderHubOrder = {
   address_summary?: string | null
   response_note?: string | null
   items: OrderHubItem[]
+}
+
+export type CreateQuoteRequestResponse = {
+  quote_request?: {
+    id: string
+    quote_number?: string | null
+    items?: Array<{
+      id: string
+      quantity: number
+    }>
+  }
+}
+
+export type QuoteHubAccountAccess = {
+  email: string
+  quoteNumber: string
 }
 
 export type CreateQuoteRequestPayload = {
@@ -102,14 +119,47 @@ export type CreateQuoteRequestPayload = {
   }[]
 }
 
-export function rememberOrderHubEmail(email: string) {
-  if (typeof window === "undefined") return
-  localStorage.setItem(ORDER_HUB_EMAIL_KEY, email)
+function normalizeQuoteNumber(value: string) {
+  return value.trim().toUpperCase()
 }
 
-export function getRememberedOrderHubEmail() {
-  if (typeof window === "undefined") return ""
-  return localStorage.getItem(ORDER_HUB_EMAIL_KEY) || ""
+export function rememberQuoteHubAccess(access: QuoteHubAccountAccess) {
+  if (typeof window === "undefined") return
+  localStorage.setItem(QUOTE_HUB_ACCESS_KEY, JSON.stringify({
+    email: access.email.trim().toLowerCase(),
+    quoteNumber: normalizeQuoteNumber(access.quoteNumber),
+  }))
+}
+
+export function getRememberedQuoteHubAccess(): QuoteHubAccountAccess | null {
+  if (typeof window === "undefined") return null
+
+  const stored = localStorage.getItem(QUOTE_HUB_ACCESS_KEY)
+
+  if (!stored) {
+    return null
+  }
+
+  try {
+    const parsed = JSON.parse(stored)
+
+    if (
+      typeof parsed?.email === "string" &&
+      typeof parsed?.quoteNumber === "string"
+    ) {
+      return {
+        email: parsed.email,
+        quoteNumber: parsed.quoteNumber,
+      }
+    }
+  } catch {}
+
+  return null
+}
+
+export function clearRememberedQuoteHubAccess() {
+  if (typeof window === "undefined") return
+  localStorage.removeItem(QUOTE_HUB_ACCESS_KEY)
 }
 
 export async function createQuoteRequest(payload: CreateQuoteRequestPayload) {
@@ -125,16 +175,16 @@ export async function createQuoteRequest(payload: CreateQuoteRequestPayload) {
     throw new Error(text || "Failed to create quote request.")
   }
 
-  return text ? JSON.parse(text) : {}
+  return (text ? JSON.parse(text) : {}) as CreateQuoteRequestResponse
 }
 
-export async function listOrderHubOrders(email: string) {
+export async function fetchQuoteHubQuote(quoteNumber: string) {
   const search = new URLSearchParams({
-    email,
+    quote_number: normalizeQuoteNumber(quoteNumber),
   })
 
   const res = await fetch(
-    `${ensureBackendUrl()}/store/order-hub/orders?${search.toString()}`,
+    `${ensureBackendUrl()}/store/order-hub/quotes?${search.toString()}`,
     {
       method: "GET",
       headers: getHeaders(),
@@ -145,11 +195,36 @@ export async function listOrderHubOrders(email: string) {
   const text = await res.text()
 
   if (!res.ok) {
-    throw new Error(text || "Failed to load Order Hub.")
+    throw new Error(text || "Failed to load quote.")
   }
 
   const data = text ? JSON.parse(text) : {}
-  return (data.orders || []) as OrderHubOrder[]
+  return data.quote as QuoteHubQuote
+}
+
+export async function accessQuoteHubAccount(
+  access: QuoteHubAccountAccess
+) {
+  const res = await fetch(`${ensureBackendUrl()}/store/order-hub/account-access`, {
+    method: "POST",
+    headers: getHeaders(),
+    body: JSON.stringify({
+      email: access.email.trim().toLowerCase(),
+      quote_number: normalizeQuoteNumber(access.quoteNumber),
+    }),
+  })
+
+  const text = await res.text()
+
+  if (!res.ok) {
+    throw new Error(text || "Failed to access quote hub.")
+  }
+
+  const data = text ? JSON.parse(text) : {}
+  return {
+    account: data.account as { email: string },
+    quotes: (data.quotes || []) as QuoteHubQuote[],
+  }
 }
 
 export async function prepareOrderPaymentCollection(orderId: string, email: string) {

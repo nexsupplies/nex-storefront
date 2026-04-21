@@ -1,32 +1,18 @@
 'use client'
 
-import { useSearchParams } from 'next/navigation'
 import { Suspense, useEffect, useEffectEvent, useMemo, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import PageFrame from '@/components/PageFrame'
 import Button from '@/components/ui/Button'
-import PageIntro from '@/components/ui/PageIntro'
 import Text from '@/components/ui/Typography'
 import {
-  getRememberedOrderHubEmail,
-  listOrderHubOrders,
-  prepareOrderPaymentCollection,
-  rememberOrderHubEmail,
-  type OrderHubOrder,
+  accessQuoteHubAccount,
+  clearRememberedQuoteHubAccess,
+  fetchQuoteHubQuote,
+  getRememberedQuoteHubAccess,
+  rememberQuoteHubAccess,
+  type QuoteHubQuote,
 } from '@/lib/order-hub'
-
-const tabs = [
-  { id: 'all', label: 'All' },
-  { id: 'saved', label: 'Saved' },
-  { id: 'paid', label: 'Paid' },
-  { id: 'waiting_quote', label: 'Waiting Quote' },
-  { id: 'pending_payment', label: 'Pending Payment' },
-  { id: 'payment_failed', label: 'Payment Failed' },
-  { id: 'ready', label: 'Ready' },
-  { id: 'completed', label: 'Completed' },
-  { id: 'processing', label: 'Processing' },
-] as const
-
-type TabId = (typeof tabs)[number]['id']
 
 function formatPrice(amount?: number | null, currencyCode = 'CAD') {
   if (amount == null) return 'TBD'
@@ -39,6 +25,7 @@ function formatPrice(amount?: number | null, currencyCode = 'CAD') {
 
 function formatDate(value?: string | null) {
   if (!value) return '-'
+
   return new Intl.DateTimeFormat('en-CA', {
     month: 'short',
     day: 'numeric',
@@ -46,362 +33,455 @@ function formatDate(value?: string | null) {
   }).format(new Date(value))
 }
 
-function matchesTab(order: OrderHubOrder, tab: TabId) {
-  if (tab === 'all') return true
-  if (tab === 'saved') {
-    return (
-      order.source === 'quote_request' ||
-      order.status === 'awaiting_shipping_quote' ||
-      order.status === 'quoted_shipping'
-    )
-  }
-  if (tab === 'paid') return order.status === 'paid'
-  if (tab === 'waiting_quote') return order.status === 'awaiting_shipping_quote'
-  if (tab === 'pending_payment') {
-    return order.status === 'pending_payment' || order.status === 'quoted_shipping'
-  }
-  if (tab === 'payment_failed') return order.status === 'payment_failed'
-  if (tab === 'ready') {
-    return (
-      order.status === 'ready_for_pickup' || order.status === 'ready_for_delivery'
-    )
-  }
-  if (tab === 'completed') return order.status === 'completed'
-  if (tab === 'processing') return order.status === 'processing'
-  return true
+function QuoteStatusPill({
+  label,
+  emphasis = 'default',
+}: {
+  label: string
+  emphasis?: 'default' | 'accent'
+}) {
+  const className =
+    emphasis === 'accent'
+      ? 'border-[#1D4DC5]/20 bg-[#1D4DC5]/6 text-[#1D4DC5]'
+      : 'border-black/15 bg-black/[0.03] text-black/70'
+
+  return (
+    <Text
+      as="span"
+      variant="caption"
+      className={`inline-flex rounded-full border px-3 py-1 ${className}`}
+    >
+      {label}
+    </Text>
+  )
 }
 
-function OrderHubPageContent() {
-  const searchParams = useSearchParams()
-  const [email, setEmail] = useState('')
-  const [orders, setOrders] = useState<OrderHubOrder[]>([])
-  const [loading, setLoading] = useState(false)
-  const [message, setMessage] = useState('')
-  const [activeTab, setActiveTab] = useState<TabId>('all')
-  const [payingId, setPayingId] = useState('')
+function QuoteDetailCard({ quote }: { quote: QuoteHubQuote }) {
+  return (
+    <section className="rounded-[12px] border border-black/20 bg-white p-6 lg:p-7">
+      <div className="flex flex-col gap-5 border-b border-black/12 pb-5 lg:flex-row lg:items-start lg:justify-between">
+        <div className="space-y-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <Text as="h2" variant="h2Section">
+              {quote.quote_number || quote.reference}
+            </Text>
+            <QuoteStatusPill label={quote.status_label} emphasis="accent" />
+          </div>
 
-  const loadInitialOrders = useEffectEvent((nextEmail: string) => {
-    void handleLoad(nextEmail)
+          <Text variant="bodyMd" className="max-w-2xl text-black/64">
+            Review the submitted materials, current quote status, and fulfillment
+            details in one place.
+          </Text>
+        </div>
+
+        <div className="grid gap-3 text-left lg:min-w-[220px]">
+          <div className="flex items-center justify-between gap-6">
+            <Text as="span" variant="muted">
+              Submitted
+            </Text>
+            <Text as="span" variant="bodyMd" className="font-semibold text-black">
+              {formatDate(quote.created_at)}
+            </Text>
+          </div>
+          <div className="flex items-center justify-between gap-6">
+            <Text as="span" variant="muted">
+              Fulfillment
+            </Text>
+            <Text as="span" variant="bodyMd" className="font-semibold text-black">
+              {quote.fulfillment_label}
+            </Text>
+          </div>
+          <div className="flex items-center justify-between gap-6">
+            <Text as="span" variant="muted">
+              Payment
+            </Text>
+            <Text as="span" variant="bodyMd" className="font-semibold text-black">
+              {quote.payment_method
+                ? quote.payment_method.replace(/_/g, ' ')
+                : 'TBD'}
+            </Text>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid gap-8 border-b border-black/12 py-5 lg:grid-cols-[minmax(0,1.25fr)_minmax(280px,0.75fr)]">
+        <div>
+          <Text as="h3" variant="h4CardTitle">
+            Items
+          </Text>
+          <div className="mt-4 divide-y divide-black/10">
+            {quote.items.map((item) => (
+              <div
+                key={item.id}
+                className="grid grid-cols-[minmax(0,1fr)_auto] gap-4 py-3 first:pt-0 last:pb-0"
+              >
+                <div className="min-w-0">
+                  <Text variant="bodyMd" className="font-semibold text-black">
+                    {item.title}
+                  </Text>
+                  <Text variant="bodySm" className="mt-1 text-black/62">
+                    {item.variant_title || 'Default variant'}
+                  </Text>
+                </div>
+                <Text variant="bodyMd" className="font-semibold text-black">
+                  Qty {item.quantity}
+                </Text>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <Text as="h3" variant="h4CardTitle">
+            Summary
+          </Text>
+          <div className="mt-4 space-y-3">
+            <div className="flex items-center justify-between gap-6">
+              <Text as="span" variant="muted">
+                Subtotal
+              </Text>
+              <Text as="span" variant="bodyMd" className="font-semibold text-black">
+                {formatPrice(quote.subtotal, quote.currency_code || 'CAD')}
+              </Text>
+            </div>
+            <div className="flex items-center justify-between gap-6">
+              <Text as="span" variant="muted">
+                Shipping
+              </Text>
+              <Text as="span" variant="bodyMd" className="font-semibold text-black">
+                {formatPrice(quote.shipping_total, quote.currency_code || 'CAD')}
+              </Text>
+            </div>
+            <div className="flex items-center justify-between gap-6">
+              <Text as="span" variant="muted">
+                Tax
+              </Text>
+              <Text as="span" variant="bodyMd" className="font-semibold text-black">
+                {formatPrice(quote.tax_total, quote.currency_code || 'CAD')}
+              </Text>
+            </div>
+            <div className="flex items-center justify-between gap-6 border-t border-black/12 pt-3">
+              <Text as="span" variant="h4CardTitle">
+                Total
+              </Text>
+              <Text as="span" variant="bodyMd" className="font-semibold text-black">
+                {formatPrice(quote.total, quote.currency_code || 'CAD')}
+              </Text>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid gap-6 pt-5 lg:grid-cols-2">
+        <div>
+          <Text as="h3" variant="h4CardTitle">
+            Delivery / Pickup
+          </Text>
+          <div className="mt-4 space-y-3">
+            <div className="flex items-start justify-between gap-6">
+              <Text as="span" variant="muted">
+                Method
+              </Text>
+              <Text as="span" variant="bodyMd" className="max-w-[240px] text-right font-semibold text-black">
+                {quote.fulfillment_label}
+              </Text>
+            </div>
+            <div className="flex items-start justify-between gap-6">
+              <Text as="span" variant="muted">
+                Address
+              </Text>
+              <Text as="span" variant="bodyMd" className="max-w-[240px] text-right font-semibold text-black">
+                {quote.address_summary || quote.pickup_location || 'Pending'}
+              </Text>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <Text as="h3" variant="h4CardTitle">
+            Response
+          </Text>
+          <Text variant="bodyMd" className="mt-4 text-black/68">
+            {quote.response_note || 'No response note has been added yet.'}
+          </Text>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function QuoteHubPageContent() {
+  const searchParams = useSearchParams()
+  const [quoteNumber, setQuoteNumber] = useState('')
+  const [accountEmail, setAccountEmail] = useState('')
+  const [accountQuoteNumber, setAccountQuoteNumber] = useState('')
+  const [selectedQuote, setSelectedQuote] = useState<QuoteHubQuote | null>(null)
+  const [accountQuotes, setAccountQuotes] = useState<QuoteHubQuote[]>([])
+  const [loadingSingle, setLoadingSingle] = useState(false)
+  const [loadingAccount, setLoadingAccount] = useState(false)
+  const [message, setMessage] = useState('')
+  const [mode, setMode] = useState<'single' | 'account' | null>(null)
+
+  const loadRememberedState = useEffectEvent(async () => {
+    const queryQuoteNumber = searchParams.get('quote_number')?.trim() || ''
+    const rememberedAccess = getRememberedQuoteHubAccess()
+
+    if (queryQuoteNumber) {
+      setQuoteNumber(queryQuoteNumber)
+      await handleLookup(queryQuoteNumber)
+      return
+    }
+
+    if (rememberedAccess) {
+      setAccountEmail(rememberedAccess.email)
+      setAccountQuoteNumber(rememberedAccess.quoteNumber)
+      await handleAccountAccess(rememberedAccess.email, rememberedAccess.quoteNumber)
+    }
   })
 
   useEffect(() => {
-    const emailFromQuery = searchParams.get('email')?.trim() || ''
-    const initialEmail = emailFromQuery || getRememberedOrderHubEmail()
-    setEmail(initialEmail)
-
-    if (initialEmail) {
-      loadInitialOrders(initialEmail)
-    }
+    void loadRememberedState()
   }, [searchParams])
 
-  async function handleLoad(nextEmail = email) {
-    if (!nextEmail.trim()) {
-      setMessage('Enter the customer email used at checkout.')
+  async function handleLookup(nextQuoteNumber = quoteNumber) {
+    if (!nextQuoteNumber.trim()) {
+      setMessage('Enter a quote number to continue.')
       return
     }
 
     try {
-      setLoading(true)
+      setLoadingSingle(true)
       setMessage('')
-      const normalized = nextEmail.trim().toLowerCase()
-      rememberOrderHubEmail(normalized)
-      const data = await listOrderHubOrders(normalized)
-      setOrders(data)
-
-      if (data.length === 0) {
-        setMessage('No orders or shipping-quote requests were found for this email yet.')
-      }
+      const quote = await fetchQuoteHubQuote(nextQuoteNumber)
+      setSelectedQuote(quote)
+      setAccountQuotes([])
+      setMode('single')
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Failed to load Order Hub.')
+      setSelectedQuote(null)
+      setMode(null)
+      setMessage(error instanceof Error ? error.message : 'Failed to load quote.')
     } finally {
-      setLoading(false)
+      setLoadingSingle(false)
     }
   }
 
-  async function handlePreparePayment(order: OrderHubOrder) {
+  async function handleAccountAccess(
+    nextEmail = accountEmail,
+    nextQuoteNumber = accountQuoteNumber
+  ) {
+    if (!nextEmail.trim() || !nextQuoteNumber.trim()) {
+      setMessage('Enter both account email and one valid quote number.')
+      return
+    }
+
     try {
-      setPayingId(order.id)
+      setLoadingAccount(true)
       setMessage('')
-      await prepareOrderPaymentCollection(order.id, email.trim().toLowerCase())
-      setMessage(
-        'Online payment is still a placeholder. The order payment collection has been prepared so this entry can become the future payment handoff point.'
-      )
-      await handleLoad(email)
+      const data = await accessQuoteHubAccount({
+        email: nextEmail,
+        quoteNumber: nextQuoteNumber,
+      })
+
+      rememberQuoteHubAccess({
+        email: nextEmail,
+        quoteNumber: nextQuoteNumber,
+      })
+
+      setAccountQuotes(data.quotes)
+      setSelectedQuote(data.quotes[0] || null)
+      setMode('account')
     } catch (error) {
+      setAccountQuotes([])
+      setSelectedQuote(null)
+      setMode(null)
       setMessage(
-        error instanceof Error ? error.message : 'Failed to prepare the payment entry.'
+        error instanceof Error ? error.message : 'Failed to access quote hub.'
       )
     } finally {
-      setPayingId('')
+      setLoadingAccount(false)
     }
   }
 
-  const filteredOrders = useMemo(
-    () => orders.filter((order) => matchesTab(order, activeTab)),
-    [orders, activeTab]
-  )
+  function handleSignOut() {
+    clearRememberedQuoteHubAccess()
+    setAccountEmail('')
+    setAccountQuoteNumber('')
+    setAccountQuotes([])
+    setSelectedQuote(null)
+    setMode(null)
+    setMessage('')
+  }
+
+  const contentTitle = useMemo(() => {
+    if (mode === 'account') {
+      return 'Account Quotes'
+    }
+
+    if (mode === 'single') {
+      return 'Quote Details'
+    }
+
+    return 'Quote Access'
+  }, [mode])
 
   return (
     <PageFrame
       mergeContent
+      contentScroll
       sidebar={
-        <PageIntro
-          label="Order Hub"
-          title="Orders, payment follow-up, and delivery quotes in one place."
-          body="Enter the checkout email to view paid orders, pending payment orders, and out-of-city delivery quote requests."
-        />
+        <div className="flex h-full items-start">
+          <Text as="h1" variant="h1Hero">
+            Quote Hub
+          </Text>
+        </div>
       }
     >
-      <div className="rounded-[12px] border border-black/30 bg-white p-6">
-        <div className="flex flex-col gap-3 md:flex-row">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="customer@email.com"
-            className="min-w-0 flex-1 rounded-xl border px-4 py-3"
-          />
-          <Button
-            type="button"
-            onClick={() => void handleLoad()}
-            disabled={loading}
-            variant="primary"
-          >
-            {loading ? 'Loading...' : 'Load Order Hub'}
-          </Button>
-        </div>
+      <div className="space-y-8">
+        <header className="max-w-3xl">
+          <Text as="h2" variant="h2Section">
+            {contentTitle}
+          </Text>
+        </header>
 
-        {message && (
-          <div className="mt-4 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3">
-            <Text variant="bodySm" className="text-blue-700">
-              {message}
+        <section className="grid gap-6 xl:grid-cols-2">
+          <div className="rounded-[12px] border border-black/20 bg-white p-6">
+            <Text as="h3" variant="h4CardTitle">
+              Search by Quote Number
+            </Text>
+            <Text variant="bodySm" className="mt-3 max-w-lg text-black/64">
+              Enter one quote number to open a single quote record directly.
+            </Text>
+
+            <div className="mt-5 flex flex-col gap-3 md:flex-row">
+              <input
+                type="text"
+                value={quoteNumber}
+                onChange={(e) => setQuoteNumber(e.target.value.toUpperCase())}
+                placeholder="Q20260421-0001"
+                className="min-w-0 flex-1 rounded-[12px] border border-black/20 px-4 py-3 outline-none transition focus:border-black"
+              />
+              <Button
+                type="button"
+                onClick={() => void handleLookup()}
+                disabled={loadingSingle}
+                variant="primary"
+              >
+                {loadingSingle ? 'Loading...' : 'Open Quote'}
+              </Button>
+            </div>
+          </div>
+
+          <div className="rounded-[12px] border border-black/20 bg-white p-6">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <Text as="h3" variant="h4CardTitle">
+                  Account Access
+                </Text>
+                <Text variant="bodySm" className="mt-3 max-w-lg text-black/64">
+                  Sign in with the account email and one valid quote number to view
+                  all quotes linked to that account.
+                </Text>
+              </div>
+
+              {mode === 'account' ? (
+                <Button type="button" variant="tertiary" onClick={handleSignOut}>
+                  Sign Out
+                </Button>
+              ) : null}
+            </div>
+
+            <div className="mt-5 grid gap-3">
+              <input
+                type="email"
+                value={accountEmail}
+                onChange={(e) => setAccountEmail(e.target.value)}
+                placeholder="account@email.com"
+                className="w-full rounded-[12px] border border-black/20 px-4 py-3 outline-none transition focus:border-black"
+              />
+              <div className="flex flex-col gap-3 md:flex-row">
+                <input
+                  type="text"
+                  value={accountQuoteNumber}
+                  onChange={(e) =>
+                    setAccountQuoteNumber(e.target.value.toUpperCase())
+                  }
+                  placeholder="One valid quote number"
+                  className="min-w-0 flex-1 rounded-[12px] border border-black/20 px-4 py-3 outline-none transition focus:border-black"
+                />
+                <Button
+                  type="button"
+                  onClick={() => void handleAccountAccess()}
+                  disabled={loadingAccount}
+                  variant="secondary"
+                >
+                  {loadingAccount ? 'Accessing...' : 'Access Account'}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {message ? (
+          <div className="rounded-[12px] border border-black/15 bg-black/[0.03] px-4 py-3">
+            <Text variant="bodySm">{message}</Text>
+          </div>
+        ) : null}
+
+        {mode === 'account' && accountQuotes.length > 0 ? (
+          <section className="grid gap-6 xl:grid-cols-[minmax(280px,0.7fr)_minmax(0,1.3fr)]">
+            <div className="rounded-[12px] border border-black/20 bg-white p-4">
+              <Text as="h3" variant="h4CardTitle" className="px-2 pb-3">
+                Quotes
+              </Text>
+
+              <div className="divide-y divide-black/10">
+                {accountQuotes.map((quote) => {
+                  const isActive = selectedQuote?.id === quote.id
+
+                  return (
+                    <button
+                      key={quote.id}
+                      type="button"
+                      onClick={() => setSelectedQuote(quote)}
+                      className={`grid w-full gap-2 px-2 py-4 text-left transition ${
+                        isActive ? 'bg-black/[0.03]' : 'hover:bg-black/[0.02]'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-4">
+                        <Text variant="bodyMd" className="font-semibold text-black">
+                          {quote.quote_number || quote.reference}
+                        </Text>
+                        <QuoteStatusPill label={quote.status_label} />
+                      </div>
+                      <Text variant="bodySm" className="text-black/62">
+                        {formatDate(quote.created_at)}
+                      </Text>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+
+            {selectedQuote ? <QuoteDetailCard quote={selectedQuote} /> : null}
+          </section>
+        ) : selectedQuote ? (
+          <QuoteDetailCard quote={selectedQuote} />
+        ) : (
+          <div className="rounded-[12px] border border-dashed border-black/20 bg-white px-6 py-10">
+            <Text variant="bodyMd" className="text-black/68">
+              Search a quote number or access an account to view quote details.
             </Text>
           </div>
-        )}
-      </div>
-
-      <div className="mt-8 flex flex-wrap gap-2">
-        {tabs.map((tab) => (
-          <Button
-            key={tab.id}
-            type="button"
-            onClick={() => setActiveTab(tab.id)}
-            variant={activeTab === tab.id ? 'primary' : 'secondary'}
-            className="rounded-full"
-          >
-            {tab.label}
-          </Button>
-        ))}
-      </div>
-
-      <div className="mt-8 space-y-4">
-        {filteredOrders.length === 0 ? (
-          <div className="rounded-[12px] border border-dashed border-black/30 p-8">
-            <Text variant="bodyMd">No entries match this filter.</Text>
-          </div>
-        ) : (
-          filteredOrders.map((order) => (
-            <section
-              key={`${order.source}-${order.id}`}
-              className="rounded-[12px] border border-black/30 bg-white p-6"
-            >
-              <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-                <div className="space-y-4">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Text as="h2" variant="h2Section">
-                      {order.reference}
-                    </Text>
-                    <Text as="span" variant="caption" className="rounded-full border px-3 py-1 text-black/72">
-                      {order.status_label}
-                    </Text>
-                    {order.source === 'quote_request' && (
-                      <Text as="span" variant="caption" className="rounded-full border border-amber-300 bg-amber-50 px-3 py-1 text-amber-800">
-                        Quote Request
-                      </Text>
-                    )}
-                  </div>
-
-                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-                    <div>
-                      <Text variant="muted">Created</Text>
-                      <Text variant="bodyMd" className="mt-1 font-semibold text-black">{formatDate(order.created_at)}</Text>
-                    </div>
-                    <div>
-                      <Text variant="muted">Fulfillment</Text>
-                      <Text variant="bodyMd" className="mt-1 font-semibold text-black">{order.fulfillment_label}</Text>
-                    </div>
-                    <div>
-                      <Text variant="muted">Quote</Text>
-                      <Text variant="bodyMd" className="mt-1 font-semibold text-black">
-                        {order.quote_required ? order.status_label : 'Not required'}
-                      </Text>
-                    </div>
-                    <div>
-                      <Text variant="muted">Payment</Text>
-                      <Text variant="bodyMd" className="mt-1 font-semibold text-black">
-                        {order.payment_required ? 'Action required' : 'No action now'}
-                      </Text>
-                    </div>
-                  </div>
-
-                  <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-                    <div>
-                      <Text variant="bodyMd" className="font-semibold text-black">Items</Text>
-                      <div className="mt-2 space-y-2">
-                        {order.items.map((item) => (
-                          <div
-                            key={item.id}
-                            className="rounded-2xl border border-dashed px-4 py-3 text-sm"
-                          >
-                            <Text variant="bodyMd" className="font-semibold text-black">{item.title}</Text>
-                            <Text variant="caption" className="mt-1">
-                              {item.variant_title || 'Default variant'}
-                            </Text>
-                            <Text variant="bodySm" className="mt-1">Qty: {item.quantity}</Text>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="rounded-2xl bg-gray-50 p-4">
-                      <Text variant="bodyMd" className="font-semibold text-black">Order Snapshot</Text>
-                      <div className="mt-3 space-y-2">
-                        <div className="flex justify-between gap-4">
-                          <Text as="span" variant="muted">Subtotal</Text>
-                          <Text as="span" variant="bodySm">{formatPrice(order.subtotal, order.currency_code || 'CAD')}</Text>
-                        </div>
-                        <div className="flex justify-between gap-4">
-                          <Text as="span" variant="muted">Shipping</Text>
-                          <Text as="span" variant="bodySm">
-                            {order.quote_required && order.quoted_amount == null
-                              ? 'TBD'
-                              : formatPrice(order.shipping_total, order.currency_code || 'CAD')}
-                          </Text>
-                        </div>
-                        <div className="flex justify-between gap-4">
-                          <Text as="span" variant="muted">Tax</Text>
-                          <Text as="span" variant="bodySm">{formatPrice(order.tax_total, order.currency_code || 'CAD')}</Text>
-                        </div>
-                        <div className="flex justify-between gap-4 border-t pt-2">
-                          <Text as="span" variant="bodyMd" className="font-semibold text-black">Total</Text>
-                          <Text as="span" variant="bodyMd" className="font-semibold text-black">{formatPrice(order.total, order.currency_code || 'CAD')}</Text>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div>
-                      <Text variant="muted">Pickup / Delivery Info</Text>
-                      <Text variant="bodyMd" className="mt-1 font-semibold text-black">
-                        {order.pickup_location || order.address_summary || '-'}
-                      </Text>
-                      {order.pickup_date && (
-                        <Text variant="bodySm" className="mt-1">
-                          {order.pickup_date}
-                          {order.pickup_time ? `, ${order.pickup_time}` : ''}
-                        </Text>
-                      )}
-                    </div>
-
-                    <div>
-                      <Text variant="muted">Next Step</Text>
-                      <Text variant="bodyMd" className="mt-1 font-semibold text-black">
-                        {order.status === 'awaiting_shipping_quote' &&
-                          'Waiting for our team to send the freight quote.'}
-                        {order.status === 'quoted_shipping' &&
-                          'Shipping quote is ready. Payment handoff will appear here next.'}
-                        {order.status === 'pending_payment' &&
-                          'Payment is still outstanding for this order.'}
-                        {order.status === 'ready_for_pickup' &&
-                          'This order is ready to be picked up.'}
-                        {order.status === 'ready_for_delivery' &&
-                          'This order is ready for delivery dispatch.'}
-                        {order.status === 'processing' && 'We are preparing this order.'}
-                        {order.status === 'paid' && 'Payment is completed.'}
-                        {order.status === 'completed' && 'Order is completed.'}
-                        {order.status === 'payment_failed' &&
-                          'Payment needs attention before the order can continue.'}
-                      </Text>
-                      {order.response_note && (
-                        <Text variant="bodySm" className="mt-2 whitespace-pre-wrap">
-                          {order.response_note}
-                        </Text>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="w-full max-w-sm rounded-[12px] border border-black/30 p-4">
-                  <Text variant="muted" className="font-semibold">Follow-up</Text>
-                  <div className="mt-4 space-y-3">
-                    {order.can_prepare_payment ? (
-                      <Button
-                        type="button"
-                        onClick={() => void handlePreparePayment(order)}
-                        disabled={payingId === order.id}
-                        variant="primary"
-                        fullWidth
-                      >
-                        {payingId === order.id
-                          ? 'Preparing...'
-                          : 'Prepare Online Payment'}
-                      </Button>
-                    ) : order.source === 'quote_request' &&
-                      order.status === 'quoted_shipping' ? (
-                      <Button
-                        type="button"
-                        disabled
-                        variant="secondary"
-                        fullWidth
-                      >
-                        Payment Link Coming Soon
-                      </Button>
-                    ) : (
-                      <Button
-                        type="button"
-                        disabled
-                        variant="secondary"
-                        fullWidth
-                      >
-                        No Action Needed
-                      </Button>
-                    )}
-
-                    <Button href="/products" variant="secondary" fullWidth>
-                      Continue Shopping
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </section>
-          ))
         )}
       </div>
     </PageFrame>
   )
 }
 
-export default function OrderHubPage() {
+export default function QuoteHubPage() {
   return (
-    <Suspense
-      fallback={
-        <PageFrame
-          mergeContent
-          sidebar={
-            <PageIntro
-              label="Order Hub"
-              title="Orders, payment follow-up, and delivery quotes in one place."
-            />
-          }
-        >
-          <div className="rounded-[12px] border border-black/30 bg-white p-6">
-            <Text variant="bodySm">Loading Order Hub...</Text>
-          </div>
-        </PageFrame>
-      }
-    >
-      <OrderHubPageContent />
+    <Suspense fallback={null}>
+      <QuoteHubPageContent />
     </Suspense>
   )
 }

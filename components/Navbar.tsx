@@ -4,7 +4,7 @@ import { textStyles } from './ui/Typography'
 
 const navItems = [
   { label: 'Catalog', href: '/products' },
-  { label: 'Order Hub', href: '/order-hub' },
+  { label: 'Quote Hub', href: '/order-hub' },
   { label: 'Quote List', href: '/quote-list' },
 ]
 
