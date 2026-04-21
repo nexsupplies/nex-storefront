@@ -329,10 +329,104 @@ function QuoteHubPageContent() {
       mergeContent
       contentScroll
       sidebar={
-        <div className="flex h-full items-start">
-          <Text as="h1" variant="h1Hero">
-            Quote Hub
-          </Text>
+        <div className="flex h-full flex-col">
+          <div className="space-y-8">
+            <Text as="h1" variant="h2Section">
+              Quote Hub
+            </Text>
+
+            <div className="space-y-6">
+              <div className="rounded-[12px] border border-black/20 bg-white p-5">
+                <Text as="h2" variant="h4CardTitle">
+                  Quote Access
+                </Text>
+                <Text variant="bodySm" className="mt-3 text-black/64">
+                  Search one quote number directly, or access an account using the
+                  account email and one valid quote number.
+                </Text>
+              </div>
+
+              <div className="rounded-[12px] border border-black/20 bg-white p-5">
+                <Text as="h3" variant="h4CardTitle">
+                  Search by Quote Number
+                </Text>
+                <Text variant="bodySm" className="mt-3 text-black/64">
+                  One quote number loads one quote record.
+                </Text>
+
+                <div className="mt-4 grid gap-3">
+                  <input
+                    type="text"
+                    value={quoteNumber}
+                    onChange={(e) => setQuoteNumber(e.target.value.toUpperCase())}
+                    placeholder="Q20260421-0001"
+                    className="w-full rounded-[12px] border border-black/20 px-4 py-3 outline-none transition focus:border-black"
+                  />
+                  <Button
+                    type="button"
+                    onClick={() => void handleLookup()}
+                    disabled={loadingSingle}
+                    variant="primary"
+                    fullWidth
+                  >
+                    {loadingSingle ? 'Loading...' : 'Open Quote'}
+                  </Button>
+                </div>
+              </div>
+
+              <div className="rounded-[12px] border border-black/20 bg-white p-5">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <Text as="h3" variant="h4CardTitle">
+                    Account Access
+                  </Text>
+                  {mode === 'account' ? (
+                    <Button type="button" variant="tertiary" onClick={handleSignOut}>
+                      Sign Out
+                    </Button>
+                  ) : null}
+                </div>
+
+                <Text variant="bodySm" className="mt-3 text-black/64">
+                  Sign in with account email plus one valid quote number to view all
+                  quotes linked to that account.
+                </Text>
+
+                <div className="mt-4 grid gap-3">
+                  <input
+                    type="email"
+                    value={accountEmail}
+                    onChange={(e) => setAccountEmail(e.target.value)}
+                    placeholder="account@email.com"
+                    className="w-full rounded-[12px] border border-black/20 px-4 py-3 outline-none transition focus:border-black"
+                  />
+                  <input
+                    type="text"
+                    value={accountQuoteNumber}
+                    onChange={(e) =>
+                      setAccountQuoteNumber(e.target.value.toUpperCase())
+                    }
+                    placeholder="One valid quote number"
+                    className="w-full rounded-[12px] border border-black/20 px-4 py-3 outline-none transition focus:border-black"
+                  />
+                  <Button
+                    type="button"
+                    onClick={() => void handleAccountAccess()}
+                    disabled={loadingAccount}
+                    variant="secondary"
+                    fullWidth
+                  >
+                    {loadingAccount ? 'Accessing...' : 'Access Account'}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {message ? (
+            <div className="mt-6 rounded-[12px] border border-black/15 bg-black/[0.03] px-4 py-3">
+              <Text variant="bodySm">{message}</Text>
+            </div>
+          ) : null}
         </div>
       }
     >
@@ -342,90 +436,6 @@ function QuoteHubPageContent() {
             {contentTitle}
           </Text>
         </header>
-
-        <section className="grid gap-6 xl:grid-cols-2">
-          <div className="rounded-[12px] border border-black/20 bg-white p-6">
-            <Text as="h3" variant="h4CardTitle">
-              Search by Quote Number
-            </Text>
-            <Text variant="bodySm" className="mt-3 max-w-lg text-black/64">
-              Enter one quote number to open a single quote record directly.
-            </Text>
-
-            <div className="mt-5 flex flex-col gap-3 md:flex-row">
-              <input
-                type="text"
-                value={quoteNumber}
-                onChange={(e) => setQuoteNumber(e.target.value.toUpperCase())}
-                placeholder="Q20260421-0001"
-                className="min-w-0 flex-1 rounded-[12px] border border-black/20 px-4 py-3 outline-none transition focus:border-black"
-              />
-              <Button
-                type="button"
-                onClick={() => void handleLookup()}
-                disabled={loadingSingle}
-                variant="primary"
-              >
-                {loadingSingle ? 'Loading...' : 'Open Quote'}
-              </Button>
-            </div>
-          </div>
-
-          <div className="rounded-[12px] border border-black/20 bg-white p-6">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <Text as="h3" variant="h4CardTitle">
-                  Account Access
-                </Text>
-                <Text variant="bodySm" className="mt-3 max-w-lg text-black/64">
-                  Sign in with the account email and one valid quote number to view
-                  all quotes linked to that account.
-                </Text>
-              </div>
-
-              {mode === 'account' ? (
-                <Button type="button" variant="tertiary" onClick={handleSignOut}>
-                  Sign Out
-                </Button>
-              ) : null}
-            </div>
-
-            <div className="mt-5 grid gap-3">
-              <input
-                type="email"
-                value={accountEmail}
-                onChange={(e) => setAccountEmail(e.target.value)}
-                placeholder="account@email.com"
-                className="w-full rounded-[12px] border border-black/20 px-4 py-3 outline-none transition focus:border-black"
-              />
-              <div className="flex flex-col gap-3 md:flex-row">
-                <input
-                  type="text"
-                  value={accountQuoteNumber}
-                  onChange={(e) =>
-                    setAccountQuoteNumber(e.target.value.toUpperCase())
-                  }
-                  placeholder="One valid quote number"
-                  className="min-w-0 flex-1 rounded-[12px] border border-black/20 px-4 py-3 outline-none transition focus:border-black"
-                />
-                <Button
-                  type="button"
-                  onClick={() => void handleAccountAccess()}
-                  disabled={loadingAccount}
-                  variant="secondary"
-                >
-                  {loadingAccount ? 'Accessing...' : 'Access Account'}
-                </Button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {message ? (
-          <div className="rounded-[12px] border border-black/15 bg-black/[0.03] px-4 py-3">
-            <Text variant="bodySm">{message}</Text>
-          </div>
-        ) : null}
 
         {mode === 'account' && accountQuotes.length > 0 ? (
           <section className="grid gap-6 xl:grid-cols-[minmax(280px,0.7fr)_minmax(0,1.3fr)]">
