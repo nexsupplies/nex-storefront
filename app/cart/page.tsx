@@ -6,6 +6,7 @@ import PageFrame from '@/components/PageFrame'
 import SupportSidebar from '@/components/SupportSidebar'
 import Button from '@/components/ui/Button'
 import Text from '@/components/ui/Typography'
+import { normalizeMedusaAssetUrl } from '@/lib/catalog'
 import {
   deleteLineItem,
   getOrCreateCart,
@@ -79,6 +80,7 @@ export default function CartPage() {
   const [cart, setCart] = useState<MedusaCart | null>(null)
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState('')
+  const [brokenImageIds, setBrokenImageIds] = useState<string[]>([])
 
   async function loadCart() {
     try {
@@ -141,6 +143,12 @@ export default function CartPage() {
     () => items.reduce((total, item) => total + item.quantity, 0),
     [items]
   )
+
+  function markImageBroken(itemId: string) {
+    setBrokenImageIds((current) =>
+      current.includes(itemId) ? current : [...current, itemId]
+    )
+  }
 
   if (loading) {
     return (
@@ -217,18 +225,28 @@ export default function CartPage() {
               >
                 <div className="flex min-w-0 items-start gap-4">
                   <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-[12px] bg-[#f3f3f3]">
-                    {item.thumbnail ? (
-                      <img
-                        src={item.thumbnail}
-                        alt={item.product_title || item.title}
-                        className="h-full w-full object-cover"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <Text variant="caption" className="px-3 text-center">
-                        No image
-                      </Text>
-                    )}
+                    {(() => {
+                      const imageUrl = normalizeMedusaAssetUrl(item.thumbnail)
+                      const hasBrokenImage = brokenImageIds.includes(item.id)
+
+                      if (!imageUrl || hasBrokenImage) {
+                        return (
+                          <Text variant="caption" className="px-3 text-center">
+                            No image
+                          </Text>
+                        )
+                      }
+
+                      return (
+                        <img
+                          src={imageUrl}
+                          alt={item.product_title || item.title}
+                          className="h-full w-full object-cover"
+                          loading="lazy"
+                          onError={() => markImageBroken(item.id)}
+                        />
+                      )
+                    })()}
                   </div>
 
                   <div className="min-w-0">
