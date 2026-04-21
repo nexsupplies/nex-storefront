@@ -28,6 +28,7 @@ export default async function ProductsPage() {
 
   return (
     <PageFrame
+      mergeContent
       sidebar={
         <PageIntro
           label="Materials"
@@ -35,7 +36,7 @@ export default async function ProductsPage() {
         />
       }
     >
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
         {products.map((product) => {
           const imageUrl = getProductImageUrl(product)
 

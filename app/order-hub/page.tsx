@@ -143,6 +143,7 @@ function OrderHubPageContent() {
 
   return (
     <PageFrame
+      mergeContent
       sidebar={
         <PageIntro
           label="Order Hub"
@@ -386,6 +387,7 @@ export default function OrderHubPage() {
     <Suspense
       fallback={
         <PageFrame
+          mergeContent
           sidebar={
             <PageIntro
               label="Order Hub"

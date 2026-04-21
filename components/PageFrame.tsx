@@ -6,12 +6,14 @@ export default function PageFrame({
   className = '',
   sidebarClassName = '',
   contentClassName = '',
+  mergeContent = false,
 }: {
   sidebar: ReactNode
   children: ReactNode
   className?: string
   sidebarClassName?: string
   contentClassName?: string
+  mergeContent?: boolean
 }) {
   return (
     <main
@@ -24,7 +26,11 @@ export default function PageFrame({
       </aside>
 
       <section
-        className={`relative min-w-0 border-l border-black/50 lg:col-span-2 lg:min-h-[calc(100vh-4rem)] lg:before:pointer-events-none lg:before:absolute lg:before:inset-y-0 lg:before:left-1/2 lg:before:z-20 lg:before:border-l lg:before:border-black/50 lg:before:content-[''] ${contentClassName}`.trim()}
+        className={`relative min-w-0 border-l border-black/50 lg:col-span-2 lg:min-h-[calc(100vh-4rem)] ${
+          mergeContent
+            ? ''
+            : "lg:before:pointer-events-none lg:before:absolute lg:before:inset-y-0 lg:before:left-1/2 lg:before:z-20 lg:before:border-l lg:before:border-black/50 lg:before:content-['']"
+        } ${contentClassName}`.trim()}
       >
         <div className="relative z-10 px-6 py-10 lg:px-8 lg:pr-16">
           {children}
