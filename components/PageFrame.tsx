@@ -7,6 +7,7 @@ export default function PageFrame({
   sidebarClassName = '',
   contentClassName = '',
   mergeContent = false,
+  contentScroll = false,
 }: {
   sidebar: ReactNode
   children: ReactNode
@@ -14,19 +15,32 @@ export default function PageFrame({
   sidebarClassName?: string
   contentClassName?: string
   mergeContent?: boolean
+  contentScroll?: boolean
 }) {
   return (
     <main
-      className={`mx-[calc(50%-50vw)] w-screen grid grid-cols-1 lg:min-h-[calc(100vh-4rem)] lg:grid-cols-[minmax(320px,30fr)_minmax(0,35fr)_minmax(0,35fr)] ${className}`.trim()}
+      className={`mx-[calc(50%-50vw)] w-screen grid grid-cols-1 lg:grid-cols-[minmax(320px,30fr)_minmax(0,35fr)_minmax(0,35fr)] ${
+        contentScroll
+          ? 'lg:h-[calc(100vh-4rem)] lg:overflow-hidden'
+          : 'lg:min-h-[calc(100vh-4rem)]'
+      } ${className}`.trim()}
     >
       <aside
-        className={`px-6 py-10 lg:min-h-[calc(100vh-4rem)] lg:pl-16 lg:pr-10 ${sidebarClassName}`.trim()}
+        className={`px-6 py-10 ${
+          contentScroll
+            ? 'lg:h-[calc(100vh-4rem)] lg:overflow-hidden'
+            : 'lg:min-h-[calc(100vh-4rem)]'
+        } lg:pl-16 lg:pr-10 ${sidebarClassName}`.trim()}
       >
         {sidebar}
       </aside>
 
       <section
-        className={`relative min-w-0 border-l border-black/50 lg:col-span-2 lg:min-h-[calc(100vh-4rem)] ${
+        className={`relative min-w-0 border-l border-black/50 lg:col-span-2 ${
+          contentScroll
+            ? 'lg:h-[calc(100vh-4rem)] lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain'
+            : 'lg:min-h-[calc(100vh-4rem)]'
+        } ${
           mergeContent
             ? ''
             : "lg:before:pointer-events-none lg:before:absolute lg:before:inset-y-0 lg:before:left-1/2 lg:before:z-20 lg:before:border-l lg:before:border-black/50 lg:before:content-['']"

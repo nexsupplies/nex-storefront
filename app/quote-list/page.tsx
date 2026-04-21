@@ -69,6 +69,7 @@ export default function QuoteListPage() {
   return (
     <PageFrame
       mergeContent
+      contentScroll
       sidebar={<SupportSidebar title="Quote" items={[...quoteSidebarItems]} />}
     >
       {quoteList.length === 0 ? (

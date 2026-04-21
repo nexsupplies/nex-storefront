@@ -103,6 +103,7 @@ export default function QuotePage() {
   if (submitted) {
     return (
       <PageFrame
+        contentScroll
         sidebar={
           <PageIntro
             label="Quote Submitted"
@@ -133,6 +134,7 @@ export default function QuotePage() {
 
   return (
     <PageFrame
+      contentScroll
       sidebar={
         <PageIntro
           label="Submit Quote"

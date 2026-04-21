@@ -154,6 +154,7 @@ export default function CartPage() {
     return (
       <PageFrame
         mergeContent
+        contentScroll
         sidebar={
           <SupportSidebar
             title="Cart"
@@ -170,6 +171,7 @@ export default function CartPage() {
   return (
     <PageFrame
       mergeContent
+      contentScroll
       sidebar={
         <SupportSidebar
           title="Cart"
