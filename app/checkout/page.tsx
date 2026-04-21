@@ -9,7 +9,6 @@ import {
   useState,
 } from 'react'
 import { useRouter } from 'next/navigation'
-import PageFrame from '@/components/PageFrame'
 import {
   addShippingMethod,
   clearStoredCartId,
@@ -828,17 +827,21 @@ export default function CheckoutPage() {
 
   if (loading) {
     return (
-      <PageFrame
-        sidebarClassName="bg-[#f2f2f2] px-0 py-0 lg:sticky lg:top-16 lg:self-start lg:min-h-[calc(100vh-4rem)] lg:pl-0 lg:pr-0"
-        contentClassName="px-0 py-0 lg:px-0 lg:py-0"
-        sidebar={
-          <div className="space-y-4">
-            <h1 className="text-sm uppercase tracking-[0.24em] text-gray-500">Checkout</h1>
+      <main className="mx-[calc(50%-50vw)] w-screen grid grid-cols-1 lg:grid-cols-[minmax(320px,30fr)_minmax(0,35fr)_minmax(0,35fr)]">
+        <aside className="bg-[#f2f2f2] lg:min-h-[calc(100vh-4rem)]">
+          <div className="px-6 py-10 lg:pl-16 lg:pr-10">
+            <h1 className="text-sm uppercase tracking-[0.24em] text-gray-500">
+              Checkout
+            </h1>
           </div>
-        }
-      >
-        <p>Loading checkout...</p>
-      </PageFrame>
+        </aside>
+
+        <section className="min-w-0 border-l border-black/50 lg:col-span-2">
+          <div className="px-6 py-10 lg:px-8 lg:pr-16">
+            <p>Loading checkout...</p>
+          </div>
+        </section>
+      </main>
     )
   }
 
@@ -851,15 +854,11 @@ export default function CheckoutPage() {
     'transition-all duration-300 ring-2 ring-black/80 ring-offset-4 ring-offset-[#f2f2f2]'
 
   return (
-    <PageFrame
-      sidebarClassName="bg-[#f2f2f2] px-0 py-0 lg:sticky lg:top-16 lg:self-start lg:min-h-[calc(100vh-4rem)] lg:pl-0 lg:pr-0"
-      contentClassName="px-0 py-0 lg:px-0 lg:py-0"
-      sidebar={
-        <div className="flex h-full flex-col px-6 pb-10 pt-0 lg:pl-16 lg:pr-10 lg:pb-10 lg:pt-0">
+    <main className="mx-[calc(50%-50vw)] w-screen grid grid-cols-1 lg:grid-cols-[minmax(320px,30fr)_minmax(0,35fr)_minmax(0,35fr)]">
+      <aside className="bg-[#f2f2f2] lg:sticky lg:top-16 lg:self-start lg:min-h-[calc(100vh-4rem)]">
+        <div className="flex h-full flex-col px-6 py-10 lg:pl-16 lg:pr-10">
           <div className="space-y-8">
-            <div>
-              <h1 className="text-sm uppercase tracking-[0.24em] text-gray-500">Checkout</h1>
-            </div>
+            <h1 className="text-sm uppercase tracking-[0.24em] text-gray-500">Checkout</h1>
 
             <div className="space-y-2">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gray-500">
@@ -904,22 +903,22 @@ export default function CheckoutPage() {
             )}
           </div>
         </div>
-      }
-    >
+      </aside>
 
+      <section className="min-w-0 border-l border-black/50 lg:col-span-2">
       {message && (
-        <div className="rounded-lg border border-blue-200 bg-blue-50 px-6 py-3 text-sm text-blue-700 lg:px-8">
+        <div className="border-b border-black/30 bg-blue-50 px-6 py-4 text-sm text-blue-700 lg:px-8 lg:pr-16">
           {message}
         </div>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start">
         <section
-          className={`min-w-0 px-6 py-0 transition-colors duration-200 lg:px-8 lg:py-0 ${
+          className={`min-w-0 transition-colors duration-200 ${
             step2Unlocked ? 'bg-[#f2f2f2]' : 'bg-white opacity-55'
           }`}
         >
-          <div className={step2Unlocked ? '' : 'pointer-events-none'}>
+          <div className={`px-6 py-10 lg:px-8 ${step2Unlocked ? '' : 'pointer-events-none'}`}>
             <div className="mb-6 flex items-start justify-between gap-4">
               <div className="space-y-2">
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gray-500">
@@ -1129,11 +1128,15 @@ export default function CheckoutPage() {
         </section>
 
         <section
-          className={`min-w-0 border-t border-black/50 px-6 py-0 transition-colors duration-200 lg:border-l lg:border-t-0 lg:px-8 lg:py-0 lg:pr-16 ${
+          className={`min-w-0 border-t border-black/50 transition-colors duration-200 lg:border-l lg:border-t-0 ${
             step3Unlocked ? 'bg-[#f2f2f2]' : 'bg-white opacity-55'
           }`}
         >
-          <div className={step3Unlocked ? '' : 'pointer-events-none'}>
+          <div
+            className={`px-6 py-10 lg:px-8 lg:pr-16 ${
+              step3Unlocked ? '' : 'pointer-events-none'
+            }`}
+          >
             <div className="mb-6 space-y-2">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gray-500">
                 Step 3
@@ -1276,6 +1279,7 @@ export default function CheckoutPage() {
           </div>
         </section>
       </div>
-    </PageFrame>
+      </section>
+    </main>
   )
 }
