@@ -7,6 +7,7 @@ import {
   getStoredCartId,
   retrieveCart,
 } from '@/lib/cart'
+import Text, { textStyles } from './ui/Typography'
 
 type CartPreviewItem = {
   id: string
@@ -70,21 +71,21 @@ export default function CartNavLink() {
 
   return (
     <div className="group relative">
-      <Link href="/cart" className="transition hover:text-black">
+      <Link href="/cart" className={textStyles.navLink}>
         {`Cart (${itemCount})`}
       </Link>
 
       <div className="pointer-events-none absolute right-0 top-full z-50 hidden w-80 translate-y-3 rounded-[12px] border border-black/30 bg-white p-4 opacity-0 shadow-[0_18px_50px_rgba(0,0,0,0.08)] transition duration-200 group-hover:pointer-events-auto group-hover:opacity-100 lg:block">
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <p className="text-xs uppercase tracking-[0.18em] text-gray-500">
-              Cart Preview
-            </p>
-            <span className="text-sm text-gray-600">{`${itemCount} item${itemCount === 1 ? '' : 's'}`}</span>
+            <Text variant="caption">Cart Preview</Text>
+            <Text as="span" variant="muted">
+              {`${itemCount} item${itemCount === 1 ? '' : 's'}`}
+            </Text>
           </div>
 
           {previewItems.length === 0 ? (
-            <p className="text-sm text-gray-600">Your cart is empty.</p>
+            <Text variant="bodySm">Your cart is empty.</Text>
           ) : (
             <div className="space-y-3">
               {previewItems.map((item) => (
@@ -103,17 +104,17 @@ export default function CartNavLink() {
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium text-gray-900">
+                    <Text as="p" variant="h4CardTitle" className="truncate">
                       {item.product_title || item.title}
-                    </p>
-                    <p className="truncate text-xs text-gray-500">
+                    </Text>
+                    <Text as="p" variant="caption" className="truncate">
                       {item.variant_title || 'Default variant'}
-                    </p>
+                    </Text>
                   </div>
 
-                  <div className="text-sm font-medium text-gray-900">
+                  <Text as="div" variant="bodyMd" className="font-semibold text-black">
                     x{item.quantity}
-                  </div>
+                  </Text>
                 </div>
               ))}
             </div>

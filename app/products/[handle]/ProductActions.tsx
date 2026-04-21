@@ -7,6 +7,7 @@ import {
   getVariantUnitAmount,
   type ProductVariant,
 } from '@/lib/catalog'
+import Text from '@/components/ui/Typography'
 
 type Product = {
   id: string
@@ -165,18 +166,20 @@ export default function ProductActions({
       className="min-w-0 border-l border-black/50 py-8 lg:col-span-2 lg:min-h-[calc(100vh-4rem)] lg:snap-start lg:px-8 lg:py-10 lg:pr-16"
     >
       <div>
-        <h2 className="text-xl font-semibold text-gray-950">Order Matrix</h2>
+        <Text as="h2" variant="h2Section">
+          Order Matrix
+        </Text>
       </div>
 
       <div className="mt-5">
         {variants.length === 0 ? (
-          <div className="text-sm text-gray-600">
+          <Text variant="bodySm">
             No orderable variants are available for this material yet.
-          </div>
+          </Text>
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full border-collapse">
-              <thead className="text-left text-[10px] uppercase tracking-[0.18em] text-gray-500">
+              <thead className="type-caption text-left">
                 <tr>
                   <th className="px-4 py-3 font-medium lg:px-4">Variant</th>
                   <th className="px-4 py-3 font-medium lg:px-4">Quantity</th>
@@ -190,9 +193,9 @@ export default function ProductActions({
                 {orderRows.map((row) => (
                   <tr key={row.variant.id}>
                     <td className="px-4 py-4 lg:px-4">
-                      <div className="text-sm font-medium text-gray-900">
+                      <Text as="div" variant="h4CardTitle">
                         {row.variant.title}
-                      </div>
+                      </Text>
                     </td>
                     <td className="px-4 py-4 lg:px-4">
                       <div className="inline-flex items-center gap-2 rounded-[10px] border border-black/30 bg-white px-2 py-1.5">
@@ -201,31 +204,39 @@ export default function ProductActions({
                           onClick={() =>
                             updateQuantity(row.variant.id, row.quantity - 1)
                           }
-                          className="rounded-md px-2 py-1 text-base leading-none"
+                          className="type-button-text rounded-md px-2 py-1 text-base leading-none"
                         >
                           -
                         </button>
-                        <span className="min-w-8 text-center text-sm font-medium">
+                        <Text
+                          as="span"
+                          variant="bodyMd"
+                          className="min-w-8 text-center font-semibold text-black"
+                        >
                           {row.quantity}
-                        </span>
+                        </Text>
                         <button
                           type="button"
                           onClick={() =>
                             updateQuantity(row.variant.id, row.quantity + 1)
                           }
-                          className="rounded-md px-2 py-1 text-base leading-none"
+                          className="type-button-text rounded-md px-2 py-1 text-base leading-none"
                         >
                           +
                         </button>
                       </div>
                     </td>
-                    <td className="px-4 py-4 text-sm text-gray-700 lg:px-4">
+                    <td className="px-4 py-4 lg:px-4">
+                      <Text variant="bodySm">
                       {formatPrice(row.unitAmount, row.currencyCode)}
+                      </Text>
                     </td>
-                    <td className="px-4 py-4 text-right text-sm font-medium text-gray-900 lg:px-4">
+                    <td className="px-4 py-4 text-right lg:px-4">
+                      <Text variant="bodyMd" className="font-semibold text-black">
                       {row.unitAmount == null
                         ? 'Price unavailable'
                         : formatPrice(row.lineTotal, row.currencyCode)}
+                      </Text>
                     </td>
                   </tr>
                 ))}
@@ -237,16 +248,22 @@ export default function ProductActions({
 
       <div className="mt-8 border-t border-black/30 pt-5">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
-          <div className="space-y-2 text-sm text-gray-700">
+          <div className="space-y-2">
             <div className="grid grid-cols-[auto_auto] justify-start gap-x-3">
-              <span className="text-gray-500">Total Items</span>
-              <span className="font-semibold text-gray-900">{totalItems}</span>
+              <Text as="span" variant="muted">
+                Total Items
+              </Text>
+              <Text as="span" variant="bodyMd" className="font-semibold text-black">
+                {totalItems}
+              </Text>
             </div>
             <div className="grid grid-cols-[auto_auto] justify-start gap-x-3">
-              <span className="text-gray-500">Product Subtotal</span>
-              <span className="font-semibold text-gray-900">
+              <Text as="span" variant="muted">
+                Product Subtotal
+              </Text>
+              <Text as="span" variant="bodyMd" className="font-semibold text-black">
                 {formatPrice(subtotal, summaryCurrency)}
-              </span>
+              </Text>
             </div>
           </div>
 
@@ -255,7 +272,7 @@ export default function ProductActions({
               type="button"
               onClick={addToCart}
               disabled={!selectedRows.length}
-              className="w-full rounded-xl bg-black py-3 text-white disabled:opacity-50"
+              className="type-button-text w-full rounded-xl bg-black py-3 text-white disabled:opacity-50"
             >
               Add Selected Variants to Cart
             </button>
@@ -264,12 +281,16 @@ export default function ProductActions({
               type="button"
               onClick={addToQuoteList}
               disabled={!selectedRows.length}
-              className="w-full rounded-xl border border-black/30 py-3 disabled:opacity-50"
+              className="type-button-text w-full rounded-xl border border-black/30 py-3 disabled:opacity-50"
             >
               Add Selected Variants to Quote List
             </button>
 
-            {message && <p className="pt-2 text-sm text-green-700">{message}</p>}
+            {message && (
+              <Text variant="bodySm" className="pt-2 text-green-700">
+                {message}
+              </Text>
+            )}
           </div>
         </div>
       </div>

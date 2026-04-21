@@ -9,6 +9,7 @@ import {
   useState,
 } from 'react'
 import { useRouter } from 'next/navigation'
+import Text from '@/components/ui/Typography'
 import {
   addShippingMethod,
   clearStoredCartId,
@@ -828,17 +829,17 @@ export default function CheckoutPage() {
   if (loading) {
     return (
       <main className="mx-[calc(50%-50vw)] w-screen grid grid-cols-1 lg:grid-cols-[minmax(320px,30fr)_minmax(0,35fr)_minmax(0,35fr)]">
-        <aside className="bg-[#f2f2f2] lg:min-h-[calc(100vh-4rem)]">
+        <aside className="lg:min-h-[calc(100vh-4rem)]">
           <div className="px-6 py-10 lg:pl-16 lg:pr-10">
-            <h1 className="text-sm uppercase tracking-[0.24em] text-gray-500">
+            <Text as="h1" variant="label">
               Checkout
-            </h1>
+            </Text>
           </div>
         </aside>
 
         <section className="min-w-0 border-l border-black/50 lg:col-span-2">
           <div className="px-6 py-10 lg:px-8 lg:pr-16">
-            <p>Loading checkout...</p>
+            <Text variant="bodyMd">Loading checkout...</Text>
           </div>
         </section>
       </main>
@@ -851,20 +852,22 @@ export default function CheckoutPage() {
   const step1ValidationMessage = getStep1ValidationMessage()
   const step2ValidationMessage = getStep2ValidationMessage()
   const detailHighlightClass =
-    'transition-all duration-300 ring-2 ring-black/80 ring-offset-4 ring-offset-[#f2f2f2]'
+    'transition-all duration-300 ring-2 ring-black/80 ring-offset-4 ring-offset-white'
 
   return (
     <main className="mx-[calc(50%-50vw)] w-screen grid grid-cols-1 lg:grid-cols-[minmax(320px,30fr)_minmax(0,35fr)_minmax(0,35fr)]">
-      <aside className="bg-[#f2f2f2] lg:sticky lg:top-16 lg:self-start lg:min-h-[calc(100vh-4rem)]">
+      <aside className="lg:sticky lg:top-16 lg:self-start lg:min-h-[calc(100vh-4rem)]">
         <div className="flex h-full flex-col px-6 py-10 lg:pl-16 lg:pr-10">
           <div className="space-y-8">
-            <h1 className="text-sm uppercase tracking-[0.24em] text-gray-500">Checkout</h1>
+            <Text as="h1" variant="label">
+              Checkout
+            </Text>
 
-            <div className="space-y-2">
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gray-500">
-                Step 1
-              </p>
-              <h2 className="text-2xl font-semibold text-gray-950">User Information</h2>
+            <div className="space-y-3 lg:min-h-[5.25rem]">
+              <Text variant="label">Step 1</Text>
+              <Text as="h2" variant="h2Section">
+                User Information
+              </Text>
             </div>
 
             <div className="space-y-4">
@@ -893,60 +896,66 @@ export default function CheckoutPage() {
 
           <div className="mt-auto space-y-3 pt-8">
             {step1ValidationMessage && (
-              <p className="text-sm text-gray-600">{step1ValidationMessage}</p>
+              <Text variant="bodySm">{step1ValidationMessage}</Text>
             )}
 
             {step1Ready && (
-              <p className="text-sm text-gray-600">
+              <Text variant="bodySm">
                 User information completed. Step 2 is now available automatically.
-              </p>
+              </Text>
             )}
           </div>
         </div>
       </aside>
 
       <section className="min-w-0 border-l border-black/50 lg:col-span-2">
-      {message && (
-        <div className="border-b border-black/30 bg-blue-50 px-6 py-4 text-sm text-blue-700 lg:px-8 lg:pr-16">
-          {message}
-        </div>
-      )}
+        {message && (
+          <div className="border-b border-black/30 bg-blue-50 px-6 py-4 lg:px-8 lg:pr-16">
+            <Text variant="bodySm" className="text-blue-700">
+              {message}
+            </Text>
+          </div>
+        )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start">
+        <div className="relative grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-stretch lg:before:absolute lg:before:inset-y-0 lg:before:left-1/2 lg:before:border-l lg:before:border-black/50 lg:before:content-['']">
         <section
-          className={`min-w-0 transition-colors duration-200 ${
-            step2Unlocked ? 'bg-[#f2f2f2]' : 'bg-white opacity-55'
+          className={`min-w-0 transition-opacity duration-200 ${
+            step2Unlocked ? 'bg-white' : 'bg-white opacity-55'
           }`}
         >
           <div className={`px-6 py-10 lg:px-8 ${step2Unlocked ? '' : 'pointer-events-none'}`}>
             <div className="mb-6 flex items-start justify-between gap-4">
-              <div className="space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gray-500">
-                  Step 2
-                </p>
-                <h2 className="text-2xl font-semibold text-gray-950">Shipping</h2>
+              <div className="space-y-3 lg:min-h-[5.25rem]">
+                <Text variant="label">Step 2</Text>
+                <Text as="h2" variant="h2Section">
+                  Shipping
+                </Text>
               </div>
 
+              <div className="pt-1">
               {step2Complete && (
                 <button
                   type="button"
                   onClick={() => setStep2Complete(false)}
-                  className="rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700"
+                  className="type-button-text rounded-full border border-gray-300 px-4 py-2 text-black/72"
                 >
                   Modify
                 </button>
               )}
+              </div>
             </div>
 
             {!step2Unlocked && (
-              <p className="mb-6 text-sm text-gray-600">
+              <Text variant="bodySm" className="mb-6">
                 Complete Step 1 before choosing shipping information.
-              </p>
+              </Text>
             )}
 
             <div className="space-y-8">
               <section>
-                <h3 className="mb-4 text-lg font-semibold">Shipping Method</h3>
+                <Text as="h3" variant="h4CardTitle" className="mb-4">
+                  Shipping Method
+                </Text>
 
                 <div className="space-y-3">
                   {shippingMethods.map((method) => (
@@ -977,16 +986,24 @@ export default function CheckoutPage() {
                   ref={pickupDetailsRef}
                   className={highlightedDetail === 'pickup' ? detailHighlightClass : ''}
                 >
-                  <h3 className="mb-4 text-lg font-semibold">Pickup Details</h3>
+                  <Text as="h3" variant="h4CardTitle" className="mb-4">
+                    Pickup Details
+                  </Text>
 
                   <div className="mb-4 rounded-2xl border border-gray-300 bg-white p-4">
-                    <p className="font-medium">Pickup Address</p>
-                    <p className="mt-1 text-sm text-gray-600">{PICKUP_LOCATION.company}</p>
-                    <p className="text-sm text-gray-600">
+                    <Text variant="bodyMd" className="font-semibold text-black">
+                      Pickup Address
+                    </Text>
+                    <Text variant="bodySm" className="mt-1">
+                      {PICKUP_LOCATION.company}
+                    </Text>
+                    <Text variant="bodySm">
                       {PICKUP_LOCATION.address1}, {PICKUP_LOCATION.city}, {PICKUP_LOCATION.province}{' '}
                       {PICKUP_LOCATION.postalCode}
-                    </p>
-                    <p className="mt-2 text-sm text-gray-600">{PICKUP_LOCATION.hours}</p>
+                    </Text>
+                    <Text variant="bodySm" className="mt-2">
+                      {PICKUP_LOCATION.hours}
+                    </Text>
                   </div>
 
                   <div className="space-y-4">
@@ -1017,22 +1034,22 @@ export default function CheckoutPage() {
                   </div>
 
                   {!isBusinessDay(pickupDate) && pickupDate && (
-                    <p className="mt-3 text-sm text-red-600">
+                    <Text variant="bodySm" className="mt-3 text-red-600">
                       Pickup is only available Monday through Friday.
-                    </p>
+                    </Text>
                   )}
 
                   {isBusinessDay(pickupDate) && availablePickupSlots.length === 0 && (
-                    <p className="mt-3 text-sm text-amber-700">
+                    <Text variant="bodySm" className="mt-3 text-amber-700">
                       No pickup windows remain for {formatDateLabel(pickupDate)}. Please
                       choose {formatDateLabel(getNextBusinessDate(pickupDate))} or later.
-                    </p>
+                    </Text>
                   )}
 
                   {availablePickupSlots.length === 1 && pickupDate === getEdmontonTodayString() && (
-                    <p className="mt-3 text-sm text-gray-600">
+                    <Text variant="bodySm" className="mt-3">
                       Morning pickup has closed for today. Afternoon remains available.
-                    </p>
+                    </Text>
                   )}
                 </section>
               )}
@@ -1042,7 +1059,9 @@ export default function CheckoutPage() {
                   ref={deliveryAddressRef}
                   className={highlightedDetail === 'delivery' ? detailHighlightClass : ''}
                 >
-                  <h3 className="mb-4 text-lg font-semibold">Delivery Address</h3>
+                  <Text as="h3" variant="h4CardTitle" className="mb-4">
+                    Delivery Address
+                  </Text>
 
                   <div className="space-y-4">
                     <input
@@ -1079,20 +1098,20 @@ export default function CheckoutPage() {
                   </div>
 
                   {expectedCity && city && !cityMatches && (
-                    <p className="mt-3 text-sm text-red-600">
+                    <Text variant="bodySm" className="mt-3 text-red-600">
                       This shipping method is intended for {expectedCity}. Please update the
                       city or select Out-of-City Delivery.
-                    </p>
+                    </Text>
                   )}
 
                   {isOutOfCity && (
                     <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4">
-                      <p className="text-sm text-amber-900">
+                      <Text variant="bodySm" className="text-amber-900">
                         We’ll review your delivery address and provide a shipping quote as
                         soon as possible. The shipping fee will be updated by email, and
                         you’ll also be able to review the quote and complete payment later
                         in your Order Hub.
-                      </p>
+                      </Text>
                     </div>
                   )}
                 </section>
@@ -1101,13 +1120,13 @@ export default function CheckoutPage() {
 
             <div className="mt-6 space-y-3">
               {step2Unlocked && !step2Complete && step2ValidationMessage && (
-                <p className="text-sm text-gray-600">{step2ValidationMessage}</p>
+                <Text variant="bodySm">{step2ValidationMessage}</Text>
               )}
 
               {step2Complete && (
-                <p className="text-sm text-gray-600">
+                <Text variant="bodySm">
                   Shipping information completed. Step 3 is now available.
-                </p>
+                </Text>
               )}
 
               {step2Unlocked && !step2Complete && (
@@ -1118,7 +1137,7 @@ export default function CheckoutPage() {
                     setStep2Complete(true)
                   }}
                   disabled={Boolean(step2ValidationMessage)}
-                  className="w-full rounded-xl bg-black py-3 text-base font-medium text-white disabled:opacity-50"
+                  className="type-button-text w-full rounded-xl bg-black py-3 text-white disabled:opacity-50"
                 >
                   Complete Step 2
                 </button>
@@ -1128,8 +1147,8 @@ export default function CheckoutPage() {
         </section>
 
         <section
-          className={`min-w-0 border-t border-black/50 transition-colors duration-200 lg:border-l lg:border-t-0 ${
-            step3Unlocked ? 'bg-[#f2f2f2]' : 'bg-white opacity-55'
+          className={`min-w-0 border-t border-black/50 transition-opacity duration-200 lg:border-t-0 ${
+            step3Unlocked ? 'bg-white' : 'bg-white opacity-55'
           }`}
         >
           <div
@@ -1137,35 +1156,39 @@ export default function CheckoutPage() {
               step3Unlocked ? '' : 'pointer-events-none'
             }`}
           >
-            <div className="mb-6 space-y-2">
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gray-500">
-                Step 3
-              </p>
-              <h2 className="text-2xl font-semibold text-gray-950">Summary</h2>
+            <div className="mb-6 space-y-3 lg:min-h-[5.25rem]">
+              <Text variant="label">Step 3</Text>
+              <Text as="h2" variant="h2Section">
+                Summary
+              </Text>
             </div>
 
             {!step3Unlocked && (
-              <p className="mb-6 text-sm text-gray-600">
+              <Text variant="bodySm" className="mb-6">
                 Complete Step 2 before reviewing the summary and placing the order.
-              </p>
+              </Text>
             )}
 
             <div className="space-y-6">
               <div className="space-y-4">
                 {items.length === 0 ? (
-                  <p className="text-sm text-gray-700">Your cart is empty.</p>
+                  <Text variant="bodySm">Your cart is empty.</Text>
                 ) : (
                   items.map((item) => (
                     <div key={item.id} className="border-b border-gray-300 pb-4 last:border-b-0">
-                      <p className="font-medium text-gray-950">
+                      <Text variant="bodyMd" className="font-semibold text-black">
                         {item.product_title || item.title}
-                      </p>
-                      <p className="text-sm text-gray-500">
+                      </Text>
+                      <Text variant="caption">
                         {item.variant_title || 'Default variant'}
-                      </p>
-                      <div className="mt-2 flex justify-between text-sm text-gray-700">
-                        <span>Qty {item.quantity}</span>
-                        <span>{formatPrice(item.subtotal, cartCurrency)}</span>
+                      </Text>
+                      <div className="mt-2 flex justify-between">
+                        <Text as="span" variant="bodySm">
+                          Qty {item.quantity}
+                        </Text>
+                        <Text as="span" variant="bodySm">
+                          {formatPrice(item.subtotal, cartCurrency)}
+                        </Text>
                       </div>
                     </div>
                   ))
@@ -1174,44 +1197,56 @@ export default function CheckoutPage() {
 
               <div className="space-y-3 border-t border-gray-300 pt-6">
                 <div className="flex justify-between">
-                  <span>Subtotal</span>
-                  <span>{formatPrice(subtotal, cartCurrency)}</span>
+                  <Text as="span" variant="muted">
+                    Subtotal
+                  </Text>
+                  <Text as="span" variant="bodyMd" className="font-semibold text-black">
+                    {formatPrice(subtotal, cartCurrency)}
+                  </Text>
                 </div>
 
                 <div className="flex justify-between">
-                  <span>Shipping</span>
-                  <span>
+                  <Text as="span" variant="muted">
+                    Shipping
+                  </Text>
+                  <Text as="span" variant="bodyMd" className="font-semibold text-black">
                     {shippingFee == null ? 'TBD' : formatPrice(shippingFee, cartCurrency)}
-                  </span>
+                  </Text>
                 </div>
 
                 <div className="flex justify-between">
-                  <span>Estimated Tax</span>
-                  <span>
+                  <Text as="span" variant="muted">
+                    Estimated Tax
+                  </Text>
+                  <Text as="span" variant="bodyMd" className="font-semibold text-black">
                     {shippingFee == null
                       ? `${formatPrice(estimatedTax, cartCurrency)} (estimated)`
                       : formatPrice(estimatedTax, cartCurrency)}
-                  </span>
+                  </Text>
                 </div>
 
-                <div className="flex justify-between text-lg font-bold">
-                  <span>Total</span>
-                  <span>
+                <div className="flex justify-between">
+                  <Text as="span" variant="h4CardTitle">
+                    Total
+                  </Text>
+                  <Text as="span" variant="bodyMd" className="font-semibold text-black">
                     {shippingFee == null
                       ? `${formatPrice(total, cartCurrency)} (shipping TBD)`
                       : formatPrice(total, cartCurrency)}
-                  </span>
+                  </Text>
                 </div>
               </div>
 
               <div className="space-y-3 border-t border-gray-300 pt-6">
-                <h3 className="text-base font-semibold">Payment Method</h3>
+                <Text as="h3" variant="h4CardTitle">
+                  Payment Method
+                </Text>
 
                 {isOutOfCity ? (
-                  <p className="text-sm text-gray-600">
+                  <Text variant="bodySm">
                     Out-of-city delivery is quoted first. Payment will happen after the
                     shipping quote is approved.
-                  </p>
+                  </Text>
                 ) : (
                   <div className="space-y-3">
                     <label className="block rounded-2xl border border-gray-300 bg-white p-4">
@@ -1221,7 +1256,9 @@ export default function CheckoutPage() {
                         onChange={() => setPaymentMethod('online')}
                         disabled={!step3Unlocked}
                       />
-                      <span className="ml-3">Online Payment</span>
+                      <Text as="span" variant="bodyMd" className="ml-3 font-semibold text-black">
+                        Online Payment
+                      </Text>
                     </label>
 
                     {isPickup && (
@@ -1232,7 +1269,9 @@ export default function CheckoutPage() {
                           onChange={() => setPaymentMethod('pickup-pay')}
                           disabled={!step3Unlocked}
                         />
-                        <span className="ml-3">Pay at Pickup</span>
+                        <Text as="span" variant="bodyMd" className="ml-3 font-semibold text-black">
+                          Pay at Pickup
+                        </Text>
                       </label>
                     )}
                   </div>
@@ -1244,7 +1283,7 @@ export default function CheckoutPage() {
                   type="button"
                   onClick={isOutOfCity ? handleRequestShippingQuote : handleCompleteManualOrder}
                   disabled={isBusy || !step3Unlocked}
-                  className="w-full rounded-xl bg-black py-4 text-lg text-white disabled:opacity-60"
+                  className="type-button-text w-full rounded-xl bg-black py-4 text-white disabled:opacity-60"
                 >
                   {placingOrder
                     ? isOutOfCity
@@ -1262,23 +1301,23 @@ export default function CheckoutPage() {
                     type="button"
                     onClick={handleSaveCheckout}
                     disabled={isBusy || !canCreateManualOrder || !step3Unlocked}
-                    className="w-full rounded-xl border border-black py-4 text-lg disabled:opacity-60"
+                    className="type-button-text w-full rounded-xl border border-black py-4 disabled:opacity-60"
                   >
                     {saving ? 'Saving...' : 'Save Checkout Details'}
                   </button>
                 )}
 
                 {paymentMethod === 'online' && !isOutOfCity && (
-                  <p className="text-sm text-gray-600">
+                  <Text variant="bodySm">
                     Online payment is still a placeholder. This will still create the
                     order and surface the payment follow-up in Order Hub.
-                  </p>
+                  </Text>
                 )}
               </div>
             </div>
           </div>
         </section>
-      </div>
+        </div>
       </section>
     </main>
   )

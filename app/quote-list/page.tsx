@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import PageFrame from '@/components/PageFrame'
+import PageIntro from '@/components/ui/PageIntro'
+import Text from '@/components/ui/Typography'
 
 type QuoteItem = {
   productId: string
@@ -43,22 +45,18 @@ export default function QuoteListPage() {
   return (
     <PageFrame
       sidebar={
-        <div className="space-y-4">
-          <p className="text-sm uppercase tracking-[0.24em] text-gray-500">
-            Quote List
-          </p>
-          <h1 className="text-4xl font-bold tracking-tight text-gray-950">
-            Collect multiple products here, then submit one consolidated quote request.
-          </h1>
-        </div>
+        <PageIntro
+          label="Quote List"
+          title="Collect multiple products here, then submit one consolidated quote request."
+        />
       }
     >
       {quoteList.length === 0 ? (
         <div className="space-y-4">
-          <p>Your quote list is empty.</p>
+          <Text variant="bodyMd">Your quote list is empty.</Text>
           <Link
             href="/products"
-            className="inline-block rounded-[12px] bg-black px-5 py-3 text-white"
+            className="type-button-text inline-block rounded-[12px] bg-black px-5 py-3 text-white"
           >
             Browse Products
           </Link>
@@ -74,13 +72,15 @@ export default function QuoteListPage() {
                 <div>
                   <Link
                     href={`/products/${item.productHandle}`}
-                    className="text-lg font-semibold hover:underline"
+                    className="hover:underline"
                   >
-                    {item.productTitle}
+                    <Text as="span" variant="h4CardTitle">
+                      {item.productTitle}
+                    </Text>
                   </Link>
-                  <p className="mt-1 text-sm text-gray-500">
+                  <Text variant="caption" className="mt-1">
                     {item.variantTitle}
-                  </p>
+                  </Text>
                 </div>
 
                 <div className="flex items-center justify-between gap-4">
@@ -90,19 +90,21 @@ export default function QuoteListPage() {
                       onClick={() =>
                         updateQuantity(item.variantId, item.quantity - 1)
                       }
-                      className="rounded-[10px] border border-black/30 px-3 py-2"
+                      className="type-button-text rounded-[10px] border border-black/30 px-3 py-2"
                     >
                       -
                     </button>
 
-                    <div className="min-w-8 text-center">{item.quantity}</div>
+                    <Text as="div" variant="bodyMd" className="min-w-8 text-center font-semibold text-black">
+                      {item.quantity}
+                    </Text>
 
                     <button
                       type="button"
                       onClick={() =>
                         updateQuantity(item.variantId, item.quantity + 1)
                       }
-                      className="rounded-[10px] border border-black/30 px-3 py-2"
+                      className="type-button-text rounded-[10px] border border-black/30 px-3 py-2"
                     >
                       +
                     </button>
@@ -111,7 +113,7 @@ export default function QuoteListPage() {
                   <button
                     type="button"
                     onClick={() => removeItem(item.variantId)}
-                    className="text-sm text-red-600 hover:underline"
+                    className="type-button-text text-red-600 hover:underline"
                   >
                     Remove
                   </button>
@@ -121,15 +123,17 @@ export default function QuoteListPage() {
           </div>
 
           <aside className="h-fit rounded-[12px] border border-black/30 bg-white p-6">
-            <h2 className="mb-4 text-xl font-semibold">Quote Summary</h2>
+            <Text as="h2" variant="h2Section" className="mb-4">
+              Quote Summary
+            </Text>
 
-            <p className="mb-6 text-sm text-gray-600">
+            <Text variant="bodySm" className="mb-6">
               You can collect multiple products here, then submit one quote request.
-            </p>
+            </Text>
 
             <Link
               href="/quote"
-              className="block w-full rounded-[12px] bg-black py-3 text-center text-white"
+              className="type-button-text block w-full rounded-[12px] bg-black py-3 text-center text-white"
             >
               Continue to Quote
             </Link>

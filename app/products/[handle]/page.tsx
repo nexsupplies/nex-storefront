@@ -10,6 +10,7 @@ import {
   normalizeMedusaAssetUrl,
   type StorefrontProduct,
 } from '@/lib/catalog'
+import Text from '@/components/ui/Typography'
 
 async function getProduct(handle: string): Promise<StorefrontProduct | null> {
   const baseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL
@@ -107,7 +108,9 @@ export default async function ProductDetailPage({
   if (!product) {
     return (
       <main className="p-10">
-        <h1 className="text-2xl font-bold">Product not found</h1>
+        <Text as="h1" variant="h2Section">
+          Product not found
+        </Text>
       </main>
     )
   }
@@ -142,30 +145,28 @@ export default async function ProductDetailPage({
               <div>
                 <Link
                   href="/products"
-                  className="inline-flex items-center gap-2 text-sm text-gray-500 transition hover:text-black"
+                  className="type-nav-link inline-flex items-center gap-2"
                 >
                   <span aria-hidden="true">←</span>
                   <span>Back to materials</span>
                 </Link>
 
-                <p className="mt-8 text-sm uppercase tracking-[0.24em] text-gray-500">
+                <Text variant="label" className="mt-8">
                   NEXPRO Material
-                </p>
-                <h1 className="mt-3 text-4xl font-bold tracking-tight text-gray-950 lg:text-5xl">
+                </Text>
+                <Text as="h1" variant="h1Hero" className="mt-3">
                   {product.title}
-                </h1>
+                </Text>
               </div>
 
               <div>
-                <p className="text-[11px] uppercase tracking-[0.2em] text-gray-500">
-                  Procurement Pricing
-                </p>
-                <p className="mt-3 text-4xl font-semibold tracking-tight text-gray-950">
+                <Text variant="label">Procurement Pricing</Text>
+                <Text as="p" variant="price" className="mt-3">
                   {priceSummary}
-                </p>
-                <p className="mt-2 max-w-sm text-sm leading-6 text-gray-500">
+                </Text>
+                <Text variant="bodySm" className="mt-2 max-w-sm">
                   Live pricing across currently orderable variants.
-                </p>
+                </Text>
               </div>
             </div>
 
@@ -176,8 +177,8 @@ export default async function ProductDetailPage({
                   variantCount={variantCount}
                 />
               ) : (
-                <div className="rounded-[12px] border border-black/30 px-5 py-4 text-sm text-gray-600">
-                  Custom ordering available
+                <div className="rounded-[12px] border border-black/30 px-5 py-4">
+                  <Text variant="bodySm">Custom ordering available</Text>
                 </div>
               )}
             </div>
@@ -202,12 +203,10 @@ export default async function ProductDetailPage({
 
       <section className="mx-[calc(50%-50vw)] mt-16 grid w-screen grid-cols-1 lg:grid-cols-[minmax(320px,30fr)_minmax(0,35fr)_minmax(0,35fr)]">
         <div className="px-6 py-10 lg:pl-16 lg:pr-10">
-          <p className="text-[11px] uppercase tracking-[0.2em] text-gray-500">
-            More Materials
-          </p>
-          <h2 className="mt-3 text-2xl font-semibold text-gray-950">
+          <Text variant="label">More Materials</Text>
+          <Text as="h2" variant="h2Section" className="mt-3">
             Related materials
-          </h2>
+          </Text>
         </div>
 
         <div className="min-w-0 border-l border-black/50 px-6 py-10 lg:col-span-2 lg:px-8 lg:pr-16">
@@ -231,20 +230,18 @@ export default async function ProductDetailPage({
                         loading="lazy"
                       />
                     ) : (
-                      <div className="flex h-full items-center justify-center text-sm text-gray-500">
-                        Image coming soon
+                      <div className="flex h-full items-center justify-center">
+                        <Text variant="bodySm">Image coming soon</Text>
                       </div>
                     )}
                   </div>
 
                   <div className="space-y-3 p-5">
-                    <p className="text-[11px] uppercase tracking-[0.18em] text-gray-500">
-                      Material
-                    </p>
-                    <h3 className="text-lg font-semibold text-gray-900">
+                    <Text variant="caption">Material</Text>
+                    <Text as="h3" variant="h4CardTitle">
                       {item.title}
-                    </h3>
-                    <p className="text-sm text-gray-600">{recommendationPrice}</p>
+                    </Text>
+                    <Text variant="bodySm">{recommendationPrice}</Text>
                   </div>
                 </Link>
               )

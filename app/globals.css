@@ -33,3 +33,57 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
 }
+
+@layer components {
+  .type-h1-hero {
+    @apply text-[clamp(2.9rem,5vw,4.8rem)] font-semibold leading-[0.94] tracking-[-0.055em] text-black;
+  }
+
+  .type-h2-section {
+    @apply text-[1.85rem] font-semibold leading-[1] tracking-[-0.04em] text-black lg:text-[2.15rem];
+  }
+
+  .type-h3-product-title {
+    @apply text-[1.3rem] font-semibold leading-[1.08] tracking-[-0.03em] text-black lg:text-[1.55rem];
+  }
+
+  .type-h4-card-title {
+    @apply text-[1.05rem] font-semibold leading-[1.18] tracking-[-0.02em] text-black lg:text-[1.15rem];
+  }
+
+  .type-body-lg {
+    @apply text-[1.05rem] leading-8 tracking-[-0.01em] text-black/78 lg:text-[1.12rem];
+  }
+
+  .type-body-md {
+    @apply text-[0.98rem] leading-7 tracking-[-0.01em] text-black/72;
+  }
+
+  .type-body-sm {
+    @apply text-[0.9rem] leading-6 tracking-[-0.005em] text-black/68;
+  }
+
+  .type-label {
+    @apply text-[0.72rem] font-semibold uppercase leading-none tracking-[0.24em] text-black/45;
+  }
+
+  .type-caption {
+    @apply text-[0.76rem] leading-5 tracking-[0.08em] text-black/52;
+  }
+
+  .type-muted {
+    @apply text-[0.92rem] leading-6 tracking-[-0.005em] text-black/52;
+  }
+
+  .type-price {
+    @apply text-[2.45rem] font-semibold leading-[0.94] tracking-[-0.05em] text-black lg:text-[3rem];
+  }
+
+  .type-nav-link {
+    @apply text-[0.92rem] font-medium leading-none tracking-[-0.01em] text-black/72 transition hover:text-black;
+  }
+
+  .type-button-text {
+    @apply text-[0.92rem] font-medium leading-none tracking-[-0.01em];
+  }
+}

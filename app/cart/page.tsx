@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 import PageFrame from '@/components/PageFrame'
+import PageIntro from '@/components/ui/PageIntro'
+import Text from '@/components/ui/Typography'
 import {
   deleteLineItem,
   getOrCreateCart,
@@ -103,15 +105,13 @@ export default function CartPage() {
     return (
       <PageFrame
         sidebar={
-          <div className="space-y-4">
-            <p className="text-sm uppercase tracking-[0.24em] text-gray-500">Cart</p>
-            <h1 className="text-4xl font-bold tracking-tight text-gray-950">
-              Review the materials currently prepared for checkout.
-            </h1>
-          </div>
+          <PageIntro
+            label="Cart"
+            title="Review the materials currently prepared for checkout."
+          />
         }
       >
-        <p>Loading cart...</p>
+        <Text variant="bodyMd">Loading cart...</Text>
       </PageFrame>
     )
   }
@@ -121,26 +121,26 @@ export default function CartPage() {
   return (
     <PageFrame
       sidebar={
-        <div className="space-y-4">
-          <p className="text-sm uppercase tracking-[0.24em] text-gray-500">Cart</p>
-          <h1 className="text-4xl font-bold tracking-tight text-gray-950">
-            Review quantities, pricing, and move directly into checkout.
-          </h1>
-        </div>
+        <PageIntro
+          label="Cart"
+          title="Review quantities, pricing, and move directly into checkout."
+        />
       }
     >
       {message && (
-        <div className="mb-6 rounded-[12px] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div className="mb-6 rounded-[12px] border border-red-200 bg-red-50 px-4 py-3">
+          <Text variant="bodySm" className="text-red-700">
           {message}
+          </Text>
         </div>
       )}
 
       {items.length === 0 ? (
         <div className="space-y-4">
-          <p>Your cart is empty.</p>
+          <Text variant="bodyMd">Your cart is empty.</Text>
           <Link
             href="/products"
-            className="inline-block rounded-[12px] bg-black px-5 py-3 text-white"
+            className="type-button-text inline-block rounded-[12px] bg-black px-5 py-3 text-white"
           >
             Browse Products
           </Link>
@@ -154,21 +154,21 @@ export default function CartPage() {
                 className="flex flex-col gap-4 rounded-[12px] border border-black/30 bg-white p-5"
               >
                 <div>
-                  <div className="text-lg font-semibold">
+                  <Text as="div" variant="h4CardTitle">
                     {item.product_title || item.title}
-                  </div>
+                  </Text>
 
-                  <p className="mt-1 text-sm text-gray-500">
+                  <Text variant="caption" className="mt-1">
                     {item.variant_title || 'Default variant'}
-                  </p>
+                  </Text>
 
-                  <p className="mt-2 font-medium">
+                  <Text variant="bodyMd" className="mt-2 font-semibold text-black">
                     Unit Price: {formatPrice(item.unit_price, currencyCode)}
-                  </p>
+                  </Text>
 
-                  <p className="mt-1 text-sm text-gray-600">
+                  <Text variant="bodySm" className="mt-1">
                     Line Total: {formatPrice(item.subtotal, currencyCode)}
-                  </p>
+                  </Text>
                 </div>
 
                 <div className="flex items-center justify-between gap-4">
@@ -176,17 +176,19 @@ export default function CartPage() {
                     <button
                       type="button"
                       onClick={() => handleDecrease(item)}
-                      className="rounded-[10px] border border-black/30 px-3 py-2"
+                      className="type-button-text rounded-[10px] border border-black/30 px-3 py-2"
                     >
                       -
                     </button>
 
-                    <div className="min-w-8 text-center">{item.quantity}</div>
+                    <Text as="div" variant="bodyMd" className="min-w-8 text-center font-semibold text-black">
+                      {item.quantity}
+                    </Text>
 
                     <button
                       type="button"
                       onClick={() => handleIncrease(item)}
-                      className="rounded-[10px] border border-black/30 px-3 py-2"
+                      className="type-button-text rounded-[10px] border border-black/30 px-3 py-2"
                     >
                       +
                     </button>
@@ -195,7 +197,7 @@ export default function CartPage() {
                   <button
                     type="button"
                     onClick={() => handleRemove(item)}
-                    className="text-sm text-red-600 hover:underline"
+                    className="type-button-text text-red-600 hover:underline"
                   >
                     Remove
                   </button>
@@ -205,21 +207,31 @@ export default function CartPage() {
           </div>
 
           <aside className="h-fit rounded-[12px] border border-black/30 bg-white p-6">
-            <h2 className="mb-4 text-xl font-semibold">Summary</h2>
+            <Text as="h2" variant="h2Section" className="mb-4">
+              Summary
+            </Text>
 
             <div className="mb-3 flex items-center justify-between">
-              <span>Subtotal</span>
-              <span>{formatPrice(cart?.subtotal, currencyCode)}</span>
+              <Text as="span" variant="muted">
+                Subtotal
+              </Text>
+              <Text as="span" variant="bodyMd" className="font-semibold text-black">
+                {formatPrice(cart?.subtotal, currencyCode)}
+              </Text>
             </div>
 
-            <div className="mb-6 flex items-center justify-between font-semibold">
-              <span>Total</span>
-              <span>{formatPrice(cart?.total, currencyCode)}</span>
+            <div className="mb-6 flex items-center justify-between">
+              <Text as="span" variant="h4CardTitle">
+                Total
+              </Text>
+              <Text as="span" variant="bodyMd" className="font-semibold text-black">
+                {formatPrice(cart?.total, currencyCode)}
+              </Text>
             </div>
 
             <Link
               href="/checkout"
-              className="block w-full rounded-[12px] bg-black py-3 text-center text-white"
+              className="type-button-text block w-full rounded-[12px] bg-black py-3 text-center text-white"
             >
               Go to Checkout
             </Link>

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import CartNavLink from './CartNavLink'
+import { textStyles } from './ui/Typography'
 
 const navItems = [
   { label: 'Catalog', href: '/products' },
@@ -30,7 +31,7 @@ export default function Navbar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="transition hover:text-black"
+                className={textStyles.navLink}
               >
                 {item.label}
               </Link>

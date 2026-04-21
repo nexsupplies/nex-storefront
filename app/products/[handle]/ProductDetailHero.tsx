@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Text from '@/components/ui/Typography'
 
 type ProductDetailHeroProps = {
   description: string
@@ -61,8 +62,8 @@ export default function ProductDetailHero({
             </div>
           ))
         ) : (
-          <div className="flex aspect-square items-center justify-center text-sm text-gray-500">
-            Product image coming soon
+          <div className="flex aspect-square items-center justify-center">
+            <Text variant="bodySm">Product image coming soon</Text>
           </div>
         )}
       </section>
@@ -82,16 +83,18 @@ export default function ProductDetailHero({
                   className="flex w-full items-center justify-between gap-4 py-5 text-left"
                   aria-expanded={isOpen}
                 >
-                  <span className="text-base font-medium text-gray-900">
+                  <Text as="span" variant="h4CardTitle">
                     {item.title}
-                  </span>
-                  <span className="text-xl text-gray-500">{isOpen ? '-' : '+'}</span>
+                  </Text>
+                  <Text as="span" variant="bodyMd" className="text-xl text-black/45">
+                    {isOpen ? '-' : '+'}
+                  </Text>
                 </button>
 
                 {isOpen && (
-                  <div className="pb-5 text-sm leading-7 text-gray-600">
+                  <Text variant="bodySm" className="pb-5">
                     {bodyText}
-                  </div>
+                  </Text>
                 )}
               </div>
             )

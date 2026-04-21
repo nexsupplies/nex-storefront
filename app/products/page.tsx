@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import PageFrame from '@/components/PageFrame'
+import PageIntro from '@/components/ui/PageIntro'
+import Text from '@/components/ui/Typography'
 import { getProductImageUrl, type StorefrontProduct } from '@/lib/catalog'
 
 async function getProducts(): Promise<StorefrontProduct[]> {
@@ -27,14 +29,10 @@ export default async function ProductsPage() {
   return (
     <PageFrame
       sidebar={
-        <div className="space-y-4">
-          <p className="text-sm uppercase tracking-[0.24em] text-gray-500">
-            Materials
-          </p>
-          <h1 className="text-4xl font-bold tracking-tight text-gray-950">
-            Browse the core sheet and sign materials available for quoting and checkout.
-          </h1>
-        </div>
+        <PageIntro
+          label="Materials"
+          title="Browse the core sheet and sign materials available for quoting and checkout."
+        />
       }
     >
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
@@ -55,23 +53,27 @@ export default async function ProductsPage() {
                     loading="lazy"
                   />
                 ) : (
-                  <div className="flex h-full items-center justify-center text-sm text-gray-500">
-                    Image coming soon
+                  <div className="flex h-full items-center justify-center">
+                    <Text variant="bodySm">Image coming soon</Text>
                   </div>
                 )}
               </div>
 
-              <h2 className="text-lg font-semibold text-gray-900">{product.title}</h2>
-              <p className="mt-1 text-sm text-gray-500">{product.handle}</p>
-              <p className="mt-3 text-sm text-gray-600">
+              <Text as="h2" variant="h4CardTitle">
+                {product.title}
+              </Text>
+              <Text variant="caption" className="mt-1">
+                {product.handle}
+              </Text>
+              <Text variant="bodySm" className="mt-3">
                 {product.variants?.length
                   ? `${product.variants.length} ordering option${product.variants.length === 1 ? '' : 's'}`
                   : 'Custom ordering available'}
-              </p>
+              </Text>
 
               <Link
                 href={`/products/${product.handle}`}
-                className="mt-4 inline-block w-full rounded-[12px] bg-black py-3 text-center text-sm font-medium text-white"
+                className="type-button-text mt-4 inline-block w-full rounded-[12px] bg-black py-3 text-center text-white"
               >
                 View Material
               </Link>
