@@ -21,15 +21,15 @@ export default function PageFrame({
     <main
       className={`mx-[calc(50%-50vw)] w-screen grid grid-cols-1 lg:grid-cols-[minmax(320px,30fr)_minmax(0,35fr)_minmax(0,35fr)] ${
         contentScroll
-          ? 'lg:h-[calc(100vh-4rem)] lg:overflow-hidden'
-          : 'lg:min-h-[calc(100vh-4rem)]'
+          ? 'lg:h-[calc(100dvh-4rem)] lg:overflow-hidden'
+          : 'lg:min-h-[calc(100dvh-4rem)]'
       } ${className}`.trim()}
     >
       <aside
         className={`px-6 py-10 ${
           contentScroll
-            ? 'lg:h-[calc(100vh-4rem)] lg:overflow-hidden'
-            : 'lg:min-h-[calc(100vh-4rem)]'
+            ? 'lg:h-[calc(100dvh-4rem)] lg:overflow-hidden'
+            : 'lg:min-h-[calc(100dvh-4rem)]'
         } lg:pl-16 lg:pr-10 ${sidebarClassName}`.trim()}
       >
         {sidebar}
@@ -38,8 +38,8 @@ export default function PageFrame({
       <section
         className={`relative min-w-0 border-l border-black/50 lg:col-span-2 ${
           contentScroll
-            ? 'lg:h-[calc(100vh-4rem)] lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain'
-            : 'lg:min-h-[calc(100vh-4rem)]'
+            ? 'lg:h-[calc(100dvh-4rem)] lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain'
+            : 'lg:min-h-[calc(100dvh-4rem)]'
         } ${
           mergeContent
             ? ''
