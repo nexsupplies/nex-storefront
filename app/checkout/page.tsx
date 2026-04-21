@@ -856,7 +856,7 @@ export default function CheckoutPage() {
       sidebarClassName="bg-[#f2f2f2] px-0 py-0 lg:sticky lg:top-16 lg:self-start lg:min-h-[calc(100vh-4rem)] lg:pl-0 lg:pr-0"
       contentClassName="px-0 py-0"
       sidebar={
-        <div className="flex h-full flex-col px-6 py-10 lg:pl-16 lg:pr-10">
+        <div className="flex h-full flex-col px-6 pb-10 pt-0 lg:pl-16 lg:pr-10 lg:pb-10 lg:pt-0">
           <div className="space-y-8">
             <div>
               <p className="text-sm uppercase tracking-[0.24em] text-gray-500">Checkout</p>
@@ -912,14 +912,14 @@ export default function CheckoutPage() {
     >
 
       {message && (
-        <div className="mx-6 mt-6 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-700 lg:mx-8">
+        <div className="rounded-lg border border-blue-200 bg-blue-50 px-6 py-3 text-sm text-blue-700 lg:px-8">
           {message}
         </div>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <section
-          className={`min-w-0 px-6 py-10 transition-colors duration-200 lg:px-8 ${
+          className={`min-w-0 px-6 pb-10 pt-0 transition-colors duration-200 lg:px-8 lg:pb-10 lg:pt-0 ${
             step2Unlocked ? 'bg-[#f2f2f2]' : 'bg-white opacity-55'
           }`}
         >
@@ -1133,7 +1133,7 @@ export default function CheckoutPage() {
         </section>
 
         <section
-          className={`min-w-0 border-t border-black/50 px-6 py-10 transition-colors duration-200 lg:border-l lg:border-t-0 lg:pl-8 lg:pr-16 ${
+          className={`min-w-0 border-t border-black/50 px-6 pb-10 pt-0 transition-colors duration-200 lg:border-l lg:border-t-0 lg:pb-10 lg:pl-8 lg:pr-16 lg:pt-0 ${
             step3Unlocked ? 'bg-[#f2f2f2]' : 'bg-white opacity-55'
           }`}
         >
