@@ -9,6 +9,7 @@ import {
   useState,
 } from 'react'
 import { useRouter } from 'next/navigation'
+import Button from '@/components/ui/Button'
 import Text from '@/components/ui/Typography'
 import {
   addShippingMethod,
@@ -934,13 +935,14 @@ export default function CheckoutPage() {
 
               <div className="pt-1">
               {step2Complete && (
-                <button
+                <Button
                   type="button"
                   onClick={() => setStep2Complete(false)}
-                  className="type-button-text rounded-full border border-gray-300 px-4 py-2 text-black/72"
+                  variant="secondary"
+                  className="rounded-full"
                 >
                   Modify
-                </button>
+                </Button>
               )}
               </div>
             </div>
@@ -1130,17 +1132,18 @@ export default function CheckoutPage() {
               )}
 
               {step2Unlocked && !step2Complete && (
-                <button
+                <Button
                   type="button"
                   onClick={() => {
                     setMessage('')
                     setStep2Complete(true)
                   }}
                   disabled={Boolean(step2ValidationMessage)}
-                  className="type-button-text w-full rounded-xl bg-black py-3 text-white disabled:opacity-50"
+                  variant="primary"
+                  fullWidth
                 >
                   Complete Step 2
-                </button>
+                </Button>
               )}
             </div>
           </div>
@@ -1279,11 +1282,12 @@ export default function CheckoutPage() {
               </div>
 
               <div className="space-y-3 border-t border-gray-300 pt-6">
-                <button
+                <Button
                   type="button"
                   onClick={isOutOfCity ? handleRequestShippingQuote : handleCompleteManualOrder}
                   disabled={isBusy || !step3Unlocked}
-                  className="type-button-text w-full rounded-xl bg-black py-4 text-white disabled:opacity-60"
+                  variant="primary"
+                  fullWidth
                 >
                   {placingOrder
                     ? isOutOfCity
@@ -1294,17 +1298,18 @@ export default function CheckoutPage() {
                     : paymentMethod === 'online'
                     ? 'Place Order and Continue to Payment'
                     : 'Place Order and Pay at Pickup'}
-                </button>
+                </Button>
 
                 {!isOutOfCity && (
-                  <button
+                  <Button
                     type="button"
                     onClick={handleSaveCheckout}
                     disabled={isBusy || !canCreateManualOrder || !step3Unlocked}
-                    className="type-button-text w-full rounded-xl border border-black py-4 disabled:opacity-60"
+                    variant="secondary"
+                    fullWidth
                   >
                     {saving ? 'Saving...' : 'Save Checkout Details'}
-                  </button>
+                  </Button>
                 )}
 
                 {paymentMethod === 'online' && !isOutOfCity && (

@@ -17,8 +17,8 @@ html.product-page-snap {
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
-  --font-mono: "SFMono-Regular", "Menlo", "Monaco", "Courier New", monospace;
+  --font-sans: var(--font-geist-sans), "Helvetica Neue", sans-serif;
+  --font-mono: var(--font-geist-mono), "SFMono-Regular", "Menlo", monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -32,43 +32,46 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+  line-height: 1.55;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 @layer components {
   .type-h1-hero {
-    @apply text-[clamp(2.9rem,5vw,4.8rem)] font-semibold leading-[0.94] tracking-[-0.055em] text-black;
+    @apply text-[clamp(2.9rem,5vw,4.8rem)] font-medium leading-[0.94] tracking-[-0.055em] text-black;
   }
 
   .type-h2-section {
-    @apply text-[1.85rem] font-semibold leading-[1] tracking-[-0.04em] text-black lg:text-[2.15rem];
+    @apply text-[1.85rem] font-medium leading-[1.02] tracking-[-0.04em] text-black lg:text-[2.15rem];
   }
 
   .type-h3-product-title {
-    @apply text-[1.3rem] font-semibold leading-[1.08] tracking-[-0.03em] text-black lg:text-[1.55rem];
+    @apply text-[1.3rem] font-medium leading-[1.08] tracking-[-0.03em] text-black lg:text-[1.55rem];
   }
 
   .type-h4-card-title {
-    @apply text-[1.05rem] font-semibold leading-[1.18] tracking-[-0.02em] text-black lg:text-[1.15rem];
+    @apply text-[1.05rem] font-medium leading-[1.22] tracking-[-0.02em] text-black lg:text-[1.15rem];
   }
 
   .type-body-lg {
-    @apply text-[1.05rem] leading-8 tracking-[-0.01em] text-black/78 lg:text-[1.12rem];
+    @apply text-[1.05rem] leading-[1.7] tracking-[-0.01em] text-black/78 lg:text-[1.12rem];
   }
 
   .type-body-md {
-    @apply text-[0.98rem] leading-7 tracking-[-0.01em] text-black/72;
+    @apply text-[0.98rem] leading-[1.62] tracking-[-0.01em] text-black/72;
   }
 
   .type-body-sm {
-    @apply text-[0.9rem] leading-6 tracking-[-0.005em] text-black/68;
+    @apply text-[0.9rem] leading-[1.58] tracking-[-0.005em] text-black/68;
   }
 
   .type-label {
-    @apply text-[0.72rem] font-semibold uppercase leading-none tracking-[0.24em] text-black/45;
+    @apply text-[0.72rem] font-medium uppercase leading-none tracking-[0.24em] text-black/45;
   }
 
   .type-caption {
-    @apply text-[0.76rem] leading-5 tracking-[0.08em] text-black/52;
+    @apply text-[0.76rem] leading-[1.45] tracking-[0.08em] text-black/52;
   }
 
   .type-muted {
@@ -76,7 +79,7 @@ body {
   }
 
   .type-price {
-    @apply text-[2.45rem] font-semibold leading-[0.94] tracking-[-0.05em] text-black lg:text-[3rem];
+    @apply text-[2.45rem] font-medium leading-[0.94] tracking-[-0.05em] text-black lg:text-[3rem];
   }
 
   .type-nav-link {
@@ -85,5 +88,123 @@ body {
 
   .type-button-text {
     @apply text-[0.92rem] font-medium leading-none tracking-[-0.01em];
+  }
+
+  .btn-base {
+    @apply relative isolate inline-flex items-center justify-center gap-2 overflow-hidden rounded-[12px] border whitespace-nowrap select-none align-middle transition-[color,border-color,box-shadow,transform,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] active:scale-[0.985] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1D4DC5]/35;
+  }
+
+  .btn-kind-text {
+    @apply px-5 py-3.5;
+  }
+
+  .btn-kind-icon-text {
+    @apply px-4 py-3.5;
+  }
+
+  .btn-kind-icon {
+    @apply h-11 w-11 p-0;
+  }
+
+  .btn-layer {
+    @apply absolute inset-0 rounded-[inherit] transition-[background-color,opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)];
+  }
+
+  .btn-grid {
+    @apply absolute inset-0 rounded-[inherit] opacity-0 transition-[opacity,background-position,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)];
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.16) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.16) 1px, transparent 1px);
+    background-size: 10px 10px;
+    background-position: 0 0;
+  }
+
+  .btn-content {
+    @apply relative z-10 inline-flex items-center justify-center gap-2;
+  }
+
+  .btn-primary {
+    @apply border-black bg-black text-white shadow-[0_1px_0_rgba(0,0,0,0.08)];
+  }
+
+  .btn-primary .btn-layer {
+    @apply bg-black;
+  }
+
+  .btn-primary:hover {
+    @apply border-[#1D4DC5] text-white;
+  }
+
+  .btn-primary:hover .btn-layer {
+    @apply bg-[#1D4DC5];
+  }
+
+  .btn-primary:hover .btn-grid {
+    @apply opacity-100;
+    background-position: 4px 4px;
+  }
+
+  .btn-primary:active .btn-layer {
+    @apply bg-[#163ea5];
+  }
+
+  .btn-secondary {
+    @apply border-black/25 bg-white text-black;
+  }
+
+  .btn-secondary .btn-layer {
+    @apply bg-white;
+  }
+
+  .btn-secondary:hover {
+    @apply border-[#1D4DC5] text-white;
+  }
+
+  .btn-secondary:hover .btn-layer {
+    @apply bg-[#1D4DC5];
+  }
+
+  .btn-secondary:hover .btn-grid {
+    @apply opacity-100;
+    background-position: 4px 4px;
+  }
+
+  .btn-secondary:active .btn-layer {
+    @apply bg-[#163ea5];
+  }
+
+  .btn-tertiary {
+    @apply border-transparent bg-transparent text-black/72 shadow-none;
+  }
+
+  .btn-tertiary .btn-layer {
+    @apply bg-transparent;
+  }
+
+  .btn-tertiary .btn-grid {
+    background-image:
+      linear-gradient(rgba(29, 77, 197, 0.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(29, 77, 197, 0.12) 1px, transparent 1px);
+  }
+
+  .btn-tertiary:hover {
+    @apply text-[#1D4DC5];
+  }
+
+  .btn-tertiary:hover .btn-layer {
+    @apply bg-[#1D4DC5]/8;
+  }
+
+  .btn-tertiary:hover .btn-grid {
+    @apply opacity-100;
+    background-position: 4px 4px;
+  }
+
+  .btn-tertiary:active .btn-layer {
+    @apply bg-[#1D4DC5]/12;
+  }
+
+  .btn-disabled {
+    @apply pointer-events-none opacity-40;
   }
 }

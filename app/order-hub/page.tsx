@@ -1,9 +1,11 @@
 'use client'
 
-import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { Suspense, useEffect, useEffectEvent, useMemo, useState } from 'react'
 import PageFrame from '@/components/PageFrame'
+import Button from '@/components/ui/Button'
+import PageIntro from '@/components/ui/PageIntro'
+import Text from '@/components/ui/Typography'
 import {
   getRememberedOrderHubEmail,
   listOrderHubOrders,
@@ -142,16 +144,11 @@ function OrderHubPageContent() {
   return (
     <PageFrame
       sidebar={
-        <div className="space-y-4">
-          <p className="text-sm uppercase tracking-[0.24em] text-gray-500">Order Hub</p>
-          <h1 className="text-4xl font-bold tracking-tight text-gray-950">
-            Orders, payment follow-up, and delivery quotes in one place.
-          </h1>
-          <p className="text-base text-gray-600">
-            Enter the checkout email to view paid orders, pending payment orders,
-            and out-of-city delivery quote requests.
-          </p>
-        </div>
+        <PageIntro
+          label="Order Hub"
+          title="Orders, payment follow-up, and delivery quotes in one place."
+          body="Enter the checkout email to view paid orders, pending payment orders, and out-of-city delivery quote requests."
+        />
       }
     >
       <div className="rounded-[12px] border border-black/30 bg-white p-6">
@@ -163,44 +160,43 @@ function OrderHubPageContent() {
             placeholder="customer@email.com"
             className="min-w-0 flex-1 rounded-xl border px-4 py-3"
           />
-          <button
+          <Button
             type="button"
             onClick={() => void handleLoad()}
             disabled={loading}
-            className="rounded-xl bg-black px-5 py-3 text-white disabled:opacity-60"
+            variant="primary"
           >
             {loading ? 'Loading...' : 'Load Order Hub'}
-          </button>
+          </Button>
         </div>
 
         {message && (
-          <div className="mt-4 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-700">
-            {message}
+          <div className="mt-4 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3">
+            <Text variant="bodySm" className="text-blue-700">
+              {message}
+            </Text>
           </div>
         )}
       </div>
 
       <div className="mt-8 flex flex-wrap gap-2">
         {tabs.map((tab) => (
-          <button
+          <Button
             key={tab.id}
             type="button"
             onClick={() => setActiveTab(tab.id)}
-            className={`rounded-full border px-4 py-2 text-sm transition ${
-              activeTab === tab.id
-                ? 'border-black bg-black text-white'
-                : 'border-gray-300 bg-white text-gray-700'
-            }`}
+            variant={activeTab === tab.id ? 'primary' : 'secondary'}
+            className="rounded-full"
           >
             {tab.label}
-          </button>
+          </Button>
         ))}
       </div>
 
       <div className="mt-8 space-y-4">
         {filteredOrders.length === 0 ? (
-          <div className="rounded-[12px] border border-dashed border-black/30 p-8 text-gray-600">
-            No entries match this filter.
+          <div className="rounded-[12px] border border-dashed border-black/30 p-8">
+            <Text variant="bodyMd">No entries match this filter.</Text>
           </div>
         ) : (
           filteredOrders.map((order) => (
@@ -211,103 +207,105 @@ function OrderHubPageContent() {
               <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
                 <div className="space-y-4">
                   <div className="flex flex-wrap items-center gap-3">
-                    <h2 className="text-2xl font-semibold">{order.reference}</h2>
-                    <span className="rounded-full border px-3 py-1 text-xs uppercase tracking-[0.16em] text-gray-700">
+                    <Text as="h2" variant="h2Section">
+                      {order.reference}
+                    </Text>
+                    <Text as="span" variant="caption" className="rounded-full border px-3 py-1 text-black/72">
                       {order.status_label}
-                    </span>
+                    </Text>
                     {order.source === 'quote_request' && (
-                      <span className="rounded-full border border-amber-300 bg-amber-50 px-3 py-1 text-xs uppercase tracking-[0.16em] text-amber-800">
+                      <Text as="span" variant="caption" className="rounded-full border border-amber-300 bg-amber-50 px-3 py-1 text-amber-800">
                         Quote Request
-                      </span>
+                      </Text>
                     )}
                   </div>
 
-                  <div className="grid gap-4 text-sm text-gray-700 md:grid-cols-2 xl:grid-cols-4">
+                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                     <div>
-                      <div className="text-gray-500">Created</div>
-                      <div className="mt-1 font-medium">{formatDate(order.created_at)}</div>
+                      <Text variant="muted">Created</Text>
+                      <Text variant="bodyMd" className="mt-1 font-semibold text-black">{formatDate(order.created_at)}</Text>
                     </div>
                     <div>
-                      <div className="text-gray-500">Fulfillment</div>
-                      <div className="mt-1 font-medium">{order.fulfillment_label}</div>
+                      <Text variant="muted">Fulfillment</Text>
+                      <Text variant="bodyMd" className="mt-1 font-semibold text-black">{order.fulfillment_label}</Text>
                     </div>
                     <div>
-                      <div className="text-gray-500">Quote</div>
-                      <div className="mt-1 font-medium">
+                      <Text variant="muted">Quote</Text>
+                      <Text variant="bodyMd" className="mt-1 font-semibold text-black">
                         {order.quote_required ? order.status_label : 'Not required'}
-                      </div>
+                      </Text>
                     </div>
                     <div>
-                      <div className="text-gray-500">Payment</div>
-                      <div className="mt-1 font-medium">
+                      <Text variant="muted">Payment</Text>
+                      <Text variant="bodyMd" className="mt-1 font-semibold text-black">
                         {order.payment_required ? 'Action required' : 'No action now'}
-                      </div>
+                      </Text>
                     </div>
                   </div>
 
                   <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
                     <div>
-                      <div className="text-sm font-medium">Items</div>
+                      <Text variant="bodyMd" className="font-semibold text-black">Items</Text>
                       <div className="mt-2 space-y-2">
                         {order.items.map((item) => (
                           <div
                             key={item.id}
                             className="rounded-2xl border border-dashed px-4 py-3 text-sm"
                           >
-                            <div className="font-medium">{item.title}</div>
-                            <div className="mt-1 text-gray-500">
+                            <Text variant="bodyMd" className="font-semibold text-black">{item.title}</Text>
+                            <Text variant="caption" className="mt-1">
                               {item.variant_title || 'Default variant'}
-                            </div>
-                            <div className="mt-1 text-gray-600">Qty: {item.quantity}</div>
+                            </Text>
+                            <Text variant="bodySm" className="mt-1">Qty: {item.quantity}</Text>
                           </div>
                         ))}
                       </div>
                     </div>
 
-                    <div className="rounded-2xl bg-gray-50 p-4 text-sm text-gray-700">
-                      <div className="font-medium">Order Snapshot</div>
+                    <div className="rounded-2xl bg-gray-50 p-4">
+                      <Text variant="bodyMd" className="font-semibold text-black">Order Snapshot</Text>
                       <div className="mt-3 space-y-2">
                         <div className="flex justify-between gap-4">
-                          <span>Subtotal</span>
-                          <span>{formatPrice(order.subtotal, order.currency_code || 'CAD')}</span>
+                          <Text as="span" variant="muted">Subtotal</Text>
+                          <Text as="span" variant="bodySm">{formatPrice(order.subtotal, order.currency_code || 'CAD')}</Text>
                         </div>
                         <div className="flex justify-between gap-4">
-                          <span>Shipping</span>
-                          <span>
+                          <Text as="span" variant="muted">Shipping</Text>
+                          <Text as="span" variant="bodySm">
                             {order.quote_required && order.quoted_amount == null
                               ? 'TBD'
                               : formatPrice(order.shipping_total, order.currency_code || 'CAD')}
-                          </span>
+                          </Text>
                         </div>
                         <div className="flex justify-between gap-4">
-                          <span>Tax</span>
-                          <span>{formatPrice(order.tax_total, order.currency_code || 'CAD')}</span>
+                          <Text as="span" variant="muted">Tax</Text>
+                          <Text as="span" variant="bodySm">{formatPrice(order.tax_total, order.currency_code || 'CAD')}</Text>
                         </div>
-                        <div className="flex justify-between gap-4 border-t pt-2 font-semibold">
-                          <span>Total</span>
-                          <span>{formatPrice(order.total, order.currency_code || 'CAD')}</span>
+                        <div className="flex justify-between gap-4 border-t pt-2">
+                          <Text as="span" variant="bodyMd" className="font-semibold text-black">Total</Text>
+                          <Text as="span" variant="bodyMd" className="font-semibold text-black">{formatPrice(order.total, order.currency_code || 'CAD')}</Text>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="grid gap-4 text-sm text-gray-700 md:grid-cols-2">
+                  <div className="grid gap-4 md:grid-cols-2">
                     <div>
-                      <div className="text-gray-500">Pickup / Delivery Info</div>
-                      <div className="mt-1 font-medium">
+                      <Text variant="muted">Pickup / Delivery Info</Text>
+                      <Text variant="bodyMd" className="mt-1 font-semibold text-black">
                         {order.pickup_location || order.address_summary || '-'}
-                      </div>
+                      </Text>
                       {order.pickup_date && (
-                        <div className="mt-1 text-gray-600">
+                        <Text variant="bodySm" className="mt-1">
                           {order.pickup_date}
                           {order.pickup_time ? `, ${order.pickup_time}` : ''}
-                        </div>
+                        </Text>
                       )}
                     </div>
 
                     <div>
-                      <div className="text-gray-500">Next Step</div>
-                      <div className="mt-1 font-medium">
+                      <Text variant="muted">Next Step</Text>
+                      <Text variant="bodyMd" className="mt-1 font-semibold text-black">
                         {order.status === 'awaiting_shipping_quote' &&
                           'Waiting for our team to send the freight quote.'}
                         {order.status === 'quoted_shipping' &&
@@ -323,55 +321,55 @@ function OrderHubPageContent() {
                         {order.status === 'completed' && 'Order is completed.'}
                         {order.status === 'payment_failed' &&
                           'Payment needs attention before the order can continue.'}
-                      </div>
+                      </Text>
                       {order.response_note && (
-                        <div className="mt-2 whitespace-pre-wrap text-gray-600">
+                        <Text variant="bodySm" className="mt-2 whitespace-pre-wrap">
                           {order.response_note}
-                        </div>
+                        </Text>
                       )}
                     </div>
                   </div>
                 </div>
 
                 <div className="w-full max-w-sm rounded-[12px] border border-black/30 p-4">
-                  <div className="text-sm font-medium text-gray-500">Follow-up</div>
+                  <Text variant="muted" className="font-semibold">Follow-up</Text>
                   <div className="mt-4 space-y-3">
                     {order.can_prepare_payment ? (
-                      <button
+                      <Button
                         type="button"
                         onClick={() => void handlePreparePayment(order)}
                         disabled={payingId === order.id}
-                        className="w-full rounded-xl bg-black px-4 py-3 text-white disabled:opacity-60"
+                        variant="primary"
+                        fullWidth
                       >
                         {payingId === order.id
                           ? 'Preparing...'
                           : 'Prepare Online Payment'}
-                      </button>
+                      </Button>
                     ) : order.source === 'quote_request' &&
                       order.status === 'quoted_shipping' ? (
-                      <button
+                      <Button
                         type="button"
                         disabled
-                        className="w-full rounded-xl border px-4 py-3 text-gray-500"
+                        variant="secondary"
+                        fullWidth
                       >
                         Payment Link Coming Soon
-                      </button>
+                      </Button>
                     ) : (
-                      <button
+                      <Button
                         type="button"
                         disabled
-                        className="w-full rounded-xl border px-4 py-3 text-gray-500"
+                        variant="secondary"
+                        fullWidth
                       >
                         No Action Needed
-                      </button>
+                      </Button>
                     )}
 
-                    <Link
-                      href="/products"
-                      className="block w-full rounded-xl border px-4 py-3 text-center text-sm"
-                    >
+                    <Button href="/products" variant="secondary" fullWidth>
                       Continue Shopping
-                    </Link>
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -389,18 +387,14 @@ export default function OrderHubPage() {
       fallback={
         <PageFrame
           sidebar={
-            <div className="space-y-4">
-              <p className="text-sm uppercase tracking-[0.24em] text-gray-500">
-                Order Hub
-              </p>
-              <h1 className="text-4xl font-bold tracking-tight text-gray-950">
-                Orders, payment follow-up, and delivery quotes in one place.
-              </h1>
-            </div>
+            <PageIntro
+              label="Order Hub"
+              title="Orders, payment follow-up, and delivery quotes in one place."
+            />
           }
         >
-          <div className="rounded-[12px] border border-black/30 bg-white p-6 text-sm text-gray-600">
-            Loading Order Hub...
+          <div className="rounded-[12px] border border-black/30 bg-white p-6">
+            <Text variant="bodySm">Loading Order Hub...</Text>
           </div>
         </PageFrame>
       }

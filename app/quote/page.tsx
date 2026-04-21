@@ -3,6 +3,9 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import PageFrame from '@/components/PageFrame'
+import Button from '@/components/ui/Button'
+import PageIntro from '@/components/ui/PageIntro'
+import Text from '@/components/ui/Typography'
 
 type QuoteItem = {
   productId: string
@@ -101,31 +104,27 @@ export default function QuotePage() {
     return (
       <PageFrame
         sidebar={
-          <div className="space-y-4">
-            <p className="text-sm uppercase tracking-[0.24em] text-gray-500">
-              Quote Submitted
-            </p>
-            <h1 className="text-4xl font-bold tracking-tight text-gray-950">
-              Your quote request has been sent successfully.
-            </h1>
-          </div>
+          <PageIntro
+            label="Quote Submitted"
+            title="Your quote request has been sent successfully."
+          />
         }
       >
         <div className="max-w-2xl space-y-6">
-          <p className="text-gray-600">
+          <Text variant="bodyMd">
             Your quote request has been sent to Medusa successfully.
-          </p>
+          </Text>
           {submittedQuoteId && (
-            <p className="text-sm text-gray-500">Quote ID: {submittedQuoteId}</p>
+            <Text variant="bodySm">Quote ID: {submittedQuoteId}</Text>
           )}
 
           <div className="flex gap-4">
-            <Link href="/products" className="underline">
+            <Button href="/products" variant="tertiary">
               Continue Browsing
-            </Link>
-            <Link href="/quote-list" className="underline">
+            </Button>
+            <Button href="/quote-list" variant="tertiary">
               Back to Quote List
-            </Link>
+            </Button>
           </div>
         </div>
       </PageFrame>
@@ -135,30 +134,25 @@ export default function QuotePage() {
   return (
     <PageFrame
       sidebar={
-        <div className="space-y-4">
-          <p className="text-sm uppercase tracking-[0.24em] text-gray-500">
-            Submit Quote
-          </p>
-          <h1 className="text-4xl font-bold tracking-tight text-gray-950">
-            Send one consolidated request for all items in your quote list.
-          </h1>
-        </div>
+        <PageIntro
+          label="Submit Quote"
+          title="Send one consolidated request for all items in your quote list."
+        />
       }
     >
       {quoteList.length === 0 ? (
         <div className="space-y-4">
-          <p>Your quote list is empty.</p>
-          <Link
-            href="/products"
-            className="inline-block rounded-[12px] bg-black px-5 py-3 text-white"
-          >
+          <Text variant="bodyMd">Your quote list is empty.</Text>
+          <Button href="/products" variant="primary">
             Browse Products
-          </Link>
+          </Button>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_380px]">
           <div>
-            <h2 className="mb-4 text-xl font-semibold">Requested Products</h2>
+            <Text as="h2" variant="h2Section" className="mb-4">
+              Requested Products
+            </Text>
             <div className="space-y-4">
               {quoteList.map((item) => (
                 <div
@@ -171,8 +165,12 @@ export default function QuotePage() {
                   >
                     {item.productTitle}
                   </Link>
-                  <p className="mt-1 text-sm text-gray-500">{item.variantTitle}</p>
-                  <p className="mt-2 text-sm">Quantity: {item.quantity}</p>
+                  <Text variant="caption" className="mt-1">
+                    {item.variantTitle}
+                  </Text>
+                  <Text variant="bodySm" className="mt-2">
+                    Quantity: {item.quantity}
+                  </Text>
                 </div>
               ))}
             </div>
@@ -183,10 +181,14 @@ export default function QuotePage() {
               onSubmit={handleSubmit}
               className="space-y-4 rounded-[12px] border border-black/30 bg-white p-6"
             >
-              <h2 className="text-xl font-semibold">Contact Details</h2>
+              <Text as="h2" variant="h2Section">
+                Contact Details
+              </Text>
 
               <div>
-                <label className="mb-1 block text-sm font-medium">Name</label>
+                <Text as="label" variant="bodySm" className="mb-1 block font-semibold text-black">
+                  Name
+                </Text>
                 <input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -196,7 +198,9 @@ export default function QuotePage() {
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium">Email</label>
+                <Text as="label" variant="bodySm" className="mb-1 block font-semibold text-black">
+                  Email
+                </Text>
                 <input
                   type="email"
                   value={email}
@@ -207,7 +211,9 @@ export default function QuotePage() {
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium">Phone</label>
+                <Text as="label" variant="bodySm" className="mb-1 block font-semibold text-black">
+                  Phone
+                </Text>
                 <input
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
@@ -216,7 +222,9 @@ export default function QuotePage() {
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium">Company</label>
+                <Text as="label" variant="bodySm" className="mb-1 block font-semibold text-black">
+                  Company
+                </Text>
                 <input
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
@@ -225,7 +233,9 @@ export default function QuotePage() {
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium">Notes</label>
+                <Text as="label" variant="bodySm" className="mb-1 block font-semibold text-black">
+                  Notes
+                </Text>
                 <textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
@@ -234,15 +244,15 @@ export default function QuotePage() {
                 />
               </div>
 
-              {error && <p className="text-sm text-red-600">{error}</p>}
+              {error && (
+                <Text variant="bodySm" className="text-red-600">
+                  {error}
+                </Text>
+              )}
 
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full rounded-[12px] bg-black py-3 text-white"
-              >
+              <Button type="submit" disabled={isSubmitting} variant="primary" fullWidth>
                 {isSubmitting ? 'Submitting...' : 'Submit Quote Request'}
-              </button>
+              </Button>
             </form>
           </aside>
         </div>

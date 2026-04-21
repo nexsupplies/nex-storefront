@@ -1,5 +1,7 @@
-import Link from 'next/link'
 import PageFrame from '@/components/PageFrame'
+import Button from '@/components/ui/Button'
+import PageIntro from '@/components/ui/PageIntro'
+import Text from '@/components/ui/Typography'
 
 const PICKUP_LOCATION = {
   company: 'NEX Supplies',
@@ -54,116 +56,121 @@ export default async function CheckoutSuccessPage({
   return (
     <PageFrame
       sidebar={
-        <div className="space-y-4">
-          <p className="text-sm uppercase tracking-[0.24em] text-gray-500">
-            Order Confirmed
-          </p>
-          <h1 className="text-4xl font-bold tracking-tight text-gray-950">
-            {orderLabel ? `Order ${orderLabel} created successfully.` : 'Order created successfully.'}
-          </h1>
-        </div>
+        <PageIntro
+          label="Order Confirmed"
+          title={
+            orderLabel
+              ? `Order ${orderLabel} created successfully.`
+              : 'Order created successfully.'
+          }
+        />
       }
     >
       <div className="max-w-2xl">
-        <p className="text-base text-gray-600">
+        <Text variant="bodyMd">
           {isPaymentPending
             ? `Your order has been created and is waiting for online payment follow-up.`
             : email
             ? `A confirmation has been prepared for ${email}.`
             : 'Your order has been created successfully in Medusa.'}
-        </p>
+        </Text>
       </div>
 
       <div className="mt-10 grid gap-6 md:grid-cols-2">
         <section className="rounded-[12px] border border-black/30 bg-white p-6">
-          <h2 className="text-lg font-semibold">Order Details</h2>
-          <div className="mt-4 space-y-3 text-sm">
+          <Text as="h2" variant="h2Section">
+            Order Details
+          </Text>
+          <div className="mt-4 space-y-3">
             <p>
-              <span className="text-gray-500">Order</span>
+              <Text as="span" variant="muted">Order</Text>
               <br />
-              <span className="font-medium">{orderLabel || '-'}</span>
+              <Text as="span" variant="bodyMd" className="font-semibold text-black">{orderLabel || '-'}</Text>
             </p>
             <p>
-              <span className="text-gray-500">Fulfillment</span>
+              <Text as="span" variant="muted">Fulfillment</Text>
               <br />
-              <span className="font-medium capitalize">
+              <Text as="span" variant="bodyMd" className="font-semibold capitalize text-black">
                 {fulfillmentMode || shippingMethod || '-'}
-              </span>
+              </Text>
             </p>
             {email && (
               <p>
-                <span className="text-gray-500">Email</span>
+                <Text as="span" variant="muted">Email</Text>
                 <br />
-                <span className="font-medium">{email}</span>
+                <Text as="span" variant="bodyMd" className="font-semibold text-black">{email}</Text>
               </p>
             )}
             <p>
-              <span className="text-gray-500">Payment</span>
+              <Text as="span" variant="muted">Payment</Text>
               <br />
-              <span className="font-medium">
+              <Text as="span" variant="bodyMd" className="font-semibold text-black">
                 {paymentMethod === 'online' ? 'Online payment follow-up' : 'Pay at pickup'}
-              </span>
+              </Text>
             </p>
           </div>
         </section>
 
         {isPickup ? (
           <section className="rounded-[12px] border border-black/30 bg-white p-6">
-            <h2 className="text-lg font-semibold">Pickup Details</h2>
-            <div className="mt-4 space-y-3 text-sm">
+            <Text as="h2" variant="h2Section">
+              Pickup Details
+            </Text>
+            <div className="mt-4 space-y-3">
               <p>
-                <span className="text-gray-500">Location</span>
+                <Text as="span" variant="muted">Location</Text>
                 <br />
-                <span className="font-medium">{PICKUP_LOCATION.company}</span>
+                <Text as="span" variant="bodyMd" className="font-semibold text-black">{PICKUP_LOCATION.company}</Text>
                 <br />
-                <span>{PICKUP_LOCATION.address}</span>
+                <Text as="span" variant="bodySm">{PICKUP_LOCATION.address}</Text>
               </p>
               <p>
-                <span className="text-gray-500">Hours</span>
+                <Text as="span" variant="muted">Hours</Text>
                 <br />
-                <span className="font-medium">{PICKUP_LOCATION.hours}</span>
+                <Text as="span" variant="bodyMd" className="font-semibold text-black">{PICKUP_LOCATION.hours}</Text>
               </p>
               {pickupDate && (
                 <p>
-                  <span className="text-gray-500">Pickup Date</span>
+                  <Text as="span" variant="muted">Pickup Date</Text>
                   <br />
-                  <span className="font-medium">{formatDateLabel(pickupDate)}</span>
+                  <Text as="span" variant="bodyMd" className="font-semibold text-black">{formatDateLabel(pickupDate)}</Text>
                 </p>
               )}
               {pickupTime && (
                 <p>
-                  <span className="text-gray-500">Pickup Window</span>
+                  <Text as="span" variant="muted">Pickup Window</Text>
                   <br />
-                  <span className="font-medium">{pickupTime}</span>
+                  <Text as="span" variant="bodyMd" className="font-semibold text-black">{pickupTime}</Text>
                 </p>
               )}
             </div>
           </section>
         ) : (
           <section className="rounded-[12px] border border-black/30 bg-white p-6">
-            <h2 className="text-lg font-semibold">What Happens Next</h2>
-            <div className="mt-4 space-y-3 text-sm text-gray-700">
-              <p>Your order is now visible in the Medusa admin.</p>
-              <p>Use the admin order details page to continue fulfillment and payment handling.</p>
+            <Text as="h2" variant="h2Section">
+              What Happens Next
+            </Text>
+            <div className="mt-4 space-y-3">
+              <Text variant="bodySm">Your order is now visible in the Medusa admin.</Text>
+              <Text variant="bodySm">
+                Use the admin order details page to continue fulfillment and payment handling.
+              </Text>
             </div>
           </section>
         )}
       </div>
 
       <div className="mt-8 flex flex-wrap gap-3">
-        <Link
-          href="/products"
-          className="inline-flex items-center justify-center rounded-[12px] bg-black px-5 py-3 text-sm font-medium text-white"
-        >
+        <Button href="/products" variant="primary">
           Continue Shopping
-        </Link>
+        </Button>
         {email && (
-          <Link
+          <Button
             href={`/order-hub?email=${encodeURIComponent(email)}`}
-            className="inline-flex items-center justify-center rounded-[12px] border border-black/30 px-5 py-3 text-sm font-medium"
+            variant="secondary"
           >
             Open Order Hub
-          </Link>
+          </Button>
         )}
       </div>
     </PageFrame>

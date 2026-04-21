@@ -1,5 +1,7 @@
-import Link from 'next/link'
 import PageFrame from '@/components/PageFrame'
+import Button from '@/components/ui/Button'
+import PageIntro from '@/components/ui/PageIntro'
+import Text from '@/components/ui/Typography'
 
 function readParam(
   value: string | string[] | undefined,
@@ -24,64 +26,61 @@ export default async function QuoteSuccessPage({
   return (
     <PageFrame
       sidebar={
-        <div className="space-y-4">
-          <p className="text-sm uppercase tracking-[0.24em] text-gray-500">
-            Shipping Quote Requested
-          </p>
-          <h1 className="text-4xl font-bold tracking-tight text-gray-950">
-            Your out-of-city delivery request was submitted successfully.
-          </h1>
-        </div>
+        <PageIntro
+          label="Shipping Quote Requested"
+          title="Your out-of-city delivery request was submitted successfully."
+        />
       }
     >
-      <p className="max-w-2xl text-base text-gray-600">
+      <Text variant="bodyMd" className="max-w-2xl">
         We received your delivery details and will prepare the freight quote next.
         You can return to Order Hub later to review the quote and continue payment.
-      </p>
+      </Text>
 
       <div className="mt-8 grid gap-6 md:grid-cols-2">
         <section className="rounded-[12px] border border-black/30 bg-white p-6">
-          <h2 className="text-lg font-semibold">Request Details</h2>
-          <div className="mt-4 space-y-3 text-sm">
+          <Text as="h2" variant="h2Section">
+            Request Details
+          </Text>
+          <div className="mt-4 space-y-3">
             {quoteId && (
               <p>
-                <span className="text-gray-500">Quote Request</span>
+                <Text as="span" variant="muted">Quote Request</Text>
                 <br />
-                <span className="font-medium">{quoteId}</span>
+                <Text as="span" variant="bodyMd" className="font-semibold text-black">{quoteId}</Text>
               </p>
             )}
             {email && (
               <p>
-                <span className="text-gray-500">Email</span>
+                <Text as="span" variant="muted">Email</Text>
                 <br />
-                <span className="font-medium">{email}</span>
+                <Text as="span" variant="bodyMd" className="font-semibold text-black">{email}</Text>
               </p>
             )}
           </div>
         </section>
 
         <section className="rounded-[12px] border border-black/30 bg-white p-6">
-          <h2 className="text-lg font-semibold">What Happens Next</h2>
-          <div className="mt-4 space-y-3 text-sm text-gray-700">
-            <p>Our team will review the route and finalize the shipping quote.</p>
-            <p>The quote will appear in Order Hub and can also be sent to the customer email.</p>
+          <Text as="h2" variant="h2Section">
+            What Happens Next
+          </Text>
+          <div className="mt-4 space-y-3">
+            <Text variant="bodySm">Our team will review the route and finalize the shipping quote.</Text>
+            <Text variant="bodySm">The quote will appear in Order Hub and can also be sent to the customer email.</Text>
           </div>
         </section>
       </div>
 
       <div className="mt-8 flex flex-wrap gap-3">
-        <Link
+        <Button
           href={email ? `/order-hub?email=${encodeURIComponent(email)}` : '/order-hub'}
-          className="inline-flex items-center justify-center rounded-[12px] bg-black px-5 py-3 text-sm font-medium text-white"
+          variant="primary"
         >
           Go to Order Hub
-        </Link>
-        <Link
-          href="/products"
-          className="inline-flex items-center justify-center rounded-[12px] border border-black/30 px-5 py-3 text-sm font-medium"
-        >
+        </Button>
+        <Button href="/products" variant="secondary">
           Browse Materials
-        </Link>
+        </Button>
       </div>
     </PageFrame>
   )

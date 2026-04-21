@@ -1,5 +1,5 @@
-import Link from 'next/link'
 import PageFrame from '@/components/PageFrame'
+import Button from '@/components/ui/Button'
 import PageIntro from '@/components/ui/PageIntro'
 import Text from '@/components/ui/Typography'
 import { getProductImageUrl, type StorefrontProduct } from '@/lib/catalog'
@@ -71,12 +71,14 @@ export default async function ProductsPage() {
                   : 'Custom ordering available'}
               </Text>
 
-              <Link
+              <Button
                 href={`/products/${product.handle}`}
-                className="type-button-text mt-4 inline-block w-full rounded-[12px] bg-black py-3 text-center text-white"
+                variant="primary"
+                fullWidth
+                className="mt-4"
               >
                 View Material
-              </Link>
+              </Button>
             </div>
           )
         })}

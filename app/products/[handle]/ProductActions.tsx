@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import Button from '@/components/ui/Button'
 import { addLineItem, getOrCreateCart } from '@/lib/cart'
 import {
   formatPrice,
@@ -199,15 +200,17 @@ export default function ProductActions({
                     </td>
                     <td className="px-4 py-4 lg:px-4">
                       <div className="inline-flex items-center gap-2 rounded-[10px] border border-black/30 bg-white px-2 py-1.5">
-                        <button
+                        <Button
                           type="button"
                           onClick={() =>
                             updateQuantity(row.variant.id, row.quantity - 1)
                           }
-                          className="type-button-text rounded-md px-2 py-1 text-base leading-none"
-                        >
-                          -
-                        </button>
+                          variant="secondary"
+                          kind="icon"
+                          icon={<span aria-hidden="true">-</span>}
+                          aria-label={`Decrease quantity for ${row.variant.title}`}
+                          className="h-8 w-8 rounded-md"
+                        />
                         <Text
                           as="span"
                           variant="bodyMd"
@@ -215,15 +218,17 @@ export default function ProductActions({
                         >
                           {row.quantity}
                         </Text>
-                        <button
+                        <Button
                           type="button"
                           onClick={() =>
                             updateQuantity(row.variant.id, row.quantity + 1)
                           }
-                          className="type-button-text rounded-md px-2 py-1 text-base leading-none"
-                        >
-                          +
-                        </button>
+                          variant="secondary"
+                          kind="icon"
+                          icon={<span aria-hidden="true">+</span>}
+                          aria-label={`Increase quantity for ${row.variant.title}`}
+                          className="h-8 w-8 rounded-md"
+                        />
                       </div>
                     </td>
                     <td className="px-4 py-4 lg:px-4">
@@ -268,23 +273,25 @@ export default function ProductActions({
           </div>
 
           <div className="space-y-3">
-            <button
+            <Button
               type="button"
               onClick={addToCart}
               disabled={!selectedRows.length}
-              className="type-button-text w-full rounded-xl bg-black py-3 text-white disabled:opacity-50"
+              variant="primary"
+              fullWidth
             >
               Add Selected Variants to Cart
-            </button>
+            </Button>
 
-            <button
+            <Button
               type="button"
               onClick={addToQuoteList}
               disabled={!selectedRows.length}
-              className="type-button-text w-full rounded-xl border border-black/30 py-3 disabled:opacity-50"
+              variant="secondary"
+              fullWidth
             >
               Add Selected Variants to Quote List
-            </button>
+            </Button>
 
             {message && (
               <Text variant="bodySm" className="pt-2 text-green-700">

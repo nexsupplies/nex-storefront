@@ -1,9 +1,9 @@
 'use client'
 
-import Link from 'next/link'
 import { useEffect } from 'react'
 import { getOrCreateCart } from '@/lib/cart'
 import PageFrame from '@/components/PageFrame'
+import Button from '@/components/ui/Button'
 import PageIntro from '@/components/ui/PageIntro'
 import Text from '@/components/ui/Typography'
 
@@ -29,18 +29,12 @@ export default function Home() {
           </Text>
         </div>
         <div className="space-y-3">
-          <Link
-            href="/products"
-            className="type-button-text block rounded-[12px] bg-black px-5 py-4 text-center text-white"
-          >
+          <Button href="/products" variant="primary" fullWidth>
             Browse Materials
-          </Link>
-          <Link
-            href="/quote-list"
-            className="type-button-text block rounded-[12px] border border-black/30 px-5 py-4 text-center text-black"
-          >
+          </Button>
+          <Button href="/quote-list" variant="secondary" fullWidth>
             Open Quote List
-          </Link>
+          </Button>
         </div>
       </div>
     </PageFrame>

@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import PageFrame from '@/components/PageFrame'
+import Button from '@/components/ui/Button'
 import PageIntro from '@/components/ui/PageIntro'
 import Text from '@/components/ui/Typography'
 
@@ -54,12 +55,9 @@ export default function QuoteListPage() {
       {quoteList.length === 0 ? (
         <div className="space-y-4">
           <Text variant="bodyMd">Your quote list is empty.</Text>
-          <Link
-            href="/products"
-            className="type-button-text inline-block rounded-[12px] bg-black px-5 py-3 text-white"
-          >
+          <Button href="/products" variant="primary">
             Browse Products
-          </Link>
+          </Button>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
@@ -85,38 +83,43 @@ export default function QuoteListPage() {
 
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
-                    <button
+                    <Button
                       type="button"
                       onClick={() =>
                         updateQuantity(item.variantId, item.quantity - 1)
                       }
-                      className="type-button-text rounded-[10px] border border-black/30 px-3 py-2"
-                    >
-                      -
-                    </button>
+                      variant="secondary"
+                      kind="icon"
+                      icon={<span aria-hidden="true">-</span>}
+                      aria-label={`Decrease quantity for ${item.productTitle}`}
+                      className="rounded-[10px]"
+                    />
 
                     <Text as="div" variant="bodyMd" className="min-w-8 text-center font-semibold text-black">
                       {item.quantity}
                     </Text>
 
-                    <button
+                    <Button
                       type="button"
                       onClick={() =>
                         updateQuantity(item.variantId, item.quantity + 1)
                       }
-                      className="type-button-text rounded-[10px] border border-black/30 px-3 py-2"
-                    >
-                      +
-                    </button>
+                      variant="secondary"
+                      kind="icon"
+                      icon={<span aria-hidden="true">+</span>}
+                      aria-label={`Increase quantity for ${item.productTitle}`}
+                      className="rounded-[10px]"
+                    />
                   </div>
 
-                  <button
+                  <Button
                     type="button"
                     onClick={() => removeItem(item.variantId)}
-                    className="type-button-text text-red-600 hover:underline"
+                    variant="tertiary"
+                    className="text-red-600 hover:!text-red-600"
                   >
                     Remove
-                  </button>
+                  </Button>
                 </div>
               </div>
             ))}
@@ -131,12 +134,9 @@ export default function QuoteListPage() {
               You can collect multiple products here, then submit one quote request.
             </Text>
 
-            <Link
-              href="/quote"
-              className="type-button-text block w-full rounded-[12px] bg-black py-3 text-center text-white"
-            >
+            <Button href="/quote" variant="primary" fullWidth>
               Continue to Quote
-            </Link>
+            </Button>
           </aside>
         </div>
       )}

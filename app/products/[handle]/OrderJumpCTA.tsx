@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Button from '@/components/ui/Button'
+import Text from '@/components/ui/Typography'
 
 export default function OrderJumpCTA({
   sectionId,
@@ -39,24 +41,28 @@ export default function OrderJumpCTA({
   }
 
   return (
-    <button
+    <Button
       type="button"
       onClick={() => {
         document
           .getElementById(sectionId)
           ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
       }}
-      className="group flex w-full items-center justify-between rounded-[12px] bg-black px-5 py-4 text-left text-white transition hover:bg-gray-900"
+      variant="primary"
+      kind="icon-text"
+      icon={<span aria-hidden="true" className="text-xl transition group-hover:translate-x-1">→</span>}
+      iconPosition="right"
+      fullWidth
+      className="justify-between text-left"
     >
       <div>
-        <p className="text-xs uppercase tracking-[0.2em] text-white/70">
+        <Text variant="caption" className="text-white/72">
           Ready to Order
-        </p>
-        <p className="mt-2 text-base font-semibold">
+        </Text>
+        <Text as="p" variant="h4CardTitle" className="mt-2 text-white">
           {`${variantCount} orderable variant${variantCount === 1 ? '' : 's'}`}
-        </p>
+        </Text>
       </div>
-      <span className="text-xl transition group-hover:translate-x-1">→</span>
-    </button>
+    </Button>
   )
 }
