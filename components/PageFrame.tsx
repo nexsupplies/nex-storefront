@@ -15,16 +15,20 @@ export default function PageFrame({
 }) {
   return (
     <main
-      className={`mx-[calc(50%-50vw)] w-screen grid grid-cols-1 lg:grid-cols-[minmax(320px,30fr)_minmax(0,35fr)_minmax(0,35fr)] ${className}`.trim()}
+      className={`mx-[calc(50%-50vw)] w-screen grid grid-cols-1 lg:min-h-[calc(100vh-4rem)] lg:grid-cols-[minmax(320px,30fr)_minmax(0,35fr)_minmax(0,35fr)] ${className}`.trim()}
     >
-      <aside className={`px-6 py-10 lg:pl-16 lg:pr-10 ${sidebarClassName}`.trim()}>
+      <aside
+        className={`px-6 py-10 lg:min-h-[calc(100vh-4rem)] lg:pl-16 lg:pr-10 ${sidebarClassName}`.trim()}
+      >
         {sidebar}
       </aside>
 
       <section
-        className={`min-w-0 border-l border-black/50 px-6 py-10 lg:col-span-2 lg:px-8 lg:pr-16 ${contentClassName}`.trim()}
+        className={`relative min-w-0 border-l border-black/50 lg:col-span-2 lg:min-h-[calc(100vh-4rem)] lg:before:pointer-events-none lg:before:absolute lg:before:inset-y-0 lg:before:left-1/2 lg:before:z-20 lg:before:border-l lg:before:border-black/50 lg:before:content-[''] ${contentClassName}`.trim()}
       >
-        {children}
+        <div className="relative z-10 px-6 py-10 lg:px-8 lg:pr-16">
+          {children}
+        </div>
       </section>
     </main>
   )
