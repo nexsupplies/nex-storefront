@@ -72,9 +72,8 @@ export default function QuoteListPage() {
       sidebar={<SupportSidebar title="Quote" items={[...quoteSidebarItems]} />}
     >
       {quoteList.length === 0 ? (
-        <div className="space-y-10">
-          <div className="max-w-2xl border-b border-black/30 pb-8">
-            <Text variant="label">Quote Intake</Text>
+        <div className="space-y-8">
+          <div className="max-w-2xl pb-4">
             <Text as="h2" variant="h2Section" className="mt-3">
               Your quote list is currently empty.
             </Text>
@@ -89,46 +88,24 @@ export default function QuoteListPage() {
           </Button>
         </div>
       ) : (
-        <div className="space-y-10">
-          <header className="grid gap-8 border-b border-black/30 pb-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(320px,0.9fr)] lg:items-end">
-            <div className="max-w-2xl">
-              <Text variant="label">Consolidated Request</Text>
-              <Text as="h2" variant="h2Section" className="mt-3">
-                Collect multiple materials here, then submit one clean quote request.
-              </Text>
-            </div>
-
-            <div className="grid grid-cols-2 gap-6 lg:justify-self-end">
-              <div>
-                <Text variant="caption">Variants Selected</Text>
-                <Text as="div" variant="price" className="mt-2">
-                  {quoteList.length}
-                </Text>
-              </div>
-
-              <div>
-                <Text variant="caption">Total Items</Text>
-                <Text as="div" variant="price" className="mt-2">
-                  {totalItems}
-                </Text>
-              </div>
-            </div>
+        <div className="space-y-8">
+          <header className="max-w-2xl pb-2">
+            <Text as="h2" variant="h2Section">
+              Quote Items
+            </Text>
           </header>
 
-          <div className="hidden border-b border-black/30 pb-3 lg:grid lg:grid-cols-[minmax(0,2.5fr)_minmax(0,1.2fr)_128px_auto] lg:gap-6">
+          <div className="hidden pb-2 lg:grid lg:grid-cols-[minmax(0,2.4fr)_minmax(0,1.15fr)_128px_40px] lg:gap-6">
             <Text variant="caption">Material</Text>
             <Text variant="caption">Variant</Text>
             <Text variant="caption">Quantity</Text>
-            <Text variant="caption" className="text-right">
-              Actions
-            </Text>
           </div>
 
           <div>
             {quoteList.map((item) => (
               <article
                 key={item.variantId}
-                className="grid gap-6 border-b border-black/30 py-6 lg:grid-cols-[minmax(0,2.5fr)_minmax(0,1.2fr)_128px_auto] lg:items-center"
+                className="grid gap-5 py-5 lg:grid-cols-[minmax(0,2.4fr)_minmax(0,1.15fr)_128px_40px] lg:items-center"
               >
                 <div className="min-w-0">
                   <Link href={`/products/${item.productHandle}`} className="inline-block">
@@ -179,31 +156,23 @@ export default function QuoteListPage() {
                   />
                 </div>
 
-                <div className="flex items-center justify-end">
+                <div className="flex items-center justify-start lg:justify-end">
                   <Button
                     type="button"
                     onClick={() => removeItem(item.variantId)}
                     variant="tertiary"
+                    kind="icon"
+                    icon={<span aria-hidden="true">×</span>}
+                    aria-label={`Remove ${item.productTitle} from quote list`}
                     className="text-red-600 hover:!text-red-600"
-                  >
-                    Remove
-                  </Button>
+                  />
                 </div>
               </article>
             ))}
           </div>
 
-          <section className="grid gap-8 border-t border-black/30 pt-8 lg:grid-cols-[minmax(0,1.25fr)_minmax(320px,0.75fr)] lg:items-start">
-            <div className="max-w-xl">
-              <Text as="h3" variant="h4CardTitle">
-                Quote Summary
-              </Text>
-              <Text variant="bodyMd" className="mt-3 text-black/68">
-                Submit the current list as one consolidated request. Product
-                quantities stay editable here until you continue.
-              </Text>
-            </div>
-
+          <section className="grid gap-8 border-t border-black/30 pt-6 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.72fr)] lg:items-start">
+            <div />
             <div className="space-y-4 lg:justify-self-end lg:min-w-[320px]">
               <div className="flex items-center justify-between gap-6">
                 <Text as="span" variant="muted">

@@ -32,12 +32,14 @@ export default function SupportSidebar({
   title,
   items,
   buttonLabel = 'Contact Support',
+  defaultOpenKey,
 }: {
   title: string
   items: SidebarItem[]
   buttonLabel?: string
+  defaultOpenKey?: string
 }) {
-  const [openItem, setOpenItem] = useState(items[0]?.key ?? '')
+  const [openItem, setOpenItem] = useState(defaultOpenKey ?? items[0]?.key ?? '')
 
   return (
     <div className="flex h-full flex-col lg:sticky lg:top-16 lg:min-h-[calc(100vh-4rem)]">

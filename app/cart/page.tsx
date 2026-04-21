@@ -42,9 +42,21 @@ function formatPrice(amount?: number, currencyCode = 'CAD') {
   }).format(amount)
 }
 
+function getLineTotal(item: CartLineItem) {
+  if (typeof item.subtotal === 'number') return item.subtotal
+  if (typeof item.unit_price === 'number') return item.unit_price * item.quantity
+  return undefined
+}
+
 const cartSidebarItems = [
   {
-    key: 'cart-timing',
+    key: 'summary',
+    title: 'Cart Summary',
+    content:
+      'Checkout will collect customer details, shipping information, and the final payment step. Delivery-specific charges are confirmed there.',
+  },
+  {
+    key: 'cart-review',
     title: 'Cart Review',
     content:
       'Use this page to confirm material selection, compare line totals, and adjust quantities before moving into checkout.',
@@ -134,7 +146,13 @@ export default function CartPage() {
     return (
       <PageFrame
         mergeContent
-        sidebar={<SupportSidebar title="Cart" items={[...cartSidebarItems]} />}
+        sidebar={
+          <SupportSidebar
+            title="Cart"
+            items={[...cartSidebarItems]}
+            defaultOpenKey="summary"
+          />
+        }
       >
         <Text variant="bodyMd">Loading cart...</Text>
       </PageFrame>
@@ -144,7 +162,13 @@ export default function CartPage() {
   return (
     <PageFrame
       mergeContent
-      sidebar={<SupportSidebar title="Cart" items={[...cartSidebarItems]} />}
+      sidebar={
+        <SupportSidebar
+          title="Cart"
+          items={[...cartSidebarItems]}
+          defaultOpenKey="summary"
+        />
+      }
     >
       {message && (
         <div className="mb-6 rounded-[12px] border border-red-200 bg-red-50 px-4 py-3">
@@ -155,9 +179,8 @@ export default function CartPage() {
       )}
 
       {items.length === 0 ? (
-        <div className="space-y-10">
-          <div className="max-w-2xl border-b border-black/30 pb-8">
-            <Text variant="label">Prepared Materials</Text>
+        <div className="space-y-8">
+          <div className="max-w-2xl pb-4">
             <Text as="h2" variant="h2Section" className="mt-3">
               Your cart is currently empty.
             </Text>
@@ -172,47 +195,25 @@ export default function CartPage() {
           </Button>
         </div>
       ) : (
-        <div className="space-y-10">
-          <header className="grid gap-8 border-b border-black/30 pb-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(320px,0.9fr)] lg:items-end">
-            <div className="max-w-2xl">
-              <Text variant="label">Prepared for Checkout</Text>
-              <Text as="h2" variant="h2Section" className="mt-3">
-                Review quantities, compare line totals, and move directly into checkout.
-              </Text>
-            </div>
-
-            <div className="grid grid-cols-2 gap-6 lg:justify-self-end">
-              <div>
-                <Text variant="caption">Total Items</Text>
-                <Text as="div" variant="price" className="mt-2">
-                  {itemCount}
-                </Text>
-              </div>
-
-              <div>
-                <Text variant="caption">Cart Total</Text>
-                <Text as="div" variant="price" className="mt-2">
-                  {formatPrice(cart?.total, currencyCode)}
-                </Text>
-              </div>
-            </div>
+        <div className="space-y-8">
+          <header className="max-w-2xl pb-2">
+            <Text as="h2" variant="h2Section">
+              Cart Items
+            </Text>
           </header>
 
-          <div className="hidden border-b border-black/30 pb-3 lg:grid lg:grid-cols-[minmax(0,2.4fr)_128px_160px_160px_auto] lg:gap-6">
+          <div className="hidden pb-2 lg:grid lg:grid-cols-[minmax(0,2.2fr)_128px_140px_140px_40px] lg:gap-6">
             <Text variant="caption">Material</Text>
             <Text variant="caption">Quantity</Text>
             <Text variant="caption">Unit Price</Text>
             <Text variant="caption">Line Total</Text>
-            <Text variant="caption" className="text-right">
-              Actions
-            </Text>
           </div>
 
           <div>
             {items.map((item) => (
               <article
                 key={item.id}
-                className="grid gap-6 border-b border-black/30 py-6 lg:grid-cols-[minmax(0,2.4fr)_128px_160px_160px_auto] lg:items-center"
+                className="grid gap-5 py-5 lg:grid-cols-[minmax(0,2.2fr)_128px_140px_140px_40px] lg:items-center"
               >
                 <div className="flex min-w-0 items-start gap-4">
                   <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-[12px] bg-[#f3f3f3]">
@@ -295,36 +296,37 @@ export default function CartPage() {
                     Line Total
                   </Text>
                   <Text variant="bodyMd" className="mt-1 font-semibold text-black lg:mt-0">
-                    {formatPrice(item.subtotal, currencyCode)}
+                    {formatPrice(getLineTotal(item), currencyCode)}
                   </Text>
                 </div>
 
-                <div className="flex items-center justify-end">
+                <div className="flex items-center justify-start lg:justify-end">
                   <Button
                     type="button"
                     onClick={() => handleRemove(item)}
                     variant="tertiary"
+                    kind="icon"
+                    icon={<span aria-hidden="true">×</span>}
+                    aria-label={`Remove ${item.product_title || item.title} from cart`}
                     className="text-red-600 hover:!text-red-600"
-                  >
-                    Remove
-                  </Button>
+                  />
                 </div>
               </article>
             ))}
           </div>
 
-          <section className="grid gap-8 border-t border-black/30 pt-8 lg:grid-cols-[minmax(0,1.25fr)_minmax(320px,0.75fr)] lg:items-start">
-            <div className="max-w-xl">
-              <Text as="h3" variant="h4CardTitle">
-                Cart Summary
-              </Text>
-              <Text variant="bodyMd" className="mt-3 text-black/68">
-                Checkout will collect customer details, shipping information, and the
-                final payment step. Delivery-specific charges are confirmed there.
-              </Text>
-            </div>
-
+          <section className="grid gap-8 border-t border-black/30 pt-6 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.72fr)] lg:items-start">
+            <div />
             <div className="space-y-4 lg:justify-self-end lg:min-w-[320px]">
+              <div className="flex items-center justify-between gap-6">
+                <Text as="span" variant="muted">
+                  Items
+                </Text>
+                <Text as="span" variant="bodyMd" className="font-semibold text-black">
+                  {itemCount}
+                </Text>
+              </div>
+
               <div className="flex items-center justify-between gap-6">
                 <Text as="span" variant="muted">
                   Subtotal

@@ -157,20 +157,15 @@ body {
   }
 
   .btn-secondary:hover {
-    @apply border-[#1D4DC5] text-white;
+    @apply border-black text-black;
   }
 
   .btn-secondary:hover .btn-layer {
-    @apply bg-[#1D4DC5];
-  }
-
-  .btn-secondary:hover .btn-grid {
-    @apply opacity-100;
-    background-position: 4px 4px;
+    @apply bg-[#f4f4f4];
   }
 
   .btn-secondary:active .btn-layer {
-    @apply bg-[#163ea5];
+    @apply bg-[#ebebeb];
   }
 
   .btn-tertiary {
@@ -188,20 +183,15 @@ body {
   }
 
   .btn-tertiary:hover {
-    @apply text-[#1D4DC5];
+    @apply text-black;
   }
 
   .btn-tertiary:hover .btn-layer {
-    @apply bg-[#1D4DC5]/8;
-  }
-
-  .btn-tertiary:hover .btn-grid {
-    @apply opacity-100;
-    background-position: 4px 4px;
+    @apply bg-black/[0.04];
   }
 
   .btn-tertiary:active .btn-layer {
-    @apply bg-[#1D4DC5]/12;
+    @apply bg-black/[0.08];
   }
 
   .btn-disabled {
