@@ -21,15 +21,14 @@ export default async function QuoteSuccessPage({
 }) {
   const params = await searchParams
   const email = readParam(params.email)
-  const quoteId = readParam(params.quote_id)
   const quoteNumber = readParam(params.quote_number)
 
   return (
     <PageFrame
       sidebar={
         <PageIntro
-          label="Shipping Quote Requested"
-          title="Your out-of-city delivery request was submitted successfully."
+          label="Shipping Quote Submitted"
+          title="Your out-of-city delivery quote was submitted successfully."
         />
       }
     >
@@ -41,7 +40,7 @@ export default async function QuoteSuccessPage({
       <div className="mt-8 grid gap-6 md:grid-cols-2">
         <section className="rounded-[12px] border border-black/30 bg-white p-6">
           <Text as="h2" variant="h2Section">
-            Request Details
+            Quote Details
           </Text>
           <div className="mt-4 space-y-3">
             {quoteNumber && (
@@ -49,13 +48,6 @@ export default async function QuoteSuccessPage({
                 <Text as="span" variant="muted">Quote Number</Text>
                 <br />
                 <Text as="span" variant="bodyMd" className="font-semibold text-[#1D4DC5]">{quoteNumber}</Text>
-              </p>
-            )}
-            {quoteId && (
-              <p>
-                <Text as="span" variant="muted">Quote Request</Text>
-                <br />
-                <Text as="span" variant="bodyMd" className="font-semibold text-black">{quoteId}</Text>
               </p>
             )}
             {email && (

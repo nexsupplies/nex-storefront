@@ -1,11 +1,16 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import PageFrame from '@/components/PageFrame'
 import Button from '@/components/ui/Button'
 import PageIntro from '@/components/ui/PageIntro'
 import Text from '@/components/ui/Typography'
+import {
+  getCustomerDisplayName,
+  getCustomerToken,
+  retrieveCustomer,
+} from '@/lib/customer-account'
 import { createQuoteRequest } from '@/lib/order-hub'
 
 type QuoteItem = {
@@ -34,8 +39,22 @@ export default function QuotePage() {
   const [submitted, setSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
-  const [submittedQuoteId, setSubmittedQuoteId] = useState('')
   const [submittedQuoteNumber, setSubmittedQuoteNumber] = useState('')
+
+  useEffect(() => {
+    if (!getCustomerToken()) {
+      return
+    }
+
+    retrieveCustomer()
+      .then((customer) => {
+        setName((current) => current || getCustomerDisplayName(customer))
+        setEmail((current) => current || customer.email)
+        setPhone((current) => current || customer.phone || '')
+        setCompany((current) => current || customer.company_name || '')
+      })
+      .catch(() => {})
+  }, [])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -68,13 +87,10 @@ export default function QuotePage() {
       localStorage.setItem('last-quote-request', JSON.stringify(data))
       localStorage.removeItem('quote-list')
       setQuoteList([])
-      setSubmittedQuoteId(data.quote_request?.id || '')
       setSubmittedQuoteNumber(data.quote_request?.quote_number || '')
       setSubmitted(true)
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to submit quote request.'
-      )
+      setError(err instanceof Error ? err.message : 'Failed to submit quote.')
     } finally {
       setIsSubmitting(false)
     }
@@ -87,13 +103,13 @@ export default function QuotePage() {
         sidebar={
           <PageIntro
             label="Quote Submitted"
-            title="Your quote request has been sent successfully."
+            title="Your quote has been sent successfully."
           />
         }
       >
         <div className="max-w-2xl space-y-6">
           <Text variant="bodyMd">
-            Your quote request has been sent to Medusa successfully.
+            Keep this quote number to track status and continue from Quote Hub.
           </Text>
           {submittedQuoteNumber ? (
             <div className="rounded-[12px] border border-[#1D4DC5]/20 bg-[#1D4DC5]/6 px-5 py-5">
@@ -103,9 +119,6 @@ export default function QuotePage() {
               </Text>
             </div>
           ) : null}
-          {submittedQuoteId && (
-            <Text variant="bodySm">Quote ID: {submittedQuoteId}</Text>
-          )}
 
           <div className="flex gap-4">
             <Button href="/products" variant="tertiary">
@@ -181,6 +194,11 @@ export default function QuotePage() {
               <Text as="h2" variant="h2Section">
                 Contact Details
               </Text>
+              {getCustomerToken() ? (
+                <Text variant="bodySm" className="text-black/62">
+                  This quote will be linked to your signed-in customer account.
+                </Text>
+              ) : null}
 
               <div>
                 <Text as="label" variant="bodySm" className="mb-1 block font-semibold text-black">
@@ -248,7 +266,7 @@ export default function QuotePage() {
               )}
 
               <Button type="submit" disabled={isSubmitting} variant="primary" fullWidth>
-                {isSubmitting ? 'Submitting...' : 'Submit Quote Request'}
+                {isSubmitting ? 'Submitting...' : 'Request Quote'}
               </Button>
             </form>
           </aside>

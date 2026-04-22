@@ -1,3 +1,5 @@
+import { getStoredCustomerToken } from './customer-session'
+
 const BACKEND_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL
 const PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY
 
@@ -11,6 +13,15 @@ function getHeaders() {
   return {
     "Content-Type": "application/json",
     "x-publishable-api-key": PUBLISHABLE_KEY,
+  }
+}
+
+function getAuthenticatedHeaders() {
+  const token = getStoredCustomerToken()
+
+  return {
+    ...getHeaders(),
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
   }
 }
 
@@ -78,6 +89,14 @@ export type QuoteHubQuote = {
   address_summary?: string | null
   response_note?: string | null
   items: OrderHubItem[]
+}
+
+export type AccountAddress = {
+  id: string
+  label: string
+  summary: string
+  fulfillment_mode: string
+  last_used_at?: string | null
 }
 
 export type CreateQuoteRequestResponse = {
@@ -181,7 +200,7 @@ export function clearRememberedQuoteHubAccess() {
 export async function createQuoteRequest(payload: CreateQuoteRequestPayload) {
   const res = await fetch(`${ensureBackendUrl()}/store/quote-requests`, {
     method: "POST",
-    headers: getHeaders(),
+    headers: getAuthenticatedHeaders(),
     body: JSON.stringify(payload),
   })
 
@@ -239,7 +258,9 @@ export async function accessQuoteHubAccount(
   const data = text ? JSON.parse(text) : {}
   return {
     account: data.account as { email: string },
+    orders: (data.orders || []) as QuoteHubQuote[],
     quotes: (data.quotes || []) as QuoteHubQuote[],
+    addresses: (data.addresses || []) as AccountAddress[],
   }
 }
 

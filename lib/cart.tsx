@@ -1,3 +1,8 @@
+import {
+  clearStoredCustomerToken,
+  getStoredCustomerToken,
+} from './customer-session'
+
 const BACKEND_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL
 const PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY
 const REGION_ID = process.env.NEXT_PUBLIC_MEDUSA_REGION_ID
@@ -86,6 +91,15 @@ function getHeaders() {
   return {
     'Content-Type': 'application/json',
     'x-publishable-api-key': PUBLISHABLE_KEY,
+  }
+}
+
+function getAuthenticatedHeaders() {
+  const token = getStoredCustomerToken()
+
+  return {
+    ...getHeaders(),
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
   }
 }
 
@@ -185,6 +199,11 @@ export async function createCart() {
   }
 
   setStoredCartId(cart.id)
+
+  try {
+    await attachCustomerToCart(cart.id)
+  } catch {}
+
   return cart
 }
 
@@ -195,11 +214,17 @@ export async function getOrCreateCart() {
     const { res, text } = await fetchCartResponse(existingId, 'id')
 
     if (res.ok) {
+      try {
+        await attachCustomerToCart(existingId)
+      } catch {}
       return existingId
     }
 
     if (isMissingCartResponse(res.status, text)) {
       const cart = await recreateStoredCart('id')
+      try {
+        await attachCustomerToCart(cart.id)
+      } catch {}
       return cart.id
     }
 
@@ -208,6 +233,36 @@ export async function getOrCreateCart() {
 
   const cart = await createCart()
   return cart.id
+}
+
+export async function attachCustomerToCart(cartId: string) {
+  const token = getStoredCustomerToken()
+
+  if (!token) {
+    return null
+  }
+
+  const res = await requestBackend(
+    `${ensureBackendUrl()}/store/carts/${cartId}/customer`,
+    {
+      method: 'POST',
+      headers: getAuthenticatedHeaders(),
+      body: JSON.stringify({}),
+    },
+    'attach cart to customer'
+  )
+
+  const text = await res.text()
+
+  if (res.status === 401) {
+    clearStoredCustomerToken()
+  }
+
+  if (!res.ok) {
+    throw new Error(`Failed to attach cart to customer: ${res.status} ${text}`)
+  }
+
+  return JSON.parse(text).cart
 }
 
 export async function retrieveCart(cartId: string, fields?: string) {

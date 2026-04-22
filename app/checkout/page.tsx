@@ -23,6 +23,11 @@ import {
   retrieveCart,
   updateCart,
 } from '@/lib/cart'
+import {
+  getCustomerDisplayName,
+  getCustomerToken,
+  retrieveCustomer,
+} from '@/lib/customer-account'
 import { createQuoteRequest } from '@/lib/order-hub'
 
 type CartLineItem = {
@@ -397,6 +402,28 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     void loadCart()
+  }, [])
+
+  useEffect(() => {
+    if (!getCustomerToken()) {
+      return
+    }
+
+    retrieveCustomer()
+      .then((customer) => {
+        const defaultAddress =
+          customer.addresses?.find((address) => address.is_default_shipping) ||
+          customer.addresses?.[0]
+
+        setFullName((current) => current || getCustomerDisplayName(customer))
+        setEmail((current) => current || customer.email)
+        setPhone((current) => current || customer.phone || '')
+        setStreet((current) => current || defaultAddress?.address_1 || '')
+        setCity((current) => current || defaultAddress?.city || '')
+        setProvince((current) => current || defaultAddress?.province || 'AB')
+        setPostalCode((current) => current || defaultAddress?.postal_code || '')
+      })
+      .catch(() => {})
   }, [])
 
   useEffect(() => {
@@ -803,15 +830,11 @@ export default function CheckoutPage() {
 
       clearStoredCartId()
 
-      const quoteId = response?.quote_request?.id
       const quoteNumber = response?.quote_request?.quote_number
       const params = new URLSearchParams({
         email: email.trim().toLowerCase(),
       })
 
-      if (quoteId) {
-        params.set('quote_id', quoteId)
-      }
       if (quoteNumber) {
         params.set('quote_number', quoteNumber)
       }
@@ -822,7 +845,7 @@ export default function CheckoutPage() {
     } catch (error) {
       console.error('handleRequestShippingQuote error:', error)
       setMessage(
-        error instanceof Error ? error.message : 'Failed to send the shipping quote request.'
+        error instanceof Error ? error.message : 'Failed to send the shipping quote.'
       )
     } finally {
       setPlacingOrder(false)
@@ -1293,10 +1316,10 @@ export default function CheckoutPage() {
                 >
                   {placingOrder
                     ? isOutOfCity
-                      ? 'Sending Quote Request...'
+                      ? 'Sending Quote...'
                       : 'Creating Order...'
                     : isOutOfCity
-                    ? 'Request Shipping Quote'
+                    ? 'Request Quote'
                     : paymentMethod === 'online'
                     ? 'Place Order and Continue to Payment'
                     : 'Place Order and Pay at Pickup'}
