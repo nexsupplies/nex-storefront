@@ -210,6 +210,11 @@ export async function registerCustomerAccount(payload: CustomerRegisterPayload) 
     'Failed to create customer account.'
   )
 
+  await requestToken('/auth/customer/emailpass', {
+    email: payload.email,
+    password: payload.password,
+  })
+
   return retrieveCustomer()
 }
 
