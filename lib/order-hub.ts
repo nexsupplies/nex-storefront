@@ -22,6 +22,22 @@ function ensureBackendUrl() {
   return BACKEND_URL
 }
 
+function parseErrorMessage(text: string, fallback: string) {
+  if (!text) {
+    return fallback
+  }
+
+  try {
+    const parsed = JSON.parse(text)
+
+    if (typeof parsed?.message === "string" && parsed.message.trim()) {
+      return parsed.message
+    }
+  } catch {}
+
+  return text
+}
+
 export type OrderHubItem = {
   id: string
   quantity: number
@@ -172,7 +188,7 @@ export async function createQuoteRequest(payload: CreateQuoteRequestPayload) {
   const text = await res.text()
 
   if (!res.ok) {
-    throw new Error(text || "Failed to create quote request.")
+    throw new Error(parseErrorMessage(text, "Failed to create quote request."))
   }
 
   return (text ? JSON.parse(text) : {}) as CreateQuoteRequestResponse
@@ -195,7 +211,7 @@ export async function fetchQuoteHubQuote(quoteNumber: string) {
   const text = await res.text()
 
   if (!res.ok) {
-    throw new Error(text || "Failed to load quote.")
+    throw new Error(parseErrorMessage(text, "Failed to load quote."))
   }
 
   const data = text ? JSON.parse(text) : {}
@@ -217,7 +233,7 @@ export async function accessQuoteHubAccount(
   const text = await res.text()
 
   if (!res.ok) {
-    throw new Error(text || "Failed to access quote hub.")
+    throw new Error(parseErrorMessage(text, "Failed to access quote hub."))
   }
 
   const data = text ? JSON.parse(text) : {}
@@ -242,7 +258,9 @@ export async function prepareOrderPaymentCollection(orderId: string, email: stri
   const text = await res.text()
 
   if (!res.ok) {
-    throw new Error(text || "Failed to prepare payment collection.")
+    throw new Error(
+      parseErrorMessage(text, "Failed to prepare payment collection.")
+    )
   }
 
   return text ? JSON.parse(text) : {}
