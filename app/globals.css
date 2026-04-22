@@ -91,7 +91,7 @@ body {
   }
 
   .btn-base {
-    @apply relative isolate inline-flex items-center justify-center gap-2 overflow-hidden rounded-[12px] border whitespace-nowrap select-none align-middle transition-[color,border-color,box-shadow,transform,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] active:scale-[0.985] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1D4DC5]/35;
+    @apply relative isolate inline-flex items-center justify-center gap-2 overflow-hidden rounded-[12px] border whitespace-nowrap select-none align-middle transition-[color,border-color,box-shadow,transform,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] active:scale-[0.985] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00AFEC]/35;
   }
 
   .btn-kind-text {
@@ -132,11 +132,11 @@ body {
   }
 
   .btn-primary:hover {
-    @apply border-[#1D4DC5] text-white;
+    @apply border-[#00AFEC] text-white;
   }
 
   .btn-primary:hover .btn-layer {
-    @apply bg-[#1D4DC5];
+    @apply bg-[#00AFEC];
   }
 
   .btn-primary:hover .btn-grid {
@@ -145,7 +145,7 @@ body {
   }
 
   .btn-primary:active .btn-layer {
-    @apply bg-[#163ea5];
+    @apply bg-[#0098cc];
   }
 
   .btn-secondary {

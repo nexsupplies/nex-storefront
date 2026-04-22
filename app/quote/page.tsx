@@ -112,9 +112,9 @@ export default function QuotePage() {
             Keep this quote number to track status and continue from Quote Hub.
           </Text>
           {submittedQuoteNumber ? (
-            <div className="rounded-[12px] border border-[#1D4DC5]/20 bg-[#1D4DC5]/6 px-5 py-5">
+            <div className="rounded-[12px] border border-[#00AFEC]/20 bg-[#00AFEC]/6 px-5 py-5">
               <Text variant="caption">Quote Number</Text>
-              <Text as="div" variant="price" className="mt-3 text-[#1D4DC5]">
+              <Text as="div" variant="price" className="mt-3 text-[#00AFEC]">
                 {submittedQuoteNumber}
               </Text>
             </div>

@@ -47,7 +47,7 @@ export default async function QuoteSuccessPage({
               <p>
                 <Text as="span" variant="muted">Quote Number</Text>
                 <br />
-                <Text as="span" variant="bodyMd" className="font-semibold text-[#1D4DC5]">{quoteNumber}</Text>
+                <Text as="span" variant="bodyMd" className="font-semibold text-[#00AFEC]">{quoteNumber}</Text>
               </p>
             )}
             {email && (

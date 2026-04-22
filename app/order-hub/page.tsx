@@ -42,7 +42,7 @@ function QuoteStatusPill({
 }) {
   const className =
     emphasis === 'accent'
-      ? 'border-[#1D4DC5]/20 bg-[#1D4DC5]/6 text-[#1D4DC5]'
+      ? 'border-[#00AFEC]/20 bg-[#00AFEC]/6 text-[#00AFEC]'
       : 'border-black/15 bg-black/[0.03] text-black/70'
 
   return (
